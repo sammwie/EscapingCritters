@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://cta8iw86o1fm"]
+
+[ext_resource type="Script" uid="uid://dk6cqhq3l8fc6" path="res://splash.gd" id="1_13jq6"]
+[ext_resource type="Texture2D" uid="uid://d1gsk7pe6ujyj" path="res://art/Primary_logo_dark1x.png" id="2_xoh7v"]
+[ext_resource type="Texture2D" uid="uid://cwq42crxrg15a" path="res://art/unknown.png" id="3_wyt6d"]
+
+[node name="Splash" type="Node2D" unique_id=1919712057 node_paths=PackedStringArray("logos")]
+script = ExtResource("1_13jq6")
+logos = [NodePath("Company"), NodePath("GameName")]
+
+[node name="Company" type="TextureRect" parent="." unique_id=2095040266]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -12.0
+offset_right = 1227.0
+offset_bottom = 667.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_xoh7v")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GameName" type="TextureRect" parent="." unique_id=1601027360]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 26.0
+offset_top = -447.0
+offset_right = 1148.0
+offset_bottom = 1038.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_wyt6d")
+expand_mode = 1
+stretch_mode = 5
