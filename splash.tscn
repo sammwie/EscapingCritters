@@ -7,6 +7,7 @@
 [node name="Splash" type="Node2D" unique_id=1919712057 node_paths=PackedStringArray("logos")]
 script = ExtResource("1_13jq6")
 logos = [NodePath("Company"), NodePath("GameName")]
+next_scene_path = "res://main_menu.tscn"
 
 [node name="Company" type="TextureRect" parent="." unique_id=2095040266]
 anchors_preset = 15
