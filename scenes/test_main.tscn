@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://binbn40xn3oiy" path="res://scenes/npc.tscn" id="2_31pel"]
 [ext_resource type="Resource" uid="uid://d1uid2tq02jrx" path="res://dialogues/test_npc.tres" id="3_bcbe7"]
 [ext_resource type="PackedScene" uid="uid://dxbcaovcv123k" path="res://scenes/dialogue_box.tscn" id="4_4jmdl"]
+[ext_resource type="PackedScene" uid="uid://cua0xve748asr" path="res://scenes/interact_prompt.tscn" id="5_31pel"]
 
 [node name="TestMain" type="Node2D" unique_id=1053836896]
 
@@ -15,3 +16,5 @@ position = Vector2(500, 300)
 dialogue = ExtResource("3_bcbe7")
 
 [node name="DialogueBox" parent="." unique_id=104292372 instance=ExtResource("4_4jmdl")]
+
+[node name="InteractPrompt" parent="." unique_id=1461623571 instance=ExtResource("5_31pel")]
