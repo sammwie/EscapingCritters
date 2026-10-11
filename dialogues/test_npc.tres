@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="DialogueData" format=3 uid="uid://d1uid2tq02jrx"]
+
+[ext_resource type="Script" uid="uid://cuib8na2qq78n" path="res://scripts/dialogue_line.gd" id="1_fgi28"]
+[ext_resource type="Script" uid="uid://bilm6gbrl1knw" path="res://scripts/dialogue_data.gd" id="2_ahph4"]
+
+[sub_resource type="Resource" id="Resource_tjar2"]
+script = ExtResource("1_fgi28")
+speaker = "Baker"
+text = "Welcome to town!"
+metadata/_custom_type_script = "uid://cuib8na2qq78n"
+
+[sub_resource type="Resource" id="Resource_y0x43"]
+script = ExtResource("1_fgi28")
+speaker = "Baker"
+text = "Fresh bread every morning!"
+metadata/_custom_type_script = "uid://cuib8na2qq78n"
+
+[sub_resource type="Resource" id="Resource_f1qqb"]
+script = ExtResource("1_fgi28")
+speaker = "Baker"
+text = "Back again?"
+metadata/_custom_type_script = "uid://cuib8na2qq78n"
+
+[resource]
+script = ExtResource("2_ahph4")
+npc_id = "test_npc"
+lines = Array[ExtResource("1_fgi28")]([SubResource("Resource_tjar2"), SubResource("Resource_y0x43")])
+repeat_lines = Array[ExtResource("1_fgi28")]([SubResource("Resource_f1qqb")])
+metadata/_custom_type_script = "uid://bilm6gbrl1knw"
