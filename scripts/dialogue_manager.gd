@@ -3,10 +3,12 @@ extends Node
 
 signal line_shown(speaker: String, text: String)
 signal finished
+signal skip_typing  # asks the dialogue box to reveal the full line now
 
 var _visits := {}  # npc_id -> int
 var _queue: Array[DialogueLine] = []
 var active := false
+var line_typing := false  # set by the dialogue box while a line is typing out
 
 func start(data: DialogueData) -> void:
 	var visits: int = _visits.get(data.npc_id, 0)
@@ -22,6 +24,13 @@ func start(data: DialogueData) -> void:
 			_queue.append(line)
 	active = true
 	advance()
+
+# Call this from interactions: skips typing first, then advances on the next press.
+func request_advance() -> void:
+	if line_typing:
+		skip_typing.emit()
+	else:
+		advance()
 
 func advance() -> void:
 	if _queue.is_empty():
