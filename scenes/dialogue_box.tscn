@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://dxbcaovcv123k"]
+
+[ext_resource type="Script" uid="uid://bhx3ebtlk6kmh" path="res://scripts/dialogue_box.gd" id="1_rc1id"]
+
+[node name="DialogueBox" type="CanvasLayer" unique_id=104292372]
+script = ExtResource("1_rc1id")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=743431106]
+custom_minimum_size = Vector2(0, 80)
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -50.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=315479488]
+layout_mode = 2
+
+[node name="SpeakerLabel" type="Label" parent="PanelContainer/VBoxContainer" unique_id=1722960694]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TextLabel" type="Label" parent="PanelContainer/VBoxContainer" unique_id=144339608]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 2
