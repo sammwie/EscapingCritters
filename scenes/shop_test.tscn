@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://iilwmf4q8mii"]
+
+[ext_resource type="PackedScene" uid="uid://cbbblps2hp85q" path="res://scenes/fishing_spot.tscn" id="1_7ubwl"]
+[ext_resource type="PackedScene" uid="uid://cua0xve748asr" path="res://scenes/interact_prompt.tscn" id="2_l54wk"]
+[ext_resource type="PackedScene" uid="uid://ds0a6pklgwifl" path="res://scenes/shop_counter.tscn" id="3_bnog6"]
+[ext_resource type="PackedScene" uid="uid://cvcw7h5ng6ydg" path="res://scenes/player.tscn" id="4_u4ky6"]
+
+[node name="ShopTest" type="Node2D" unique_id=1157638986]
+
+[node name="FishingSpot" parent="." unique_id=670462628 instance=ExtResource("1_7ubwl")]
+position = Vector2(500, 300)
+
+[node name="InteractPrompt" parent="." unique_id=1461623571 instance=ExtResource("2_l54wk")]
+
+[node name="ShopCounter" parent="." unique_id=1501374330 instance=ExtResource("3_bnog6")]
+position = Vector2(700, 300)
+fishing_spot_path = NodePath("../FishingSpot")
+
+[node name="Player" parent="." unique_id=2047223457 instance=ExtResource("4_u4ky6")]
+position = Vector2(300, 300)
