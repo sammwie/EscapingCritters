@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://ds0a6pklgwifl"]
+
+[ext_resource type="Script" uid="uid://bppfovfq2tddh" path="res://scripts/shop_counter.gd" id="1_27r4e"]
+[ext_resource type="Script" uid="uid://p7mg341r28ve" path="res://scripts/shop.gd" id="2_vk58o"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_etr18"]
+size = Vector2(64, 32)
+
+[node name="ShopCounter" type="Area2D" unique_id=1501374330]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_27r4e")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=5822122]
+shape = SubResource("RectangleShape2D_etr18")
+
+[node name="Shop" type="Node" parent="." unique_id=420730861]
+script = ExtResource("2_vk58o")
+metadata/_custom_type_script = "uid://p7mg341r28ve"
