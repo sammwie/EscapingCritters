@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://bolbbnnuwom14"]
+
+[ext_resource type="Script" uid="uid://bp4rwl0gqg2vs" path="res://scripts/farm_plot.gd" id="1_nnlth"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_etr18"]
+size = Vector2(32, 32)
+
+[node name="FarmPlot" type="Area2D" unique_id=200896601]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_nnlth")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=39412599]
+shape = SubResource("RectangleShape2D_etr18")

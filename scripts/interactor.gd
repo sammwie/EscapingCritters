@@ -4,13 +4,15 @@ extends Area2D
 ## Needs an "interact" action in the Input Map.
 ## Interactables live on collision layer 2; this Area2D's mask = 2.
 ##
-## Emits target_changed whenever the closest interactable in range changes,
-## so UI (like the "Press E" prompt) can react without polling.
+## Emits target_changed when the closest interactable changes, OR when the
+## current target's prompt text changes (e.g. a farm plot going from
+## "Plant" to "Water"), so the "Press E" label stays correct.
 
 signal target_changed(target: Interactable)
 
 var nearby: Array[Interactable] = []
 var current_target: Interactable = null
+var _last_prompt := ""
 
 func _ready() -> void:
 	add_to_group("interactor")
@@ -26,8 +28,10 @@ func _on_area_exited(area: Area2D) -> void:
 
 func _process(_delta: float) -> void:
 	var best := _closest()
-	if best != current_target:
+	var prompt := best.prompt_text if best else ""
+	if best != current_target or prompt != _last_prompt:
 		current_target = best
+		_last_prompt = prompt
 		target_changed.emit(current_target)
 
 func _unhandled_input(event: InputEvent) -> void:

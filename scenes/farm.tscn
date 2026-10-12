@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://jq3yjoa4chsl"]
+
+[ext_resource type="Script" uid="uid://c3pbb5fhvd235" path="res://scripts/farm_manager.gd" id="1_o03py"]
+[ext_resource type="PackedScene" uid="uid://bolbbnnuwom14" path="res://scenes/farm_plot.tscn" id="2_k3ns2"]
+[ext_resource type="PackedScene" uid="uid://cvcw7h5ng6ydg" path="res://scenes/player.tscn" id="3_7byxm"]
+[ext_resource type="PackedScene" uid="uid://cua0xve748asr" path="res://scenes/interact_prompt.tscn" id="4_5q3ck"]
+
+[node name="Farm" type="Node2D" unique_id=1962172900]
+
+[node name="FarmManager" type="Node" parent="." unique_id=1192624]
+script = ExtResource("1_o03py")
+
+[node name="FarmPlot" parent="." unique_id=200896601 instance=ExtResource("2_k3ns2")]
+position = Vector2(200, 100)
+
+[node name="FarmPlot2" parent="." unique_id=130351533 instance=ExtResource("2_k3ns2")]
+position = Vector2(260, 100)
+
+[node name="FarmPlot3" parent="." unique_id=2076952910 instance=ExtResource("2_k3ns2")]
+position = Vector2(320, 100)
+
+[node name="FarmPlot4" parent="." unique_id=1471856056 instance=ExtResource("2_k3ns2")]
+position = Vector2(200, 160)
+
+[node name="FarmPlot5" parent="." unique_id=601012672 instance=ExtResource("2_k3ns2")]
+position = Vector2(260, 160)
+
+[node name="Player" parent="." unique_id=2047223457 instance=ExtResource("3_7byxm")]
+position = Vector2(100, 100)
+
+[node name="InteractPrompt" parent="." unique_id=1461623571 instance=ExtResource("4_5q3ck")]
+
+[editable path="Player"]
