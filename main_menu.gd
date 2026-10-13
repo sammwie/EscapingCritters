@@ -4,6 +4,9 @@ extends Control
 @export var continue_scene_path := "res://scenes/test_main.tscn"
 
 func _ready() -> void:
+	# Apply saved volume / fullscreen / text-speed options as soon as the game starts.
+	GameSettings.load_and_apply()
+
 	$ButtonList/NewGameButton.pressed.connect(_on_new_game_pressed)
 	$ButtonList/ContinueButton.pressed.connect(_on_continue_pressed)
 	$ButtonList/SettingsButton.pressed.connect(_on_settings_pressed)

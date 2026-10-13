@@ -283,6 +283,21 @@ shape = SubResource("DoorShape")
 position = Vector2(220, 292)
 metadata/facing = "south"
 
+[node name="TownhallDoor" type="Area2D" parent="Doors"]
+position = Vector2(408, 390)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("11_door")
+target_scene = "res://scenes/interiors/townhall_interior.tscn"
+spawn_at = "Spawn_inside"
+
+[node name="Shape" type="CollisionShape2D" parent="Doors/TownhallDoor"]
+shape = SubResource("DoorShape")
+
+[node name="Spawn_townhall_outside" type="Marker2D" parent="Doors"]
+position = Vector2(408, 404)
+metadata/facing = "south"
+
 [node name="Butcher" parent="." unique_id=1016802625 instance=ExtResource("2_31pel")]
 position = Vector2(248, 284)
 prompt_text = "Talk"

@@ -1,33 +1,172 @@
 [gd_scene format=3 uid="uid://bbgevq3i7vacn"]
 
 [ext_resource type="Script" uid="uid://bgvsjpmllh26b" path="res://credits.gd" id="1_nm7lk"]
+[ext_resource type="Theme" path="res://ui/menu_theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://coxkvbce8fl78" path="res://art/escaping_critters_main_menu_bg.png" id="3_bg"]
+[ext_resource type="Texture2D" path="res://art/critter/rotations/south.png" id="4_critter"]
+[ext_resource type="Texture2D" path="res://art/animals/cat.png" id="5_cat"]
+[ext_resource type="Texture2D" path="res://art/animals/chicken.png" id="6_chicken"]
+[ext_resource type="Texture2D" path="res://art/animals/duck.png" id="7_duck"]
 
-[node name="Credits" type="Control" unique_id=2075873036]
+[sub_resource type="AtlasTexture" id="Cat"]
+atlas = ExtResource("5_cat")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="Chicken"]
+atlas = ExtResource("6_chicken")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="Duck"]
+atlas = ExtResource("7_duck")
+region = Rect2(0, 0, 16, 16)
+
+[node name="Credits" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_theme")
 script = ExtResource("1_nm7lk")
 
-[node name="Content" type="VBoxContainer" parent="." unique_id=1195794499]
+[node name="Background" type="TextureRect" parent="."]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_bg")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Dim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.22745098, 0.15686275, 0.11764706, 0.2)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Names" type="Label" parent="Content" unique_id=400764158]
+[node name="Panel" type="PanelContainer" parent="Center"]
+custom_minimum_size = Vector2(1440, 0)
+layout_mode = 2
+theme_type_variation = &"ParchmentPanel"
+
+[node name="Content" type="VBoxContainer" parent="Center/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Title" type="Label" parent="Center/Panel/Content"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "CREDITS"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Center/Panel/Content"]
+layout_mode = 2
+theme_type_variation = &"RoleLabel"
+theme_override_font_sizes/font_size = 28
+text = "ESCAPING CRITTERS"
+horizontal_alignment = 1
+
+[node name="TopRule" type="HSeparator" parent="Center/Panel/Content"]
 layout_mode = 2
 
-[node name="BackButton" type="Button" parent="Content" unique_id=467389242]
+[node name="Scroll" type="ScrollContainer" parent="Center/Panel/Content"]
+custom_minimum_size = Vector2(0, 440)
 layout_mode = 2
-text = "Back"
+horizontal_scroll_mode = 0
+
+[node name="Entries" type="GridContainer" parent="Center/Panel/Content/Scroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 40
+theme_override_constants/v_separation = 30
+columns = 3
+
+[node name="CritterRow" type="HBoxContainer" parent="Center/Panel/Content"]
+layout_mode = 2
+theme_override_constants/separation = 36
+alignment = 1
+
+[node name="Critter" type="TextureRect" parent="Center/Panel/Content/CritterRow"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+texture = ExtResource("4_critter")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Cat" type="TextureRect" parent="Center/Panel/Content/CritterRow"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+texture = SubResource("Cat")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Thanks" type="Label" parent="Center/Panel/Content/CritterRow"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 26
+text = "Thank you for playing!"
+
+[node name="Chicken" type="TextureRect" parent="Center/Panel/Content/CritterRow"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+texture = SubResource("Chicken")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Duck" type="TextureRect" parent="Center/Panel/Content/CritterRow"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+texture = SubResource("Duck")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BottomRule" type="HSeparator" parent="Center/Panel/Content"]
+layout_mode = 2
+
+[node name="Buttons" type="HBoxContainer" parent="Center/Panel/Content"]
+layout_mode = 2
+alignment = 1
+
+[node name="BackButton" type="Button" parent="Center/Panel/Content/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 72)
+layout_mode = 2
+theme_override_font_sizes/font_size = 34
+text = "BACK"
+
+[node name="Hint" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -400.0
+offset_top = -64.0
+offset_right = 400.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 0.972549, 0.9098039, 1)
+theme_override_colors/font_shadow_color = Color(0.22745098, 0.15686275, 0.11764706, 1)
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 3
+theme_override_font_sizes/font_size = 22
+text = "Esc to go back"
+horizontal_alignment = 1

@@ -24,7 +24,7 @@ func _on_line_shown(speaker: String, text: String) -> void:
 	text_label.visible_ratio = 0.0
 	if _tween:
 		_tween.kill()
-	var duration := maxf(text.length() / chars_per_second, 0.05)
+	var duration := maxf(text.length() / (chars_per_second * GameSettings.text_speed_multiplier()), 0.05)
 	Dialogue.line_typing = true
 	_tween = create_tween()
 	_tween.tween_property(text_label, "visible_ratio", 1.0, duration)

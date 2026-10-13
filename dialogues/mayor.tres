@@ -1,0 +1,56 @@
+[gd_resource type="Resource" script_class="DialogueData" format=3]
+
+[ext_resource type="Script" uid="uid://bilm6gbrl1knw" path="res://scripts/dialogue_data.gd" id="1_data"]
+[ext_resource type="Script" uid="uid://cuib8na2qq78n" path="res://scripts/dialogue_line.gd" id="2_line"]
+
+[sub_resource type="Resource" id="Resource_1"]
+script = ExtResource("2_line")
+speaker = "Mayor"
+text = "Welcome to Town Hall! I'm the mayor. Well... somebody has to be."
+
+[sub_resource type="Resource" id="Resource_2"]
+script = ExtResource("2_line")
+speaker = "Mayor"
+text = "The Baker's up with the sun, the Butcher keeps the shop by the road, and your little house sits just past the farm."
+
+[sub_resource type="Resource" id="Resource_3"]
+script = ExtResource("2_line")
+speaker = "Mayor"
+text = "Everything in Hollowbrook is exactly where it should be. I checked. Twice."
+
+[sub_resource type="Resource" id="Resource_4"]
+script = ExtResource("2_line")
+speaker = "Mayor"
+text = "Funny. I can't remember anyone ever arriving. Or leaving."
+min_corruption = 2
+
+[sub_resource type="Resource" id="Resource_5"]
+script = ExtResource("2_line")
+speaker = "Mayor"
+text = "The road only goes one way. The road only goes one way."
+min_corruption = 3
+glitch = true
+
+[sub_resource type="Resource" id="Resource_6"]
+script = ExtResource("2_line")
+speaker = "Mayor"
+text = "Anything else? The notice box by the door has today's news."
+
+[sub_resource type="Resource" id="Resource_7"]
+script = ExtResource("2_line")
+speaker = "Mayor"
+text = "Have you been to the lake yet? It's lovely this time of day. It's always this time of day."
+min_corruption = 2
+
+[sub_resource type="Resource" id="Resource_8"]
+script = ExtResource("2_line")
+speaker = "Mayor"
+text = "Meetings are every day. Meetings are every day."
+min_corruption = 3
+glitch = true
+
+[resource]
+script = ExtResource("1_data")
+npc_id = "mayor"
+lines = Array[ExtResource("2_line")]([SubResource("Resource_1"), SubResource("Resource_2"), SubResource("Resource_3"), SubResource("Resource_4"), SubResource("Resource_5")])
+repeat_lines = Array[ExtResource("2_line")]([SubResource("Resource_6"), SubResource("Resource_7"), SubResource("Resource_8")])
