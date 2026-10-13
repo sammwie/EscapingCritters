@@ -50,8 +50,8 @@ mid-line, listen to `Dialogue.line_started(npc_id)` and
 ## Puzzles
 
 `Puzzle` is the base class. Every puzzle has a `puzzle_id` and reports
-`WorldState.mark_solved(puzzle_id)` when solved (skipped quietly until
-WorldState exists).
+`GameState.mark_solved(puzzle_id)` when solved (skipped quietly until
+Coder 3's GameState update is merged).
 
 - `start()`, `reset()`, `complete()`, `fail()`.
 - Signals: `solved`, `failed`.
@@ -85,8 +85,8 @@ Wiring: `ShopCounter` has `farm_manager_path` and `fishing_spot_path`,
 
 - The treehouse and town square are placeholders: the GDD doesn't define them.
 - Prices, fish and crops are placeholder values.
-- `FarmManager`'s day and `GameState.current_day` are not linked yet (Coder 3).
-- `farm_manager.gd` still has a debug key (N) to skip a day.
+- The farm and treehouse bed use `GameState.advance_day()` and `GameState.current_day`.
+  If those aren't on `main` yet, they quietly fall back to simpler behavior.
 
 ## Test scenes
 

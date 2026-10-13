@@ -20,9 +20,7 @@ func _ready() -> void:
 
 func _draw() -> void:
 	draw_rect(Rect2(-size / 2.0, size), Color("7a5fb0"))
-	var fm := _farm_manager()
-	if fm:
-		draw_string(ThemeDB.fallback_font, Vector2(-size.x / 2.0, -size.y / 2.0 - 6.0), "Day %d" % fm.day)
+	draw_string(ThemeDB.fallback_font, Vector2(-size.x / 2.0, -size.y / 2.0 - 6.0), "Day %d" % GameState.current_day)
 
 func _on_interact(_by: Node) -> void:
 	if treehouse == null:

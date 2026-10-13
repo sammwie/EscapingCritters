@@ -2,7 +2,7 @@ class_name Puzzle
 extends Node
 ## Base class for all five puzzles (farm, lake, shop, treehouse, town square).
 ## Levels only need to listen to `solved` / `failed`.
-## Every puzzle has an ID and reports to WorldState when solved.
+## Every puzzle has an ID and reports to GameState when solved.
 
 signal solved
 signal failed
@@ -36,13 +36,12 @@ func fail() -> void:
 	state = State.FAILED
 	failed.emit()
 
-# WorldState is owned by Coder 3. Until it exists (or if it has no
-# mark_solved method yet) this does nothing, so nothing breaks.
-# Expected API: WorldState.mark_solved(puzzle_id: StringName)
+# GameState is owned by Coder 3. It tracks solved puzzles via
+# GameState.mark_solved(puzzle_id: StringName). Called dynamically so this
+# file still loads if that function isn't on main yet.
 func _report_solved() -> void:
-	var ws := get_node_or_null("/root/WorldState")
-	if ws and ws.has_method("mark_solved"):
-		ws.mark_solved(puzzle_id)
+	if GameState.has_method("mark_solved"):
+		GameState.call("mark_solved", puzzle_id)
 
 # Override these in each puzzle:
 func _on_start() -> void: pass

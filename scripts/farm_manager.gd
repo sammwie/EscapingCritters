@@ -1,12 +1,12 @@
 class_name FarmManager
 extends Node
 ## Drop one in a farm scene. Advances every FarmPlot when a day passes.
-## For now, press N to skip a day (debug). Later, call end_day() from
-## whatever owns the real day cycle (GameState / Coder 3).
+## The day itself lives in GameState (Coder 3): end_day() calls
+## GameState.advance_day() and then grows every plot.
+## Press N to skip a day (debug) until a real day trigger calls end_day().
 
 signal day_advanced(day: int)
 
-var day := 1
 var harvest_counts := {}  # crop_id -> int
 
 func _ready() -> void:
@@ -16,10 +16,13 @@ func _ready() -> void:
 		plot.harvested.connect(_on_harvested)
 
 func end_day() -> void:
-	day += 1
+	if GameState.has_method("advance_day"):
+		GameState.call("advance_day")
+	else:
+		GameState.current_day += 1  # fallback until advance_day is on main
 	for plot in get_tree().get_nodes_in_group("farm_plots"):
 		plot.advance_day()
-	day_advanced.emit(day)
+	day_advanced.emit(GameState.current_day)
 
 func _on_harvested(crop_id: StringName) -> void:
 	harvest_counts[crop_id] = harvest_counts.get(crop_id, 0) + 1
@@ -28,4 +31,4 @@ func _on_harvested(crop_id: StringName) -> void:
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_N:
 		end_day()
-		print("Day ", day)
+		print("Day ", GameState.current_day)
