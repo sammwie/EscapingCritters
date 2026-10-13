@@ -20,6 +20,11 @@ var label: Label
 var player: Node = null
 
 func _ready() -> void:
+	# Only play the intro the first time, not when walking back out of a building.
+	if get_tree().root.has_meta("intro_played"):
+		return
+	get_tree().root.set_meta("intro_played", true)
+
 	player = _find_player(self)
 	if player and player.has_method("set_physics_process"):
 		player.set_physics_process(false)

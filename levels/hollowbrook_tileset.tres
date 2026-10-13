@@ -1,8 +1,8 @@
-[gd_resource type="TileSet" load_steps=7 format=3]
+[gd_resource type="TileSet" format=3 uid="uid://chfk3gf3dhctt"]
 
-[ext_resource type="Texture2D" path="res://art/tilesets/hollowbrook_ldtk_tileset.png" id="1_sl32l"]
-[ext_resource type="Texture2D" path="res://art/tilesets/house_tileset_32px.png" id="2_ansep"]
-[ext_resource type="Texture2D" path="res://art/tilesets/shops_tileset_32px.png" id="3_2fo1c"]
+[ext_resource type="Texture2D" uid="uid://crdg5w33cqpq" path="res://art/tilesets/hollowbrook_ldtk_tileset.png" id="1_sl32l"]
+[ext_resource type="Texture2D" uid="uid://b0hlo208anr6e" path="res://art/tilesets/house_tileset_32px.png" id="2_ansep"]
+[ext_resource type="Texture2D" uid="uid://byyjxf5rc4uuh" path="res://art/tilesets/shops_tileset_32px.png" id="3_2fo1c"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bwfei"]
 texture = ExtResource("1_sl32l")
