@@ -11,15 +11,20 @@ text = "Morning, sunshine! Another perfect day in Hollowbrook."
 [sub_resource type="Resource" id="Resource_2"]
 script = ExtResource("2_line")
 speaker = "Baker"
-text = "Be a dear and grow me some wheat? Three bundles should do."
+text = "Could you bring me three eggs from your hens, and three bundles of wheat?"
 
 [sub_resource type="Resource" id="Resource_3"]
 script = ExtResource("2_line")
 speaker = "Baker"
-text = "Your field is by the farmhouse. Plant it, water it, then sleep on it!"
+text = "Feed the chickens first, and they'll lay for you. Your field is by the farmhouse."
+
+[sub_resource type="Resource" id="Resource_4"]
+script = ExtResource("2_line")
+speaker = "Baker"
+text = "Bring it all back and I'll bake you something special!"
 
 [resource]
 script = ExtResource("1_data")
 npc_id = "baker"
-lines = Array[ExtResource("2_line")]([SubResource("Resource_1"), SubResource("Resource_2"), SubResource("Resource_3")])
+lines = Array[ExtResource("2_line")]([SubResource("Resource_1"), SubResource("Resource_2"), SubResource("Resource_3"), SubResource("Resource_4")])
 repeat_lines = Array[ExtResource("2_line")]([])

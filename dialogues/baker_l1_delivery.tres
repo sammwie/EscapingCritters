@@ -6,17 +6,17 @@
 [sub_resource type="Resource" id="Resource_1"]
 script = ExtResource("2_line")
 speaker = "Baker"
-text = "Oh, lovely wheat! Thank you, dear."
+text = "Eggs and wheat! You're a treasure."
 
 [sub_resource type="Resource" id="Resource_2"]
 script = ExtResource("2_line")
 speaker = "Baker"
-text = "I'll bake it fresh tomorrow morning."
+text = "Here, a loaf for you. Fresh from the oven, still warm."
 
 [sub_resource type="Resource" id="Resource_3"]
 script = ExtResource("2_line")
 speaker = "Baker"
-text = "Just like I did yesterday. And the day before that..."
+text = "Funny... I don't remember baking it."
 
 [resource]
 script = ExtResource("1_data")

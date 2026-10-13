@@ -14,6 +14,35 @@
 [ext_resource type="Script" path="res://scripts/scene_door.gd" id="11_door"]
 [ext_resource type="PackedScene" uid="uid://bolbbnnuwom14" path="res://scenes/farm_plot.tscn" id="12_plot"]
 [ext_resource type="Script" path="res://scripts/level1_quest.gd" id="13_quest"]
+[ext_resource type="TileSet" path="res://levels/hollowbrook_tileset.tres" id="14_tiles"]
+[ext_resource type="Texture2D" path="res://art/animals/coop.png" id="15_coop"]
+[ext_resource type="Texture2D" path="res://art/animals/chicken.png" id="16_chicken"]
+[ext_resource type="Texture2D" path="res://art/animals/duck.png" id="17_duck"]
+[ext_resource type="Script" path="res://scripts/wander_animal.gd" id="18_wander"]
+[ext_resource type="Script" path="res://scripts/feed_trough.gd" id="19_trough"]
+[ext_resource type="Script" path="res://scripts/pet_cat.gd" id="20_cat"]
+[ext_resource type="Script" path="res://scripts/butterflies.gd" id="21_flies"]
+
+[sub_resource type="RectangleShape2D" id="PenH"]
+size = Vector2(128, 12)
+
+[sub_resource type="RectangleShape2D" id="PenV"]
+size = Vector2(8, 96)
+
+[sub_resource type="RectangleShape2D" id="PenGatePost"]
+size = Vector2(8, 32)
+
+[sub_resource type="RectangleShape2D" id="CoopBody"]
+size = Vector2(28, 14)
+
+[sub_resource type="RectangleShape2D" id="TroughArea"]
+size = Vector2(18, 10)
+
+[sub_resource type="RectangleShape2D" id="HayBody"]
+size = Vector2(30, 10)
+
+[sub_resource type="CircleShape2D" id="CatArea"]
+radius = 8.0
 
 [sub_resource type="RectangleShape2D" id="DoorShape"]
 size = Vector2(20, 16)
@@ -34,6 +63,132 @@ size = Vector2(128, 96)
 script = ExtResource("1_bcbe7")
 
 [node name="Village" parent="." instance=ExtResource("10_level")]
+
+[node name="Decor" type="TileMapLayer" parent="."]
+texture_filter = 1
+tile_map_data = PackedByteArray("AAACAAQAAAAGAAMAAAACABAAAAAGAAMAAAACABoAAAAFAAMAAAACACcAAAAEAAMAAAACACwAAAAFAAMAAAADAAQAAAAGAAMAAAADAAkAAAAHAAMAAAADAAoAAAAEAAMAAAADABMAAAAIAAQAAAADABQAAAAIAAQAAAADABUAAAAIAAQAAAADABYAAAAIAAQAAAADABcAAAAIAAQAAAADABgAAAAIAAQAAAADABsAAAAFAAMAAAADABwAAAAFAAMAAAADACcAAAAHAAMAAAADACgAAAAEAAMAAAADACsAAAAGAAMAAAADACwAAAAEAAMAAAAEAAQAAAAEAAMAAAAEAAkAAAAHAAMAAAAEABAAAAAGAAMAAAAEABEAAAAGAAMAAAAEABMAAAAHAAQAAAAEABgAAAAHAAQAAAAEABkAAAADAAUAAAAEABsAAAAFAAMAAAAEABwAAAAFAAMAAAAEACgAAAAGAAMAAAAEACkAAAAEAAMAAAAEACoAAAAGAAMAAAAEACsAAAAGAAMAAAAEACwAAAAFAAMAAAAFABMAAAAHAAQAAAAFABgAAAAHAAQAAAAFABkAAAADAAUAAAAFACAAAAAEAAMAAAAFACYAAAAEAAMAAAAFACkAAAAEAAMAAAAGABMAAAAHAAQAAAAGABgAAAAHAAQAAAAGABsAAAAHAAMAAAAGACcAAAAGAAMAAAAGACgAAAAEAAMAAAAGACkAAAAGAAMAAAAGACwAAAAAAAUAAAAHABEAAAAEAAMAAAAHABMAAAAHAAQAAAAHABgAAAAHAAQAAAAHABoAAAAHAAMAAAAIABMAAAAHAAQAAAAIABgAAAAHAAQAAAAIABsAAAAHAAMAAAAIAB0AAAAEAAMAAAAIACIAAAAEAAMAAAAJABAAAAAEAAMAAAAJABMAAAAHAAQAAAAJABgAAAAHAAQAAAAJAB0AAAAEAAMAAAAJACAAAAAGAAMAAAAJACIAAAAGAAMAAAAKAA8AAAAEAAMAAAAKABAAAAAEAAMAAAAKABMAAAAIAAQAAAAKABQAAAAIAAQAAAAKABcAAAAIAAQAAAAKABgAAAAIAAQAAAAKACIAAAAGAAMAAAAKACQAAAAGAAMAAAAKACwAAAAHAAMAAAALABsAAAAEAAMAAAALACIAAAAGAAMAAAALACMAAAAGAAMAAAALACQAAAAGAAMAAAALACsAAAAHAAMAAAAMAAUAAAAEAAMAAAAMABMAAAAEAAMAAAAMABQAAAAGAAMAAAAMABYAAAAEAAMAAAAMABgAAAAHAAMAAAAMAB8AAAAFAAMAAAAMACEAAAAFAAMAAAAMACIAAAAGAAMAAAAMACsAAAAHAAMAAAAMACwAAAAEAAMAAAANABYAAAAHAAMAAAANAB4AAAAEAAMAAAANAB8AAAAFAAMAAAANACAAAAAFAAMAAAANACEAAAAFAAMAAAANACwAAAAFAAMAAAAOABcAAAAFAAMAAAAOAB0AAAAEAAMAAAAOAB8AAAAFAAMAAAAOACAAAAAFAAMAAAAPAAoAAAAFAAMAAAAPABoAAAAEAAMAAAAPAB0AAAAFAAMAAAAPACAAAAAGAAMAAAAPACsAAAAEAAMAAAAQAAYAAAAEAAMAAAAQACwAAAAEAAMAAAARAB8AAAAEAAMAAAATACwAAAAEAAMAAAAUAAcAAAAEAAMAAAAUACsAAAAEAAMAAAAUACwAAAAEAAMAAAAVAA4AAAAEAAMAAAAVABcAAAACAAUAAAAWAB0AAAAEAAMAAAAXABsAAAAEAAMAAAAXABwAAAAHAAMAAAAYAB0AAAAHAAMAAAAYACwAAAAEAAMAAAAZAAsAAAAEAAMAAAAZABwAAAAGAAMAAAAZAB0AAAAGAAMAAAAaAC0AAAAAAAUAAAAbAB0AAAAEAAMAAAAbACEAAAAAAAUAAAAbACgAAAAEAAMAAAAcAAUAAAAFAAMAAAAcAAkAAAAHAAMAAAAcABwAAAAEAAMAAAAdAAMAAAAFAAMAAAAdAAQAAAAEAAMAAAAdABUAAAAEAAMAAAAdACQAAAAEAAMAAAAdACcAAAAEAAMAAAA=")
+tile_set = ExtResource("14_tiles")
+
+[node name="Pen" type="Node2D" parent="."]
+
+[node name="Fence" type="StaticBody2D" parent="Pen"]
+
+[node name="Top" type="CollisionShape2D" parent="Pen/Fence"]
+position = Vector2(112, 312)
+shape = SubResource("PenH")
+
+[node name="Bottom" type="CollisionShape2D" parent="Pen/Fence"]
+position = Vector2(112, 392)
+shape = SubResource("PenH")
+
+[node name="Left" type="CollisionShape2D" parent="Pen/Fence"]
+position = Vector2(56, 352)
+shape = SubResource("PenV")
+
+[node name="RightTop" type="CollisionShape2D" parent="Pen/Fence"]
+position = Vector2(168, 320)
+shape = SubResource("PenGatePost")
+
+[node name="RightBottom" type="CollisionShape2D" parent="Pen/Fence"]
+position = Vector2(168, 384)
+shape = SubResource("PenGatePost")
+
+[node name="Coop" type="Sprite2D" parent="Pen"]
+texture_filter = 1
+position = Vector2(88, 329)
+texture = ExtResource("15_coop")
+
+[node name="Body" type="StaticBody2D" parent="Pen/Coop"]
+
+[node name="Shape" type="CollisionShape2D" parent="Pen/Coop/Body"]
+position = Vector2(0, 4)
+shape = SubResource("CoopBody")
+
+[node name="Trough" type="Area2D" parent="Pen"]
+position = Vector2(132, 330)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("19_trough")
+
+[node name="Shape" type="CollisionShape2D" parent="Pen/Trough"]
+shape = SubResource("TroughArea")
+
+[node name="EggSpots" type="Node2D" parent="Pen"]
+
+[node name="Egg1" type="Marker2D" parent="Pen/EggSpots"]
+position = Vector2(76, 352)
+
+[node name="Egg2" type="Marker2D" parent="Pen/EggSpots"]
+position = Vector2(102, 368)
+
+[node name="Egg3" type="Marker2D" parent="Pen/EggSpots"]
+position = Vector2(80, 374)
+
+[node name="HayBales" type="StaticBody2D" parent="Pen"]
+
+[node name="Shape" type="CollisionShape2D" parent="Pen/HayBales"]
+position = Vector2(80, 408)
+shape = SubResource("HayBody")
+
+[node name="Chicken1" type="Node2D" parent="Pen"]
+position = Vector2(110, 350)
+script = ExtResource("18_wander")
+sheet = ExtResource("16_chicken")
+frame_count = 3
+idle_frame = 2
+area = Rect2(68, 346, 88, 30)
+speed = 12.0
+
+[node name="Chicken2" type="Node2D" parent="Pen"]
+position = Vector2(140, 362)
+script = ExtResource("18_wander")
+sheet = ExtResource("16_chicken")
+frame_count = 3
+idle_frame = 2
+area = Rect2(68, 346, 88, 30)
+speed = 12.0
+
+[node name="Chicken3" type="Node2D" parent="Pen"]
+position = Vector2(124, 374)
+script = ExtResource("18_wander")
+sheet = ExtResource("16_chicken")
+frame_count = 3
+idle_frame = 2
+area = Rect2(68, 346, 88, 30)
+speed = 12.0
+
+[node name="Duck1" type="Node2D" parent="."]
+position = Vector2(150, 620)
+script = ExtResource("18_wander")
+sheet = ExtResource("17_duck")
+area = Rect2(124, 604, 104, 72)
+speed = 6.0
+shadow = false
+
+[node name="Duck2" type="Node2D" parent="."]
+position = Vector2(200, 660)
+script = ExtResource("18_wander")
+sheet = ExtResource("17_duck")
+area = Rect2(124, 604, 104, 72)
+speed = 6.0
+shadow = false
+
+[node name="Duck3" type="Node2D" parent="."]
+position = Vector2(350, 640)
+script = ExtResource("18_wander")
+sheet = ExtResource("17_duck")
+area = Rect2(300, 604, 104, 72)
+speed = 6.0
+shadow = false
+
+[node name="Mochi" type="Area2D" parent="."]
+position = Vector2(72, 124)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("20_cat")
+
+[node name="Shape" type="CollisionShape2D" parent="Mochi"]
+shape = SubResource("CatArea")
 
 [node name="Farm" type="Node2D" parent="."]
 
@@ -195,6 +350,9 @@ limit_right = 512
 limit_bottom = 768
 position_smoothing_enabled = true
 position_smoothing_speed = 6.0
+
+[node name="Butterflies" type="Node2D" parent="."]
+script = ExtResource("21_flies")
 
 [node name="DialogueBox" parent="." unique_id=104292372 instance=ExtResource("4_4jmdl")]
 

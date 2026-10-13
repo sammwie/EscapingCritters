@@ -20,6 +20,7 @@ func _ready() -> void:
 	for child in get_children():
 		if child is Sprite2D:
 			child.visible = false
+	add_child(SoftShadow.make(Vector2(0, 9), Vector2(7, 2.5)))
 	sprite = AnimatedSprite2D.new()
 	sprite.name = "CritterSprite"
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST

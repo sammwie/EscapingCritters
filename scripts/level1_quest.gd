@@ -2,20 +2,24 @@ class_name Level1Quest
 extends Node
 ## Level 1, "A normal day". Walks the player through a cozy farming day
 ## with an on-screen task list:
-##   talk to the Baker > plant > water > sleep > harvest > deliver wheat.
+##   talk to the Baker > feed chickens > collect eggs > plant > water >
+##   sleep > harvest > bring wheat and eggs to the Baker.
+## Petting Mochi the cat is a bonus task.
 ## Add one of these to every scene the player can be in (village and
 ## interiors). Progress is kept in static vars, so it survives walking
 ## in and out of buildings for the whole play session.
 ##
-## In the village it also looks for sibling nodes named "Baker" (an NPC)
-## and "Farm" (holding FarmPlot instances) and wires them up.
+## In the village it also looks for sibling nodes named "Baker" (an NPC),
+## "Farm" (holding FarmPlot instances) and "Pen/EggSpots" (Marker2Ds where
+## eggs appear once the chickens are fed) and wires them up.
 
-enum Stage { TALK_BAKER, PLANT, WATER, SLEEP, HARVEST, DELIVER, DONE }
+enum Stage { TALK_BAKER, FEED, EGGS, PLANT, WATER, SLEEP, HARVEST, DELIVER, DONE }
 
 const NEEDED := 3
 const FONT_REG := preload("res://art/fonts/Silkscreen-Regular.ttf")
 const FONT_BOLD := preload("res://art/fonts/Silkscreen-Bold.ttf")
 const WHEAT_ART := preload("res://art/Inventory items/wheat.png")
+const EGG_ART := preload("res://art/Inventory items/Normal Egg.png")
 const BAKER_LINES := {
 	Stage.TALK_BAKER: "res://dialogues/baker_l1_morning.tres",
 	Stage.DELIVER: "res://dialogues/baker_l1_delivery.tres",
@@ -33,11 +37,16 @@ static var planted := 0
 static var watered := 0
 static var harvested := 0
 static var plot_saves := {}   # plot name -> [state, growth, days_to_grow]
+static var fed := false
+static var eggs_taken: Array[String] = []
+static var cat_petted := false
 static var _version := 0      # bumps on any change so every scene's UI refreshes
 
 var _baker: Node = null
+var _egg_spots: Node = null
 var _plots: Array[FarmPlot] = []
 var _task_labels: Array[Label] = []
+var _bonus_label: Label
 var _seen_version := -1
 
 # Call this when a brand new game starts.
@@ -47,6 +56,19 @@ static func reset() -> void:
 	watered = 0
 	harvested = 0
 	plot_saves.clear()
+	fed = false
+	eggs_taken.clear()
+	cat_petted = false
+	_version += 1
+
+static func pet_cat() -> void:
+	cat_petted = true
+	_version += 1
+
+static func feed_chickens() -> void:
+	fed = true
+	if stage == Stage.FEED:
+		stage = Stage.EGGS
 	_version += 1
 
 # Called by Bed. Grows watered crops even though the field is in another scene.
@@ -79,6 +101,7 @@ func _process(_delta: float) -> void:
 func _setup_village() -> void:
 	var scene := get_parent()
 	_baker = scene.get_node_or_null("Baker")
+	_egg_spots = scene.get_node_or_null("Pen/EggSpots")
 	var farm := scene.get_node_or_null("Farm")
 	if farm:
 		for child in farm.get_children():
@@ -140,14 +163,48 @@ func _on_conversation_ended(npc_id: String) -> void:
 	if npc_id != "baker":
 		return
 	if stage == Stage.TALK_BAKER:
-		_set_stage(Stage.PLANT)
+		_set_stage(Stage.FEED)
 	elif stage == Stage.DELIVER:
 		_set_stage(Stage.DONE)
 		GameState.current_level = 2
-		_show_banner("Level 1 Complete", "Tomorrow, the bread will come out the same.")
+		_show_banner("Level 1 Complete", "The Baker gave you a warm loaf of bread.")
+
+func _spawn_eggs() -> void:
+	if _egg_spots == null or not fed:
+		return
+	for spot in _egg_spots.get_children():
+		if eggs_taken.has(String(spot.name)) or spot.get_child_count() > 0:
+			continue
+		var egg := Pickup.new()
+		egg.item_id = &"egg"
+		egg.collision_layer = 2
+		egg.collision_mask = 0
+		var shape := CollisionShape2D.new()
+		var circle := CircleShape2D.new()
+		circle.radius = 6.0
+		shape.shape = circle
+		egg.add_child(shape)
+		var art := Sprite2D.new()
+		art.texture = EGG_ART
+		art.scale = Vector2.ONE * 0.09
+		art.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		egg.add_child(art)
+		spot.add_child(egg)
+		egg.prompt_text = "Collect egg"
+		egg.picked_up.connect(_on_egg_taken.bind(String(spot.name)))
+		# Little pop so it's clear the hens just laid them.
+		egg.scale = Vector2.ZERO
+		create_tween().tween_property(egg, "scale", Vector2.ONE, 0.3).set_trans(Tween.TRANS_BACK)
+
+func _on_egg_taken(_item: StringName, spot_name: String) -> void:
+	eggs_taken.append(spot_name)
+	_check()
 
 func _check() -> void:
 	match stage:
+		Stage.EGGS:
+			if eggs_taken.size() >= NEEDED:
+				_set_stage(Stage.PLANT)
 		Stage.PLANT:
 			if planted >= NEEDED:
 				_set_stage(Stage.WATER)
@@ -169,17 +226,21 @@ func _set_stage(new_stage: int) -> void:
 func _refresh() -> void:
 	for plot in _plots:
 		plot.enabled = stage >= Stage.PLANT
+	_spawn_eggs()
+	get_tree().call_group("feed_troughs", "refresh")
 	if _baker and "dialogue" in _baker:
 		var path: String = BAKER_LINES.get(stage, BAKER_WAITING)
 		_baker.dialogue = load(path)
 
 	var tasks := [
 		"Say good morning to the Baker",
+		"Feed the chickens in the pen",
+		"Collect eggs from the coop (%d/%d)" % [mini(eggs_taken.size(), NEEDED), NEEDED],
 		"Plant wheat in the farm field (%d/%d)" % [mini(planted, NEEDED), NEEDED],
 		"Water the seeds (%d/%d)" % [mini(watered, NEEDED), NEEDED],
 		"Go home and sleep in your bed",
 		"Harvest the wheat (%d/%d)" % [mini(harvested, NEEDED), NEEDED],
-		"Bring the wheat to the Baker",
+		"Bring wheat and eggs to the Baker",
 	]
 	for i in _task_labels.size():
 		var label := _task_labels[i]
@@ -190,6 +251,8 @@ func _refresh() -> void:
 		else:
 			label.text = "[ ] " + tasks[i]
 			label.modulate = Color.WHITE
+	_bonus_label.text = ("[x] " if cat_petted else "[ ] ") + "Bonus: pet Mochi the cat"
+	_bonus_label.modulate = Color(1, 1, 1, 0.45) if cat_petted else Color.WHITE
 
 func _build_ui() -> void:
 	var layer := CanvasLayer.new()
@@ -222,13 +285,19 @@ func _build_ui() -> void:
 	title.add_theme_color_override("font_color", WOOD_DARK)
 	box.add_child(title)
 
-	for i in 6:
+	for i in 8:
 		var label := Label.new()
 		label.add_theme_font_override("font", FONT_REG)
 		label.add_theme_font_size_override("font_size", 20)
 		label.add_theme_color_override("font_color", INK)
 		box.add_child(label)
 		_task_labels.append(label)
+
+	_bonus_label = Label.new()
+	_bonus_label.add_theme_font_override("font", FONT_REG)
+	_bonus_label.add_theme_font_size_override("font_size", 20)
+	_bonus_label.add_theme_color_override("font_color", WOOD_DARK)
+	box.add_child(_bonus_label)
 
 func _show_banner(heading: String, sub: String) -> void:
 	var layer := CanvasLayer.new()

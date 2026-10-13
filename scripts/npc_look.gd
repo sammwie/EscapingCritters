@@ -30,6 +30,14 @@ func _ready() -> void:
 	_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_sprite.scale = Vector2.ONE * sprite_scale
 	set_facing(default_facing)
+	_add_shadow.call_deferred()
+
+func _add_shadow() -> void:
+	if _npc == null or _npc.has_node("Shadow"):
+		return
+	var shadow := SoftShadow.make(Vector2(0, 10), Vector2(7, 2.5))
+	_npc.add_child(shadow)
+	_npc.move_child(shadow, 0)  # draw it underneath the sprite
 
 func _process(_delta: float) -> void:
 	if not face_player or _npc == null:
