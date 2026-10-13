@@ -1,7 +1,7 @@
 extends Control
 
-@export var new_game_scene_path := "res://Game.tscn"
-@export var continue_scene_path := "res://Game.tscn"
+@export var new_game_scene_path := "res://scenes/test_main.tscn"
+@export var continue_scene_path := "res://scenes/test_main.tscn"
 
 func _ready() -> void:
 	$ButtonList/NewGameButton.pressed.connect(_on_new_game_pressed)
@@ -19,7 +19,7 @@ func _on_continue_pressed() -> void:
 	get_tree().change_scene_to_file(continue_scene_path)
 
 func _on_settings_pressed() -> void:
-	get_tree().change_scene_to_file("res://Settings.tscn")
+	get_tree().change_scene_to_file("res://settings.tscn")
 
 func _on_credits_pressed() -> void:
-	get_tree().change_scene_to_file("res://Credits.tscn")
+	get_tree().change_scene_to_file("res://credits.tscn")

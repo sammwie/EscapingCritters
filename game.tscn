@@ -1,15 +1,7 @@
 [gd_scene format=3 uid="uid://dp8h7s47tdtf0"]
 
-[ext_resource type="Script" uid="uid://lrf61qtca11e" path="res://player.gd" id="1_80nbo"]
-
-[sub_resource type="DrawableTexture2D" id="DrawableTexture2D_80nbo"]
+[ext_resource type="PackedScene" uid="uid://cvcw7h5ng6ydg" path="res://scenes/player.tscn" id="1_80nbo"]
 
 [node name="Game" type="Node2D" unique_id=1752681227]
 
-[node name="Player" type="CharacterBody2D" parent="." unique_id=165146159]
-script = ExtResource("1_80nbo")
-
-[node name="Sprite2D" type="Sprite2D" parent="Player" unique_id=1877562873]
-texture = SubResource("DrawableTexture2D_80nbo")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=498359515]
+[node name="Player" parent="." unique_id=2047223457 instance=ExtResource("1_80nbo")]
