@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://btddjwtj7riu"]
+
+[ext_resource type="Script" uid="uid://mx53weupddo4" path="res://scripts/glitch_overlay.gd" id="1_4fhv4"]
+[ext_resource type="Shader" uid="uid://cjpe0g05b17r0" path="res://glitch.gdshader" id="1_41nvn"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_etr18"]
+shader = ExtResource("1_41nvn")
+shader_parameter/intensity = 1.0
+shader_parameter/scan_line_jitter = 0.015
+shader_parameter/horizontal_shake = 0.01
+shader_parameter/color_drift = 0.03
+
+[node name="CanvasLayer" type="CanvasLayer" unique_id=560165375]
+layer = 100
+script = ExtResource("1_4fhv4")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1731136466]
+material = SubResource("ShaderMaterial_etr18")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
