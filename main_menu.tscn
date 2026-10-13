@@ -1,6 +1,52 @@
 [gd_scene format=3 uid="uid://dg80rsoj2n5yo"]
 
 [ext_resource type="Script" uid="uid://dsj6ghmgkhytx" path="res://main_menu.gd" id="1_06t4h"]
+[ext_resource type="Texture2D" uid="uid://coxkvbce8fl78" path="res://art/escaping_critters_main_menu_bg.png" id="2_7vrkn"]
+[ext_resource type="FontFile" uid="uid://15wntirmkjy2" path="res://art/fonts/Silkscreen-Regular.ttf" id="3_jix8l"]
+[ext_resource type="FontFile" uid="uid://dmcda54mdy7of" path="res://art/fonts/Silkscreen-Bold.ttf" id="4_glbon"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nlkkf"]
+bg_color = Color(0.6509804, 0.45490196, 0.28235295, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.47058824, 0.32156864, 0.20392157, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qe12f"]
+bg_color = Color(0.72156864, 0.5137255, 0.30980393, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.47058824, 0.32156864, 0.20392157, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wyt6d"]
+bg_color = Color(0.6509804, 0.45490196, 0.28235295, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.47058824, 0.32156864, 0.20392157, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8qtwp"]
+bg_color = Color(0.54901963, 0.38431373, 0.24313726, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.47058824, 0.32156864, 0.20392157, 1)
+
+[sub_resource type="Theme" id="Theme_xoh7v"]
+default_font = ExtResource("3_jix8l")
+default_font_size = 40
+Button/colors/font_color = Color(1, 0.972549, 0.9098039, 1)
+Button/colors/font_hover_color = Color(1, 0.972549, 0.9098039, 1)
+Button/colors/font_pressed_color = Color(1, 0.972549, 0.9098039, 1)
+Button/styles/focus = SubResource("StyleBoxFlat_nlkkf")
+Button/styles/hover = SubResource("StyleBoxFlat_qe12f")
+Button/styles/normal = SubResource("StyleBoxFlat_wyt6d")
+Button/styles/pressed = SubResource("StyleBoxFlat_8qtwp")
 
 [node name="MainMenu" type="Control" unique_id=2041680811]
 layout_mode = 3
@@ -11,43 +57,58 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_06t4h")
 
-[node name="ButtonList" type="VBoxContainer" parent="." unique_id=1354189989]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=722850134]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+texture = ExtResource("2_7vrkn")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="ButtonList" type="VBoxContainer" parent="." unique_id=1354189989]
+layout_mode = 1
+offset_left = 120.0
+offset_top = 440.0
+offset_right = 213.0
+offset_bottom = 576.0
+theme = SubResource("Theme_xoh7v")
+theme_override_constants/separation = 24
 
 [node name="NewGameButton" type="Button" parent="ButtonList" unique_id=277787290]
+custom_minimum_size = Vector2(400, 76)
 layout_mode = 2
 text = "New Game"
 
 [node name="ContinueButton" type="Button" parent="ButtonList" unique_id=649405313]
+custom_minimum_size = Vector2(400, 76)
 layout_mode = 2
 text = "Continue"
 
 [node name="SettingsButton" type="Button" parent="ButtonList" unique_id=1923399799]
+custom_minimum_size = Vector2(400, 76)
 layout_mode = 2
 text = "Settings"
 
 [node name="CreditsButton" type="Button" parent="ButtonList" unique_id=781216045]
+custom_minimum_size = Vector2(400, 76)
 layout_mode = 2
 text = "Credits"
 
 [node name="Label" type="Label" parent="." unique_id=1595242602]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.47916666
-anchor_top = 0.19753087
-anchor_right = 0.5138889
-anchor_bottom = 0.23302469
-grow_horizontal = 2
-text = "Escaping Critters"
-metadata/_edit_use_anchors_ = true
+offset_left = 120.0
+offset_top = 150.0
+offset_right = 188.0
+offset_bottom = 199.0
+theme_override_colors/font_color = Color(1, 0.972549, 0.9098039, 1)
+theme_override_colors/font_shadow_color = Color(0.22745098, 0.15686275, 0.11764706, 1)
+theme_override_constants/line_spacing = 8
+theme_override_constants/shadow_offset_x = 6
+theme_override_constants/shadow_offset_y = 6
+theme_override_fonts/font = ExtResource("4_glbon")
+theme_override_font_sizes/font_size = 96
+text = "ESCAPING
+CRITTERS"
