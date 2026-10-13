@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dxbcaovcv123k" path="res://scenes/dialogue_box.tscn" id="db"]
 [ext_resource type="PackedScene" uid="uid://cua0xve748asr" path="res://scenes/interact_prompt.tscn" id="ip"]
 [ext_resource type="Script" path="res://scripts/scene_door.gd" id="door"]
+[ext_resource type="Script" path="res://scripts/level1_quest.gd" id="quest"]
 
 [sub_resource type="RectangleShape2D" id="R0"]
 size = Vector2(256, 32)
@@ -115,3 +116,6 @@ zoom = Vector2(4, 4)
 [node name="DialogueBox" parent="." instance=ExtResource("db")]
 
 [node name="InteractPrompt" parent="." instance=ExtResource("ip")]
+
+[node name="Level1Quest" type="Node" parent="."]
+script = ExtResource("quest")

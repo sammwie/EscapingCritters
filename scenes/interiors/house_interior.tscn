@@ -5,6 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://dxbcaovcv123k" path="res://scenes/dialogue_box.tscn" id="db"]
 [ext_resource type="PackedScene" uid="uid://cua0xve748asr" path="res://scenes/interact_prompt.tscn" id="ip"]
 [ext_resource type="Script" path="res://scripts/scene_door.gd" id="door"]
+[ext_resource type="Script" path="res://scripts/level1_quest.gd" id="quest"]
+[ext_resource type="Script" path="res://scripts/bed.gd" id="bed"]
 
 [sub_resource type="RectangleShape2D" id="R0"]
 size = Vector2(256, 32)
@@ -38,6 +40,9 @@ size = Vector2(48, 12)
 
 [sub_resource type="RectangleShape2D" id="R10"]
 size = Vector2(16, 16)
+
+[sub_resource type="RectangleShape2D" id="BedShape"]
+size = Vector2(24, 40)
 
 [sub_resource type="RectangleShape2D" id="DoorShape"]
 size = Vector2(16, 12)
@@ -115,6 +120,15 @@ label = "Leave"
 [node name="Shape" type="CollisionShape2D" parent="ExitDoor"]
 shape = SubResource("DoorShape")
 
+[node name="Bed" type="Area2D" parent="."]
+position = Vector2(24, 64)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("bed")
+
+[node name="Shape" type="CollisionShape2D" parent="Bed"]
+shape = SubResource("BedShape")
+
 [node name="Spawn_inside" type="Marker2D" parent="."]
 position = Vector2(136, 164)
 metadata/facing = "north"
@@ -129,3 +143,6 @@ zoom = Vector2(4, 4)
 [node name="DialogueBox" parent="." instance=ExtResource("db")]
 
 [node name="InteractPrompt" parent="." instance=ExtResource("ip")]
+
+[node name="Level1Quest" type="Node" parent="."]
+script = ExtResource("quest")

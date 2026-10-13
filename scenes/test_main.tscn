@@ -9,9 +9,17 @@
 [ext_resource type="Resource" uid="uid://c118lohe8xwfg" path="res://dialogues/baker.tres" id="6_baker"]
 [ext_resource type="Resource" path="res://dialogues/villager_01.tres" id="7_vil01"]
 [ext_resource type="Resource" path="res://dialogues/villager_02.tres" id="8_vil02"]
-[ext_resource type="Script" uid="uid://bcmywlq2hce5d" path="res://scripts/npc_look.gd" id="9_look"]
+[ext_resource type="Script" path="res://scripts/npc_look.gd" id="9_look"]
 [ext_resource type="PackedScene" path="res://levels/level_0.tscn" id="10_level"]
-[ext_resource type="Script" uid="uid://iwyytpx0fac3" path="res://scripts/scene_door.gd" id="11_door"]
+[ext_resource type="Script" path="res://scripts/scene_door.gd" id="11_door"]
+[ext_resource type="PackedScene" uid="uid://bolbbnnuwom14" path="res://scenes/farm_plot.tscn" id="12_plot"]
+[ext_resource type="Script" path="res://scripts/level1_quest.gd" id="13_quest"]
+
+[sub_resource type="RectangleShape2D" id="DoorShape"]
+size = Vector2(20, 16)
+
+[sub_resource type="CircleShape2D" id="NPCBody"]
+radius = 4.0
 
 [sub_resource type="RectangleShape2D" id="WallH"]
 size = Vector2(512, 32)
@@ -22,149 +30,164 @@ size = Vector2(32, 768)
 [sub_resource type="RectangleShape2D" id="LakeHalf"]
 size = Vector2(128, 96)
 
-[sub_resource type="RectangleShape2D" id="DoorShape"]
-size = Vector2(20, 16)
-
-[sub_resource type="CircleShape2D" id="NPCBody"]
-radius = 6.0
-
 [node name="TestMain" type="Node2D" unique_id=1053836896]
 script = ExtResource("1_bcbe7")
 
-[node name="Village" parent="." unique_id=95715005 instance=ExtResource("10_level")]
+[node name="Village" parent="." instance=ExtResource("10_level")]
 
-[node name="Bounds" type="StaticBody2D" parent="." unique_id=1290607166]
+[node name="Farm" type="Node2D" parent="."]
 
-[node name="Top" type="CollisionShape2D" parent="Bounds" unique_id=1212349612]
+[node name="Plot1" parent="Farm" instance=ExtResource("12_plot")]
+position = Vector2(72, 200)
+crop_id = &"wheat"
+days_to_grow = 1
+size = Vector2(16, 16)
+
+[node name="Plot2" parent="Farm" instance=ExtResource("12_plot")]
+position = Vector2(104, 200)
+crop_id = &"wheat"
+days_to_grow = 1
+size = Vector2(16, 16)
+
+[node name="Plot3" parent="Farm" instance=ExtResource("12_plot")]
+position = Vector2(136, 200)
+crop_id = &"wheat"
+days_to_grow = 1
+size = Vector2(16, 16)
+
+[node name="Bounds" type="StaticBody2D" parent="."]
+
+[node name="Top" type="CollisionShape2D" parent="Bounds"]
 position = Vector2(256, 16)
 shape = SubResource("WallH")
 
-[node name="Bottom" type="CollisionShape2D" parent="Bounds" unique_id=1634877430]
+[node name="Bottom" type="CollisionShape2D" parent="Bounds"]
 position = Vector2(256, 752)
 shape = SubResource("WallH")
 
-[node name="Left" type="CollisionShape2D" parent="Bounds" unique_id=984867161]
+[node name="Left" type="CollisionShape2D" parent="Bounds"]
 position = Vector2(16, 384)
 shape = SubResource("WallV")
 
-[node name="Right" type="CollisionShape2D" parent="Bounds" unique_id=2059255083]
+[node name="Right" type="CollisionShape2D" parent="Bounds"]
 position = Vector2(496, 384)
 shape = SubResource("WallV")
 
-[node name="LakeLeft" type="CollisionShape2D" parent="Bounds" unique_id=808210377]
+[node name="LakeLeft" type="CollisionShape2D" parent="Bounds"]
 position = Vector2(176, 640)
 shape = SubResource("LakeHalf")
 
-[node name="LakeRight" type="CollisionShape2D" parent="Bounds" unique_id=406624343]
+[node name="LakeRight" type="CollisionShape2D" parent="Bounds"]
 position = Vector2(352, 640)
 shape = SubResource("LakeHalf")
 
-[node name="Doors" type="Node2D" parent="." unique_id=467637334]
+[node name="Doors" type="Node2D" parent="."]
 
-[node name="HouseDoor" type="Area2D" parent="Doors" unique_id=155340338]
+[node name="HouseDoor" type="Area2D" parent="Doors"]
 position = Vector2(130, 150)
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("11_door")
-spawn_at = "Spawn_inside"
 target_scene = "res://scenes/interiors/house_interior.tscn"
+spawn_at = "Spawn_inside"
 
-[node name="Shape" type="CollisionShape2D" parent="Doors/HouseDoor" unique_id=1161367229]
+[node name="Shape" type="CollisionShape2D" parent="Doors/HouseDoor"]
 shape = SubResource("DoorShape")
 
-[node name="Spawn_house_outside" type="Marker2D" parent="Doors" unique_id=1150673232]
+[node name="Spawn_house_outside" type="Marker2D" parent="Doors"]
 position = Vector2(130, 164)
 metadata/facing = "south"
 
-[node name="BakeryDoor" type="Area2D" parent="Doors" unique_id=65220704]
+[node name="BakeryDoor" type="Area2D" parent="Doors"]
 position = Vector2(377, 150)
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("11_door")
-spawn_at = "Spawn_inside"
 target_scene = "res://scenes/interiors/bakery_interior.tscn"
+spawn_at = "Spawn_inside"
 
-[node name="Shape" type="CollisionShape2D" parent="Doors/BakeryDoor" unique_id=38946727]
+[node name="Shape" type="CollisionShape2D" parent="Doors/BakeryDoor"]
 shape = SubResource("DoorShape")
 
-[node name="Spawn_bakery_outside" type="Marker2D" parent="Doors" unique_id=275005529]
+[node name="Spawn_bakery_outside" type="Marker2D" parent="Doors"]
 position = Vector2(377, 164)
 metadata/facing = "south"
 
-[node name="ButcherDoor" type="Area2D" parent="Doors" unique_id=2111966159]
+[node name="ButcherDoor" type="Area2D" parent="Doors"]
 position = Vector2(220, 278)
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("11_door")
-spawn_at = "Spawn_inside"
 target_scene = "res://scenes/interiors/butcher_interior.tscn"
+spawn_at = "Spawn_inside"
 
-[node name="Shape" type="CollisionShape2D" parent="Doors/ButcherDoor" unique_id=685147952]
+[node name="Shape" type="CollisionShape2D" parent="Doors/ButcherDoor"]
 shape = SubResource("DoorShape")
 
-[node name="Spawn_butcher_outside" type="Marker2D" parent="Doors" unique_id=1598488880]
+[node name="Spawn_butcher_outside" type="Marker2D" parent="Doors"]
 position = Vector2(220, 292)
 metadata/facing = "south"
 
 [node name="Butcher" parent="." unique_id=1016802625 instance=ExtResource("2_31pel")]
 position = Vector2(248, 284)
-dialogue = ExtResource("3_31pel")
 prompt_text = "Talk"
+dialogue = ExtResource("3_31pel")
 
-[node name="NPCLook" type="Node" parent="Butcher" unique_id=475055331]
+[node name="NPCLook" type="Node" parent="Butcher"]
 script = ExtResource("9_look")
 art_folder = "res://art/butcher"
 
-[node name="Body" type="StaticBody2D" parent="Butcher" unique_id=1544287009]
+[node name="Body" type="StaticBody2D" parent="Butcher"]
 
-[node name="Shape" type="CollisionShape2D" parent="Butcher/Body" unique_id=1497198133]
+[node name="Shape" type="CollisionShape2D" parent="Butcher/Body"]
 shape = SubResource("NPCBody")
 
-[node name="Baker" parent="." unique_id=1393690405 instance=ExtResource("2_31pel")]
+[node name="Baker" parent="." instance=ExtResource("2_31pel")]
 position = Vector2(372, 158)
-dialogue = ExtResource("6_baker")
 prompt_text = "Talk"
+dialogue = ExtResource("6_baker")
 
-[node name="NPCLook" type="Node" parent="Baker" unique_id=1770667677]
+[node name="NPCLook" type="Node" parent="Baker"]
 script = ExtResource("9_look")
 art_folder = "res://art/baker"
 
-[node name="Body" type="StaticBody2D" parent="Baker" unique_id=121352657]
+[node name="Body" type="StaticBody2D" parent="Baker"]
 
-[node name="Shape" type="CollisionShape2D" parent="Baker/Body" unique_id=255899544]
+[node name="Shape" type="CollisionShape2D" parent="Baker/Body"]
 shape = SubResource("NPCBody")
 
-[node name="Villager01" parent="." unique_id=755879584 instance=ExtResource("2_31pel")]
+[node name="Villager01" parent="." instance=ExtResource("2_31pel")]
 position = Vector2(189, 152)
-dialogue = ExtResource("7_vil01")
 prompt_text = "Talk"
+dialogue = ExtResource("7_vil01")
 
-[node name="NPCLook" type="Node" parent="Villager01" unique_id=1786864485]
+[node name="NPCLook" type="Node" parent="Villager01"]
 script = ExtResource("9_look")
+art_folder = "res://art/villager-01"
 
-[node name="Body" type="StaticBody2D" parent="Villager01" unique_id=1059851865]
+[node name="Body" type="StaticBody2D" parent="Villager01"]
 
-[node name="Shape" type="CollisionShape2D" parent="Villager01/Body" unique_id=1212802938]
+[node name="Shape" type="CollisionShape2D" parent="Villager01/Body"]
 shape = SubResource("NPCBody")
 
-[node name="Villager02" parent="." unique_id=695013566 instance=ExtResource("2_31pel")]
-position = Vector2(392, 410)
-dialogue = ExtResource("8_vil02")
+[node name="Villager02" parent="." instance=ExtResource("2_31pel")]
+position = Vector2(446, 404)
 prompt_text = "Talk"
+dialogue = ExtResource("8_vil02")
 
-[node name="NPCLook" type="Node" parent="Villager02" unique_id=1836321050]
+[node name="NPCLook" type="Node" parent="Villager02"]
 script = ExtResource("9_look")
 art_folder = "res://art/villager-02"
 
-[node name="Body" type="StaticBody2D" parent="Villager02" unique_id=68970314]
+[node name="Body" type="StaticBody2D" parent="Villager02"]
 
-[node name="Shape" type="CollisionShape2D" parent="Villager02/Body" unique_id=964092857]
+[node name="Shape" type="CollisionShape2D" parent="Villager02/Body"]
 shape = SubResource("NPCBody")
 
 [node name="Player" parent="." unique_id=2047223457 instance=ExtResource("1_7yu4j")]
 position = Vector2(321, 340)
 
-[node name="Camera2D" type="Camera2D" parent="Player" unique_id=1442722588]
+[node name="Camera2D" type="Camera2D" parent="Player"]
 zoom = Vector2(4, 4)
 limit_left = 0
 limit_top = 0
@@ -176,3 +199,6 @@ position_smoothing_speed = 6.0
 [node name="DialogueBox" parent="." unique_id=104292372 instance=ExtResource("4_4jmdl")]
 
 [node name="InteractPrompt" parent="." unique_id=1461623571 instance=ExtResource("5_31pel")]
+
+[node name="Level1Quest" type="Node" parent="."]
+script = ExtResource("13_quest")
