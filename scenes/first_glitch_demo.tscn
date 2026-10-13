@@ -1,0 +1,120 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/egg_test.tscn" id="1_eggs"]
+[ext_resource type="Script" path="res://scripts/first_glitch_demo.gd" id="2_script"]
+[ext_resource type="Texture2D" path="res://art/escaping_critters_main_menu_bg.png" id="3_town"]
+[ext_resource type="Script" path="res://scripts/critter_art.gd" id="4_critter"]
+[ext_resource type="PackedScene" path="res://scenes/demo_villager.tscn" id="5_villager"]
+[ext_resource type="Resource" path="res://dialogues/baker.tres" id="6_baker_dialogue"]
+[ext_resource type="Resource" path="res://dialogues/butcher.tres" id="7_butcher_dialogue"]
+[ext_resource type="Texture2D" path="res://art/butcher/south.png" id="8_butcher"]
+[ext_resource type="Texture2D" path="res://art/villager-01/south.png" id="9_neighbor"]
+[ext_resource type="Texture2D" path="res://art/villager-02/rotations/south.png" id="10_neighbor"]
+[ext_resource type="FontFile" path="res://art/fonts/Silkscreen-Regular.ttf" id="11_font"]
+[ext_resource type="PackedScene" path="res://scenes/dialogue_box.tscn" id="12_dialogue"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_notice"]
+bg_color = Color(0.16, 0.13, 0.10, 0.92)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.72, 0.52, 0.31, 1)
+content_margin_left = 28.0
+content_margin_top = 20.0
+content_margin_right = 28.0
+content_margin_bottom = 20.0
+
+[sub_resource type="Theme" id="Theme_village"]
+default_font = ExtResource("11_font")
+default_font_size = 26
+Label/colors/font_color = Color(1, 0.96, 0.84, 1)
+
+[node name="FirstGlitchDemo" type="Node2D"]
+texture_filter = 1
+script = ExtResource("2_script")
+
+[node name="TownBackdrop" type="Sprite2D" parent="."]
+texture = ExtResource("3_town")
+centered = false
+
+[node name="EggTest" parent="." instance=ExtResource("1_eggs")]
+
+[node name="CritterArt" type="AnimatedSprite2D" parent="EggTest/Player"]
+position = Vector2(0, -24)
+scale = Vector2(5, 5)
+script = ExtResource("4_critter")
+
+[node name="Villagers" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Baker" parent="Villagers" instance=ExtResource("5_villager")]
+position = Vector2(1080, 930)
+dialogue = ExtResource("6_baker_dialogue")
+prompt_text = "Talk to the baker"
+
+[node name="Butcher" parent="Villagers" instance=ExtResource("5_villager")]
+position = Vector2(1450, 950)
+dialogue = ExtResource("7_butcher_dialogue")
+prompt_text = "Talk to the butcher"
+
+[node name="Sprite2D" parent="Villagers/Butcher" index="0"]
+texture = ExtResource("8_butcher")
+
+[node name="Neighbor" parent="Villagers" instance=ExtResource("5_villager")]
+position = Vector2(1230, 1020)
+enabled = false
+
+[node name="Sprite2D" parent="Villagers/Neighbor" index="0"]
+texture = ExtResource("9_neighbor")
+
+[node name="Neighbor2" parent="Villagers" instance=ExtResource("5_villager")]
+position = Vector2(1690, 970)
+enabled = false
+
+[node name="Sprite2D" parent="Villagers/Neighbor2" index="0"]
+texture = ExtResource("10_neighbor")
+
+[node name="HUD" type="CanvasLayer" parent="."]
+layer = 20
+
+[node name="Notice" type="PanelContainer" parent="HUD"]
+offset_left = 48.0
+offset_top = 40.0
+offset_right = 1010.0
+offset_bottom = 220.0
+mouse_filter = 2
+theme = SubResource("Theme_village")
+theme_override_styles/panel = SubResource("StyleBox_notice")
+
+[node name="Lines" type="VBoxContainer" parent="HUD/Notice"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="Status" type="Label" parent="HUD/Notice/Lines"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 34
+text = "A QUIET MORNING"
+
+[node name="Objective" type="Label" parent="HUD/Notice/Lines"]
+layout_mode = 2
+text = "Collect four real eggs in the meadow.  0 / 4"
+
+[node name="Controls" type="Label" parent="HUD/Notice/Lines"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "WASD move   E interact   R start fresh   Esc menu"
+
+[node name="Hint" type="Label" parent="HUD/Notice/Lines"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "The darker eggs are fake. The townsfolk are nearby."
+
+[node name="DialogueBox" parent="." instance=ExtResource("12_dialogue")]
+layer = 30
+
+[editable path="EggTest"]
+[editable path="Villagers/Butcher"]
+[editable path="Villagers/Neighbor"]
+[editable path="Villagers/Neighbor2"]

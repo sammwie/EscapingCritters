@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/npc.tscn" id="1_npc"]
+[ext_resource type="Texture2D" path="res://art/baker/rotations/south.png" id="2_art"]
+
+[node name="Villager" instance=ExtResource("1_npc")]
+texture_filter = 1
+prompt_text = "Talk"
+
+[node name="Sprite2D" parent="." index="0"]
+position = Vector2(0, -24)
+scale = Vector2(5, 5)
+texture = ExtResource("2_art")

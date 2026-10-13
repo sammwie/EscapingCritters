@@ -1,9 +1,10 @@
 extends Node
-## Autoload as "GameState".
 
 signal corruption_changed(stage: int)
 signal day_changed(day: int)
 signal puzzle_solved(puzzle_id: String)
+
+const FIRST_CORRUPTION_PUZZLE_ID := "farm_eggs"
 
 var current_level := 1
 
@@ -37,6 +38,8 @@ func mark_solved(puzzle_id: String) -> void:
 		return
 
 	solved_puzzles[puzzle_id] = true
+	if puzzle_id == FIRST_CORRUPTION_PUZZLE_ID:
+		set_corruption_stage(maxi(corruption_stage, 1))
 	puzzle_solved.emit(puzzle_id)
 
 

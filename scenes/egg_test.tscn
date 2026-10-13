@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://cjm7foogx7s5d" path="res://scenes/egg.tscn" id="2_4l4ug"]
 [ext_resource type="PackedScene" uid="uid://cvcw7h5ng6ydg" path="res://scenes/player.tscn" id="3_8b2lv"]
 [ext_resource type="PackedScene" uid="uid://cua0xve748asr" path="res://scenes/interact_prompt.tscn" id="4_o56so"]
+[ext_resource type="PackedScene" path="res://scenes/corruption_effect.tscn" id="5_effect"]
 
 [node name="EggTest" type="Node2D" unique_id=790228215]
 
@@ -34,3 +35,6 @@ is_safe = false
 position = Vector2(300, 300)
 
 [node name="InteractPrompt" parent="." unique_id=1461623571 instance=ExtResource("4_o56so")]
+layer = 20
+
+[node name="CorruptionEffect" parent="." instance=ExtResource("5_effect")]

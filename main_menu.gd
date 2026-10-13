@@ -1,6 +1,6 @@
 extends Control
 
-@export var new_game_scene_path := "res://scenes/test_main.tscn"
+@export var new_game_scene_path := "res://scenes/first_glitch_demo.tscn"
 @export var continue_scene_path := "res://scenes/test_main.tscn"
 
 func _ready() -> void:
@@ -13,6 +13,7 @@ func _ready() -> void:
 	$ButtonList/ContinueButton.disabled = not FileAccess.file_exists("user://save.dat")
 
 func _on_new_game_pressed() -> void:
+	GameState.new_playthrough()
 	get_tree().change_scene_to_file(new_game_scene_path)
 
 func _on_continue_pressed() -> void:
