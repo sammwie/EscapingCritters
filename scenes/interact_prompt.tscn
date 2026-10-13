@@ -1,18 +1,48 @@
 [gd_scene format=3 uid="uid://cua0xve748asr"]
 
 [ext_resource type="Script" uid="uid://cwasbd6tvlvgx" path="res://scripts/interact_prompt.gd" id="1_57u52"]
+[ext_resource type="FontFile" uid="uid://15wntirmkjy2" path="res://art/fonts/Silkscreen-Regular.ttf" id="font_reg"]
+[ext_resource type="FontFile" uid="uid://dmcda54mdy7of" path="res://art/fonts/Silkscreen-Bold.ttf" id="font_bold"]
+
+[sub_resource type="StyleBoxFlat" id="WoodSign"]
+bg_color = Color(0.6509804, 0.45490196, 0.28235295, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.47058824, 0.32156864, 0.20392157, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+content_margin_left = 28.0
+content_margin_top = 12.0
+content_margin_right = 28.0
+content_margin_bottom = 12.0
+shadow_color = Color(0.22745098, 0.15686275, 0.11764706, 0.45)
+shadow_size = 4
+shadow_offset = Vector2(0, 4)
 
 [node name="InteractPrompt" type="CanvasLayer" unique_id=1461623571]
 script = ExtResource("1_57u52")
 
 [node name="PromptLabel" type="Label" parent="." unique_id=937981401]
 unique_name_in_owner = true
-anchors_preset = 12
+anchors_preset = 7
+anchor_left = 0.5
 anchor_top = 1.0
-anchor_right = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
-offset_top = -128.0
-offset_bottom = -105.0
+offset_top = -110.0
+offset_bottom = -60.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_colors/font_color = Color(1, 0.972549, 0.9098039, 1)
+theme_override_colors/font_shadow_color = Color(0.22745098, 0.15686275, 0.11764706, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("font_bold")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("WoodSign")
 horizontal_alignment = 1
+vertical_alignment = 1

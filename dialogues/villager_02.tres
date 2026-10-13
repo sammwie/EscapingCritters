@@ -1,0 +1,51 @@
+[gd_resource type="Resource" script_class="DialogueData" format=3 uid="uid://fhvb0rv6ylek"]
+
+[ext_resource type="Script" uid="uid://bilm6gbrl1knw" path="res://scripts/dialogue_data.gd" id="1_data"]
+[ext_resource type="Script" uid="uid://cuib8na2qq78n" path="res://scripts/dialogue_line.gd" id="2_line"]
+
+[sub_resource type="Resource" id="Resource_1"]
+script = ExtResource("2_line")
+speaker = "Villager"
+text = "New face! We don't get many of those. Actually, we never do."
+
+[sub_resource type="Resource" id="Resource_2"]
+script = ExtResource("2_line")
+speaker = "Villager"
+text = "You'll love it here. Nobody ever wants to leave."
+
+[sub_resource type="Resource" id="Resource_3"]
+script = ExtResource("2_line")
+speaker = "Villager"
+text = "I tried walking past the fields once. I ended up right back here."
+min_corruption = 2
+
+[sub_resource type="Resource" id="Resource_4"]
+script = ExtResource("2_line")
+speaker = "Villager"
+text = "You shouldn't ask so many questions. Stay. Stay. Stay."
+min_corruption = 3
+glitch = true
+
+[sub_resource type="Resource" id="Resource_5"]
+script = ExtResource("2_line")
+speaker = "Villager"
+text = "Settling in alright?"
+
+[sub_resource type="Resource" id="Resource_6"]
+script = ExtResource("2_line")
+speaker = "Villager"
+text = "You look tired of this place. You shouldn't be."
+min_corruption = 2
+
+[sub_resource type="Resource" id="Resource_7"]
+script = ExtResource("2_line")
+speaker = "Villager"
+text = "Nobody ever leaves. Nobody ever leaves."
+min_corruption = 3
+glitch = true
+
+[resource]
+script = ExtResource("1_data")
+npc_id = "villager_02"
+lines = Array[ExtResource("2_line")]([SubResource("Resource_1"), SubResource("Resource_2"), SubResource("Resource_3"), SubResource("Resource_4")])
+repeat_lines = Array[ExtResource("2_line")]([SubResource("Resource_5"), SubResource("Resource_6"), SubResource("Resource_7")])

@@ -1,0 +1,117 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://art/interiors/bakery_interior.png" id="bg"]
+[ext_resource type="PackedScene" uid="uid://cvcw7h5ng6ydg" path="res://scenes/player.tscn" id="p"]
+[ext_resource type="PackedScene" uid="uid://dxbcaovcv123k" path="res://scenes/dialogue_box.tscn" id="db"]
+[ext_resource type="PackedScene" uid="uid://cua0xve748asr" path="res://scenes/interact_prompt.tscn" id="ip"]
+[ext_resource type="Script" path="res://scripts/scene_door.gd" id="door"]
+
+[sub_resource type="RectangleShape2D" id="R0"]
+size = Vector2(256, 32)
+
+[sub_resource type="RectangleShape2D" id="R1"]
+size = Vector2(16, 192)
+
+[sub_resource type="RectangleShape2D" id="R2"]
+size = Vector2(16, 192)
+
+[sub_resource type="RectangleShape2D" id="R3"]
+size = Vector2(256, 16)
+
+[sub_resource type="RectangleShape2D" id="R4"]
+size = Vector2(128, 16)
+
+[sub_resource type="RectangleShape2D" id="R5"]
+size = Vector2(56, 12)
+
+[sub_resource type="RectangleShape2D" id="R6"]
+size = Vector2(48, 16)
+
+[sub_resource type="RectangleShape2D" id="R7"]
+size = Vector2(32, 16)
+
+[sub_resource type="RectangleShape2D" id="R8"]
+size = Vector2(32, 14)
+
+[sub_resource type="RectangleShape2D" id="DoorShape"]
+size = Vector2(16, 12)
+
+[node name="BakeryInterior" type="Node2D"]
+
+[node name="Darkness" type="ColorRect" parent="."]
+offset_left = -600.0
+offset_top = -400.0
+offset_right = 856.0
+offset_bottom = 592.0
+mouse_filter = 2
+color = Color(0.0784, 0.0588, 0.0471, 1)
+
+[node name="Background" type="Sprite2D" parent="."]
+texture = ExtResource("bg")
+centered = false
+scale = Vector2(0.5, 0.5)
+
+[node name="Walls" type="StaticBody2D" parent="."]
+
+[node name="Wall0" type="CollisionShape2D" parent="Walls"]
+position = Vector2(128, 16)
+shape = SubResource("R0")
+
+[node name="Wall1" type="CollisionShape2D" parent="Walls"]
+position = Vector2(8, 96)
+shape = SubResource("R1")
+
+[node name="Wall2" type="CollisionShape2D" parent="Walls"]
+position = Vector2(248, 96)
+shape = SubResource("R2")
+
+[node name="Wall3" type="CollisionShape2D" parent="Walls"]
+position = Vector2(128, 184)
+shape = SubResource("R3")
+
+[node name="Wall4" type="CollisionShape2D" parent="Walls"]
+position = Vector2(80, 104)
+shape = SubResource("R4")
+
+[node name="Wall5" type="CollisionShape2D" parent="Walls"]
+position = Vector2(92, 72)
+shape = SubResource("R5")
+
+[node name="Wall6" type="CollisionShape2D" parent="Walls"]
+position = Vector2(216, 40)
+shape = SubResource("R6")
+
+[node name="Wall7" type="CollisionShape2D" parent="Walls"]
+position = Vector2(32, 40)
+shape = SubResource("R7")
+
+[node name="Wall8" type="CollisionShape2D" parent="Walls"]
+position = Vector2(208, 136)
+shape = SubResource("R8")
+
+[node name="ExitDoor" type="Area2D" parent="."]
+position = Vector2(128, 182)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("door")
+target_scene = "res://scenes/test_main.tscn"
+spawn_at = "Spawn_bakery_outside"
+label = "Leave"
+
+[node name="Shape" type="CollisionShape2D" parent="ExitDoor"]
+shape = SubResource("DoorShape")
+
+[node name="Spawn_inside" type="Marker2D" parent="."]
+position = Vector2(128, 164)
+metadata/facing = "north"
+
+[node name="Player" parent="." instance=ExtResource("p")]
+position = Vector2(128, 164)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(128, 96)
+zoom = Vector2(4, 4)
+
+[node name="DialogueBox" parent="." instance=ExtResource("db")]
+
+[node name="InteractPrompt" parent="." instance=ExtResource("ip")]
