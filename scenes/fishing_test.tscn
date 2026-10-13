@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://sujib1fks4t5"]
+
+[ext_resource type="PackedScene" uid="uid://cbbblps2hp85q" path="res://scenes/fishing_spot.tscn" id="1_qoq6s"]
+[ext_resource type="PackedScene" uid="uid://cvcw7h5ng6ydg" path="res://scenes/player.tscn" id="2_exq3g"]
+[ext_resource type="PackedScene" uid="uid://cua0xve748asr" path="res://scenes/interact_prompt.tscn" id="3_w8p4s"]
+
+[node name="FishingTest" type="Node2D" unique_id=616581925]
+
+[node name="FishingSpot" parent="." unique_id=670462628 instance=ExtResource("1_qoq6s")]
+position = Vector2(500, 300)
+
+[node name="Player" parent="." unique_id=2047223457 instance=ExtResource("2_exq3g")]
+position = Vector2(300, 300)
+
+[node name="InteractPrompt" parent="." unique_id=1461623571 instance=ExtResource("3_w8p4s")]

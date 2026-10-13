@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://ucutbk8pmsh5"]
+
+[ext_resource type="Script" uid="uid://dwb38j2gxc8ub" path="res://scenes/notice_board.gd" id="1_rw1qp"]
+[ext_resource type="Script" uid="uid://b22pmdky42o3f" path="res://scenes/town_square.gd" id="2_rbmdp"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_etr18"]
+size = Vector2(48, 32)
+
+[node name="NoticeBoard" type="Area2D" unique_id=1180636645]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_rw1qp")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1328481543]
+shape = SubResource("RectangleShape2D_etr18")
+
+[node name="TownSquare" type="Node" parent="." unique_id=847273531]
+script = ExtResource("2_rbmdp")
+metadata/_custom_type_script = "uid://b22pmdky42o3f"

@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://bupwmmlfbh7jd"]
+
+[ext_resource type="PackedScene" uid="uid://cvcw7h5ng6ydg" path="res://scenes/player.tscn" id="1_lk1xq"]
+[ext_resource type="PackedScene" uid="uid://dxbcaovcv123k" path="res://scenes/dialogue_box.tscn" id="2_eevre"]
+[ext_resource type="PackedScene" uid="uid://cua0xve748asr" path="res://scenes/interact_prompt.tscn" id="3_4afr2"]
+[ext_resource type="PackedScene" uid="uid://bl757xqplvkk6" path="res://scenes/treehouse_bed.tscn" id="4_cunn1"]
+[ext_resource type="PackedScene" uid="uid://ucutbk8pmsh5" path="res://scenes/notice_board.tscn" id="5_svlve"]
+[ext_resource type="Script" uid="uid://c3pbb5fhvd235" path="res://scripts/farm_manager.gd" id="6_eevre"]
+
+[node name="SquareTest" type="Node2D" unique_id=941034835]
+
+[node name="Player" parent="." unique_id=2047223457 instance=ExtResource("1_lk1xq")]
+position = Vector2(300, 300)
+
+[node name="DialogueBox" parent="." unique_id=104292372 instance=ExtResource("2_eevre")]
+
+[node name="InteractPrompt" parent="." unique_id=1461623571 instance=ExtResource("3_4afr2")]
+
+[node name="TreehouseBed" parent="." unique_id=109139477 instance=ExtResource("4_cunn1")]
+position = Vector2(700, 300)
+farm_manager_path = NodePath("../FarmManager")
+
+[node name="NoticeBoard" parent="." unique_id=1180636645 instance=ExtResource("5_svlve")]
+position = Vector2(500, 300)
+
+[node name="FarmManager" type="Node" parent="." unique_id=171442089]
+script = ExtResource("6_eevre")
+metadata/_custom_type_script = "uid://c3pbb5fhvd235"

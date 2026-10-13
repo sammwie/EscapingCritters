@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://smpktk81kper"]
+
+[ext_resource type="Script" uid="uid://b7obg3ydfh7c2" path="res://scripts/rock.gd" id="1_1di36"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_etr18"]
+radius = 12.0
+
+[node name="Rock" type="Area2D" unique_id=897940141]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_1di36")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1047854528]
+shape = SubResource("CircleShape2D_etr18")

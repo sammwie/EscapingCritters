@@ -1,0 +1,51 @@
+[gd_resource type="Resource" script_class="DialogueData" format=3 uid="uid://c118lohe8xwfg"]
+
+[ext_resource type="Script" uid="uid://bilm6gbrl1knw" path="res://scripts/dialogue_data.gd" id="1_data"]
+[ext_resource type="Script" uid="uid://cuib8na2qq78n" path="res://scripts/dialogue_line.gd" id="2_line"]
+
+[sub_resource type="Resource" id="Resource_1"]
+script = ExtResource("2_line")
+speaker = "Baker"
+text = "Good morning! Fresh bread's just out of the oven."
+
+[sub_resource type="Resource" id="Resource_2"]
+script = ExtResource("2_line")
+speaker = "Baker"
+text = "I'm up before the sun every day. Somebody has to be."
+
+[sub_resource type="Resource" id="Resource_3"]
+script = ExtResource("2_line")
+speaker = "Baker"
+text = "Funny... I don't remember baking this loaf."
+min_corruption = 2
+
+[sub_resource type="Resource" id="Resource_4"]
+script = ExtResource("2_line")
+speaker = "Baker"
+text = "The bread... it keeps coming out the same. Over and over."
+min_corruption = 3
+glitch = true
+
+[sub_resource type="Resource" id="Resource_5"]
+script = ExtResource("2_line")
+speaker = "Baker"
+text = "Back again? Take a roll, on the house."
+
+[sub_resource type="Resource" id="Resource_6"]
+script = ExtResource("2_line")
+speaker = "Baker"
+text = "You were just here. Weren't you?"
+min_corruption = 2
+
+[sub_resource type="Resource" id="Resource_7"]
+script = ExtResource("2_line")
+speaker = "Baker"
+text = "Fresh bread every morning. Fresh bread every morning."
+min_corruption = 3
+glitch = true
+
+[resource]
+script = ExtResource("1_data")
+npc_id = "baker"
+lines = Array[ExtResource("2_line")]([SubResource("Resource_1"), SubResource("Resource_2"), SubResource("Resource_3"), SubResource("Resource_4")])
+repeat_lines = Array[ExtResource("2_line")]([SubResource("Resource_5"), SubResource("Resource_6"), SubResource("Resource_7")])

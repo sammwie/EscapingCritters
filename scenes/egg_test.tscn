@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://cn8p460wcm2f7"]
+
+[ext_resource type="Script" uid="uid://bnwd2ixec40w6" path="res://scripts/egg_puzzle.gd" id="1_kq4ks"]
+[ext_resource type="PackedScene" uid="uid://cjm7foogx7s5d" path="res://scenes/egg.tscn" id="2_4l4ug"]
+[ext_resource type="PackedScene" uid="uid://cvcw7h5ng6ydg" path="res://scenes/player.tscn" id="3_8b2lv"]
+[ext_resource type="PackedScene" uid="uid://cua0xve748asr" path="res://scenes/interact_prompt.tscn" id="4_o56so"]
+
+[node name="EggTest" type="Node2D" unique_id=790228215]
+
+[node name="EggPuzzle" type="Node" parent="." unique_id=590741313]
+script = ExtResource("1_kq4ks")
+
+[node name="Egg6" parent="EggPuzzle" unique_id=1584164339 instance=ExtResource("2_4l4ug")]
+position = Vector2(700, 300)
+
+[node name="Egg" parent="EggPuzzle" unique_id=924869504 instance=ExtResource("2_4l4ug")]
+position = Vector2(400, 300)
+
+[node name="Egg2" parent="EggPuzzle" unique_id=1001398700 instance=ExtResource("2_4l4ug")]
+position = Vector2(460, 300)
+is_safe = false
+
+[node name="Egg3" parent="EggPuzzle" unique_id=671519638 instance=ExtResource("2_4l4ug")]
+position = Vector2(520, 300)
+
+[node name="Egg4" parent="EggPuzzle" unique_id=1608262616 instance=ExtResource("2_4l4ug")]
+position = Vector2(580, 300)
+
+[node name="Egg5" parent="EggPuzzle" unique_id=1822277183 instance=ExtResource("2_4l4ug")]
+position = Vector2(640, 300)
+is_safe = false
+
+[node name="Player" parent="." unique_id=2047223457 instance=ExtResource("3_8b2lv")]
+position = Vector2(300, 300)
+
+[node name="InteractPrompt" parent="." unique_id=1461623571 instance=ExtResource("4_o56so")]

@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://bx312bcq53pnj"]
+
+[ext_resource type="PackedScene" uid="uid://cvcw7h5ng6ydg" path="res://scenes/player.tscn" id="1_7yu4j"]
+[ext_resource type="PackedScene" uid="uid://binbn40xn3oiy" path="res://scenes/npc.tscn" id="2_31pel"]
+[ext_resource type="Resource" uid="uid://jiyifxwnop0f" path="res://dialogues/butcher.tres" id="3_31pel"]
+[ext_resource type="PackedScene" uid="uid://dxbcaovcv123k" path="res://scenes/dialogue_box.tscn" id="4_4jmdl"]
+[ext_resource type="PackedScene" uid="uid://cua0xve748asr" path="res://scenes/interact_prompt.tscn" id="5_31pel"]
+
+[node name="TestMain" type="Node2D" unique_id=1053836896]
+
+[node name="Player" parent="." unique_id=2047223457 instance=ExtResource("1_7yu4j")]
+position = Vector2(300, 300)
+
+[node name="NPC" parent="." unique_id=1016802625 instance=ExtResource("2_31pel")]
+position = Vector2(500, 300)
+dialogue = ExtResource("3_31pel")
+
+[node name="DialogueBox" parent="." unique_id=104292372 instance=ExtResource("4_4jmdl")]
+
+[node name="InteractPrompt" parent="." unique_id=1461623571 instance=ExtResource("5_31pel")]

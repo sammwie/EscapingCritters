@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://cua0xve748asr"]
+
+[ext_resource type="Script" uid="uid://cwasbd6tvlvgx" path="res://scripts/interact_prompt.gd" id="1_57u52"]
+
+[node name="InteractPrompt" type="CanvasLayer" unique_id=1461623571]
+script = ExtResource("1_57u52")
+
+[node name="PromptLabel" type="Label" parent="." unique_id=937981401]
+unique_name_in_owner = true
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -128.0
+offset_bottom = -105.0
+grow_horizontal = 2
+grow_vertical = 0
+horizontal_alignment = 1
