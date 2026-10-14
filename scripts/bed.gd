@@ -40,6 +40,7 @@ func _on_interact(by: Node) -> void:
 	await fade_in.finished
 
 	Level1Quest.sleep_through_night()
+	Level2Quest.wake_up()  # starts Level 2's morning once Level 1 is done
 	label.text = "Day %d" % GameState.current_day
 	var show_day := create_tween()
 	show_day.tween_property(label, "modulate:a", 1.0, 0.5)

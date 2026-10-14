@@ -48,6 +48,7 @@ var _plots: Array[FarmPlot] = []
 var _task_labels: Array[Label] = []
 var _bonus_label: Label
 var _seen_version := -1
+var _ui_layer: CanvasLayer
 
 # Call this when a brand new game starts.
 static func reset() -> void:
@@ -87,11 +88,21 @@ static func sleep_through_night() -> void:
 	_version += 1
 
 func _ready() -> void:
+	# Level 2 rides along with Level 1: any scene that has this node also gets
+	# a Level2Quest, so it never has to be added to scenes by hand.
+	var parent := get_parent()
+	if parent and parent.get_node_or_null("Level2Quest") == null:
+		var l2 := Level2Quest.new()
+		l2.name = "Level2Quest"
+		parent.add_child.call_deferred(l2)
 	_build_ui()
 	Dialogue.conversation_ended.connect(_on_conversation_ended)
 	_setup_village.call_deferred()
 
 func _process(_delta: float) -> void:
+	# Level 2 brings its own task list, so hide this one once it starts.
+	if _ui_layer:
+		_ui_layer.visible = Level2Quest.stage <= Level2Quest.Stage.EVENING
 	if _seen_version != _version:
 		_seen_version = _version
 		_refresh()
@@ -258,6 +269,7 @@ func _build_ui() -> void:
 	var layer := CanvasLayer.new()
 	layer.layer = 5
 	add_child(layer)
+	_ui_layer = layer
 
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color(CREAM, 0.95)

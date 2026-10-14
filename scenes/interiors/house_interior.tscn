@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/scene_door.gd" id="door"]
 [ext_resource type="Script" path="res://scripts/level1_quest.gd" id="quest"]
 [ext_resource type="Script" path="res://scripts/bed.gd" id="bed"]
+[ext_resource type="Script" path="res://scripts/level2_quest.gd" id="l2quest"]
 
 [sub_resource type="RectangleShape2D" id="R0"]
 size = Vector2(256, 32)
@@ -146,3 +147,6 @@ zoom = Vector2(4, 4)
 
 [node name="Level1Quest" type="Node" parent="."]
 script = ExtResource("quest")
+
+[node name="Level2Quest" type="Node" parent="."]
+script = ExtResource("l2quest")

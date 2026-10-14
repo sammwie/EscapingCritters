@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://scripts/npc_look.gd" id="look"]
 [ext_resource type="Resource" path="res://dialogues/mayor.tres" id="mayor_dlg"]
 [ext_resource type="PackedScene" uid="uid://ucutbk8pmsh5" path="res://scenes/notice_board.tscn" id="board"]
+[ext_resource type="Script" path="res://scripts/level2_quest.gd" id="l2quest"]
 
 [sub_resource type="RectangleShape2D" id="R0"]
 size = Vector2(256, 32)
@@ -235,3 +236,6 @@ zoom = Vector2(4, 4)
 
 [node name="Level1Quest" type="Node" parent="."]
 script = ExtResource("quest")
+
+[node name="Level2Quest" type="Node" parent="."]
+script = ExtResource("l2quest")
