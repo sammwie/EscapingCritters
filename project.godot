@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 GameState="*uid://cu7n366eof0vw"
 Dialogue="*uid://bmacqami5fbeu"
+PauseMenu="*res://scenes/pause_menu.tscn"
 
 [display]
 
