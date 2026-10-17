@@ -12,7 +12,7 @@ Art the game actually uses lives in `art/`. That's where you should reference as
 ## How art gets from here into the game
 
 1. An designer finishes a file in `design/`.
-2. The exported file (usually a PNG) is copied into the matching folder under `art/`. The folder structure is mirrored, so `design/characters/baker/` maps to `art/characters/baker/`.
+2. The exported file (usually a PNG) is copied by a coder into the matching folder under `art/`. The folder structure should be mirrored, so `design/characters/baker/` maps to `art/characters/baker/`, however that's up to however the coders want to organize the art folder. 
 3. Open the Godot editor so it imports the new or changed file. That creates the `.import` file in `art/`.
 4. Commit the export and its `.import` file together.
 
