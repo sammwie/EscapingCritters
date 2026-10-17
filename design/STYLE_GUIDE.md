@@ -2,6 +2,8 @@
 
 Keep new art consistent with existing art. Fill in the values marked **TODO** and keep this file up to date.
 
+# JUST IGNORE THIS FILE, WE PROBABLY WON'T NEED TO USE IT
+
 ## Overview
 
 - **Game:** Escaping Critters
