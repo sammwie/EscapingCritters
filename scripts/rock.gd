@@ -1,28 +1,49 @@
 class_name Rock
 extends LyingObject
 ## A stepping stone in the puddle. Looks the same whether safe or not.
-## The player tests it by jumping (Space, handled by PuddlePuzzle), which
-## calls jump_test(). Unsafe rocks sink (dark) and the player sinks too,
-## safe ones hold (green).
+## The player tests it by jumping (handled by PuddlePuzzle), which calls
+## jump_test(). Unsafe rocks sink (dark) and the player sinks too, safe ones
+## hold (green).
 ## Scene: Area2D (this script) > CollisionShape2D (CircleShape2D, radius ~12).
 ## Collision: Layer 2 only, Mask empty.
 ## is_safe is set by PuddlePuzzle at start, so leave it alone in the Inspector.
 
 @export var hop_time := 0.35
 @export var hop_height := 22.0
+@export var radius := 13.0
 
 var tested := false
 var _jumper: Node2D
+var _squash := 1.3   # each rock is a slightly different oval
+var _size_mult := 1.0
 
 func _ready() -> void:
 	enabled = false  # no "Press E" prompt, jumping is the only way to test
+	var h := absi(hash(String(name)))
+	_squash = 1.2 + float(h % 30) / 100.0          # 1.20 to 1.49 wide
+	_size_mult = 0.9 + float((h / 7) % 25) / 100.0  # 0.90 to 1.14 size
 	queue_redraw()
 
 func _draw() -> void:
-	var col := Color("9a9a9a")
+	var r := radius * _size_mult
+	var body := Color("9a9a9a")
+	var rim := Color("6a6a70")
+	var top := Color("b8b8bc")
 	if tested:
-		col = Color("6fbf73") if is_safe else Color("1d2b4a")  # holds / sinks
-	draw_circle(Vector2.ZERO, 12.0, col)
+		if is_safe:
+			body = Color("6fbf73")
+			rim = Color("3f8f48")
+			top = Color("9bd99f")
+		else:
+			body = Color("1d2b4a")
+			rim = Color("101a30")
+			top = Color("2a3d66")
+	draw_set_transform(Vector2(0, 2), 0.0, Vector2(_squash, 1.0))
+	draw_arc(Vector2.ZERO, r + 4.0, 0.0, TAU, 28, Color(0.75, 0.92, 1.0, 0.55), 1.5)  # water ripple
+	draw_circle(Vector2.ZERO, r + 1.5, rim)
+	draw_circle(Vector2(0, -1), r, body)
+	draw_circle(Vector2(-r * 0.2, -r * 0.35), r * 0.55, top)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 # Called by PuddlePuzzle when the player jumps at this rock.
 func jump_test(by: Node2D) -> void:
