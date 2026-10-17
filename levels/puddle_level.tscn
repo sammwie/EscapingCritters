@@ -10,30 +10,37 @@ size = Vector2(40, 120)
 
 [node name="PuddleTest" type="Node2D" unique_id=555057888]
 
-[node name="PuddlePuzzle" type="Node" parent="." unique_id=779759993 node_paths=PackedStringArray("rocks_parent", "goal")]
+[node name="PuddlePuzzle" type="Node" parent="." unique_id=779759993 node_paths=PackedStringArray("rocks_parent", "goal", "water")]
 script = ExtResource("1_jnjjb")
 rocks_parent = NodePath("../Rocks")
 goal = NodePath("../Goal")
+water = NodePath("../Water")
 
 [node name="Rocks" type="Node2D" parent="." unique_id=1441567082]
 
 [node name="Rock" parent="Rocks" unique_id=897940141 instance=ExtResource("2_rnrjf")]
-position = Vector2(400, 260)
+position = Vector2(385, 250)
 
 [node name="Rock2" parent="Rocks" unique_id=344011015 instance=ExtResource("2_rnrjf")]
-position = Vector2(400, 340)
+position = Vector2(392, 335)
 
 [node name="Rock3" parent="Rocks" unique_id=1021681482 instance=ExtResource("2_rnrjf")]
-position = Vector2(480, 260)
+position = Vector2(455, 215)
 
 [node name="Rock4" parent="Rocks" unique_id=1264647258 instance=ExtResource("2_rnrjf")]
-position = Vector2(480, 340)
+position = Vector2(462, 305)
 
 [node name="Rock5" parent="Rocks" unique_id=1511660153 instance=ExtResource("2_rnrjf")]
-position = Vector2(560, 260)
+position = Vector2(525, 265)
 
 [node name="Rock6" parent="Rocks" unique_id=511978176 instance=ExtResource("2_rnrjf")]
-position = Vector2(560, 340)
+position = Vector2(520, 350)
+
+[node name="Rock7" parent="Rocks" unique_id=1129168538 instance=ExtResource("2_rnrjf")]
+position = Vector2(595, 225)
+
+[node name="Rock8" parent="Rocks" unique_id=1569552864 instance=ExtResource("2_rnrjf")]
+position = Vector2(600, 320)
 
 [node name="Goal" type="Area2D" parent="." unique_id=1970424417]
 position = Vector2(700, 300)
@@ -61,8 +68,8 @@ color = Color(0.4745098, 1, 0.24705882, 1)
 
 [node name="Water" type="ColorRect" parent="." unique_id=1174892344]
 z_index = -9
-offset_left = 360.0
-offset_top = 220.0
+offset_left = 350.0
+offset_top = 150.0
 offset_right = 640.0
-offset_bottom = 380.0
-color = Color(0.3372549, 1, 1, 1)
+offset_bottom = 410.0
+color = Color(0.2138792, 0.75514585, 0.8681007, 1)
