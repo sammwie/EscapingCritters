@@ -3,7 +3,7 @@ extends LyingObject
 ## A stepping stone in the puddle. Looks the same whether safe or not.
 ## The player tests it by jumping (handled by PuddlePuzzle), which calls
 ## jump_test(). Unsafe rocks sink (dark) and the player sinks too, safe ones
-## hold (green).
+## hold (green). `targeted` shows a white ring: the rock a jump would hit.
 ## Scene: Area2D (this script) > CollisionShape2D (CircleShape2D, radius ~12).
 ## Collision: Layer 2 only, Mask empty.
 ## is_safe is set by PuddlePuzzle at start, so leave it alone in the Inspector.
@@ -13,6 +13,11 @@ extends LyingObject
 @export var radius := 13.0
 
 var tested := false
+var targeted := false:
+	set(v):
+		if v != targeted:
+			targeted = v
+			queue_redraw()
 var _jumper: Node2D
 var _squash := 1.3   # each rock is a slightly different oval
 var _size_mult := 1.0
@@ -43,6 +48,8 @@ func _draw() -> void:
 	draw_circle(Vector2.ZERO, r + 1.5, rim)
 	draw_circle(Vector2(0, -1), r, body)
 	draw_circle(Vector2(-r * 0.2, -r * 0.35), r * 0.55, top)
+	if targeted and not tested:
+		draw_arc(Vector2.ZERO, r + 8.0, 0.0, TAU, 32, Color.WHITE, 2.5)  # jump target
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 # Called by PuddlePuzzle when the player jumps at this rock.
@@ -50,6 +57,7 @@ func jump_test(by: Node2D) -> void:
 	if tested:
 		return
 	_jumper = by
+	targeted = false
 	_on_interact(by)  # emits revealed(is_safe), then _play_reveal()
 
 func _play_reveal() -> void:
@@ -67,7 +75,8 @@ func _hop_player(player: Node2D) -> void:
 	tw.tween_method(_hop_step.bind(player, from, to), 0.0, 1.0, hop_time)
 	await tw.finished
 	if is_safe:
-		player.set_physics_process(true)
+		# Stay locked on the rock: PuddlePuzzle keeps the player's movement
+		# off while it stands on a safe rock. Only hopping moves it.
 		player.set_meta("hopping", false)
 	else:
 		# Sinks. PuddlePuzzle respawns the player and clears "hopping".
@@ -79,4 +88,5 @@ func _hop_step(t: float, player: Node2D, from: Vector2, to: Vector2) -> void:
 # Called by PuddlePuzzle when the puzzle restarts.
 func reset_rock() -> void:
 	tested = false
+	targeted = false
 	queue_redraw()
