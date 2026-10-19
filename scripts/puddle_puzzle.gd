@@ -1,7 +1,8 @@
 class_name PuddlePuzzle
 extends Puzzle
 ## Puddle puzzle: jump (Space or Shift) across rocks to reach the goal. Hold a
-## direction while jumping to choose which rock to hop to.
+## direction to aim: a white ring shows which rock the jump will hit. While
+## standing on a safe rock the player can't walk, only hop.
 ## Add LyingObject (or Rock) children under `rocks_parent`, and point `goal`
 ## at an Area2D on the far side (its collision mask must include layer 3,
 ## the player). `water` is a Control (ColorRect) covering the pond: being in
@@ -11,6 +12,10 @@ extends Puzzle
 ## Rocks are grouped into columns by x position (column_width), and every
 ## column is guaranteed at least one safe rock. A failure sends the player
 ## back to the start and restarts the puzzle.
+## A small instruction box (instructions_text) explains the controls and
+## fades out once the puzzle is solved.
+## Reaching the goal flickers the glitch overlay (group "glitch_overlay", if
+## the scene has one) and shows `ending_text` for a moment (placeholder).
 
 @export var rocks_parent: Node
 @export var goal: Area2D
@@ -24,12 +29,18 @@ extends Puzzle
 @export var column_width := 60.0     # rocks within this x-distance share a column
 @export var randomize_each_visit := true       # new layout each time the level loads
 @export var reshuffle_every_attempt := false   # re-roll after every sinking (kills memorizing)
+@export var ending_text := "You made it across."
+@export var ending_flicker := true
+@export var ending_show_time := 3.0
+@export var show_instructions := true
+@export_multiline var instructions_text := "HOW TO CROSS\nArrow keys: aim at a stone\nSpace / Shift: jump to it\nWrong stones and water sink you\nReach the far bank to finish"
 
 var _rocks: Array[LyingObject] = []
 var _player: Node2D
 var _player_start := Vector2.ZERO
 var _player_modulate := Color.WHITE
 var _seed := 0
+var _hint_layer: CanvasLayer
 
 func _ready() -> void:
 	if puzzle_id == &"":
@@ -43,6 +54,8 @@ func _ready() -> void:
 		goal.body_entered.connect(_on_goal_entered)
 	failed.connect(_on_failed)
 	start()
+	if show_instructions:
+		_build_instructions()
 
 func _find_player() -> Node2D:
 	var p := get_tree().get_first_node_in_group("player")
@@ -50,6 +63,37 @@ func _find_player() -> Node2D:
 		for n in get_tree().current_scene.find_children("*", "CharacterBody2D", true, false):
 			return n as Node2D
 	return p as Node2D
+
+# --- Instruction box ---------------------------------------------------
+
+func _build_instructions() -> void:
+	_hint_layer = CanvasLayer.new()
+	_hint_layer.layer = 40
+	var panel := PanelContainer.new()
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.10, 0.08, 0.06, 0.80)
+	style.border_color = Color("c9a56a")
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(6)
+	style.set_content_margin_all(10)
+	panel.add_theme_stylebox_override("panel", style)
+	var label := Label.new()
+	label.text = instructions_text
+	label.add_theme_font_size_override("font_size", 14)
+	label.add_theme_color_override("font_color", Color("f3e9d2"))
+	panel.add_child(label)
+	panel.position = Vector2(12, 12)
+	_hint_layer.add_child(panel)
+	add_child(_hint_layer)
+
+func _hide_instructions() -> void:
+	if _hint_layer == null:
+		return
+	var panel := _hint_layer.get_child(0)
+	var tw := create_tween()
+	tw.tween_property(panel, "modulate:a", 0.0, 0.6)
+	tw.tween_callback(_hint_layer.queue_free)
+	_hint_layer = null
 
 # --- Jumping -----------------------------------------------------------
 
@@ -81,13 +125,12 @@ func _input_dir() -> Vector2:
 			v += Input.get_vector(keys[0], keys[1], keys[2], keys[3])
 	return v.limit_length(1.0)
 
-func _try_jump() -> bool:
+func _goal_in_reach() -> bool:
+	return goal != null and _player.global_position.distance_to(goal.global_position) <= jump_range
+
+# The rock a jump would hit right now, given the held direction (or null).
+func _find_target(dir: Vector2) -> Rock:
 	var ppos := _player.global_position
-	# The goal wins whenever it is within reach.
-	if goal and ppos.distance_to(goal.global_position) <= jump_range:
-		_hop_to_goal()
-		return true
-	var dir := _input_dir()
 	var best: Rock = null
 	var best_score := -INF
 	for r in _rocks:
@@ -107,15 +150,30 @@ func _try_jump() -> bool:
 		if score > best_score:
 			best_score = score
 			best = rock
-	if best:
-		best.jump_test(_player)
+	return best
+
+func _try_jump() -> bool:
+	# The goal wins whenever it is within reach.
+	if _goal_in_reach():
+		_hop_to_goal()
+		return true
+	var target := _find_target(_input_dir())
+	if target:
+		target.jump_test(_player)
 		return true
 	return false
+
+func _set_target(target: Rock) -> void:
+	for r in _rocks:
+		var rock := r as Rock
+		if rock:
+			rock.targeted = (rock == target)
 
 func _hop_to_goal() -> void:
 	var player := _player
 	var from := player.global_position
 	var to := goal.global_position
+	_set_target(null)
 	player.set_meta("hopping", true)
 	player.set_physics_process(false)
 	var tw := create_tween()
@@ -127,24 +185,36 @@ func _hop_to_goal() -> void:
 func _goal_hop_step(t: float, player: Node2D, from: Vector2, to: Vector2) -> void:
 	player.global_position = from.lerp(to, t) + Vector2(0, -sin(t * PI) * 22.0)
 
-# --- Water -------------------------------------------------------------
+# --- Aiming, water -----------------------------------------------------
 
 func _physics_process(_delta: float) -> void:
-	if state != State.ACTIVE or _player == null or water == null:
+	if _player == null:
 		return
-	if _player.get_meta("hopping", false):
+	if state != State.ACTIVE or _player.get_meta("hopping", false):
+		_set_target(null)
+		return
+	# Show which rock a jump would hit.
+	_set_target(null if _goal_in_reach() else _find_target(_input_dir()))
+	if water == null:
 		return
 	var pond := Rect2(water.global_position, water.size)
 	if not pond.has_point(_player.global_position):
 		return
+	if _standing_on_safe_rock():
+		_player.set_physics_process(false)  # locked on the rock: only hopping moves
+		return
+	_sink_player()
+
+func _standing_on_safe_rock() -> bool:
 	for r in _rocks:
 		var rock := r as Rock
 		if rock and rock.tested and rock.is_safe \
 				and _player.global_position.distance_to(rock.global_position) <= standing_radius:
-			return  # standing on a safe rock
-	_sink_player()
+			return true
+	return false
 
 func _sink_player() -> void:
+	_set_target(null)
 	_player.set_physics_process(false)
 	_player.set_meta("hopping", true)
 	create_tween().tween_property(_player, "modulate:a", 0.0, 0.3)
@@ -212,6 +282,9 @@ func _on_rock_revealed(safe: bool) -> void:
 
 func _on_goal_entered(body: Node) -> void:
 	if body.is_in_group("player") or body is CharacterBody2D:
+		if state == State.ACTIVE:
+			_hide_instructions()
+			_play_ending()
 		complete()
 
 func _on_failed() -> void:
@@ -228,3 +301,32 @@ func _respawn_player() -> void:
 	_player.modulate = _player_modulate
 	_player.set_physics_process(true)
 	_player.set_meta("hopping", false)
+
+# --- Ending (placeholder until the designers decide) -------------------
+
+func _play_ending() -> void:
+	if ending_flicker:
+		get_tree().call_group("glitch_overlay", "flicker")
+	if ending_text != "":
+		_show_message(ending_text)
+
+func _show_message(text: String) -> void:
+	var layer := CanvasLayer.new()
+	layer.layer = 50
+	var label := Label.new()
+	label.text = text
+	label.add_theme_font_size_override("font_size", 28)
+	label.add_theme_color_override("font_color", Color.WHITE)
+	label.add_theme_color_override("font_outline_color", Color.BLACK)
+	label.add_theme_constant_override("outline_size", 8)
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	label.position.y = 60
+	label.modulate.a = 0.0
+	layer.add_child(label)
+	get_tree().current_scene.add_child(layer)
+	var tw := create_tween()
+	tw.tween_property(label, "modulate:a", 1.0, 0.4)
+	tw.tween_interval(ending_show_time)
+	tw.tween_property(label, "modulate:a", 0.0, 0.8)
+	tw.tween_callback(layer.queue_free)
