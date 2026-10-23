@@ -16,6 +16,7 @@ script = ExtResource("1_jnjjb")
 rocks_parent = NodePath("../Rocks")
 goal = NodePath("../Goal")
 water = NodePath("../Water")
+rigged_to_lose = true
 
 [node name="Rocks" type="Node2D" parent="." unique_id=1441567082]
 
