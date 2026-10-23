@@ -12,14 +12,23 @@ extends Puzzle
 ## Rocks are grouped into columns by x position (column_width), and every
 ## column is guaranteed at least one safe rock. A failure sends the player
 ## back to the start and restarts the puzzle.
+## The player is kept inside `play_area` (match it to your Ground rectangle).
 ## A small instruction box (instructions_text) explains the controls and
 ## fades out once the puzzle is solved.
 ## Reaching the goal flickers the glitch overlay (group "glitch_overlay", if
 ## the scene has one) and shows `ending_text` for a moment (placeholder).
+##
+## STORY MODE: tick `rigged_to_lose` and the puzzle plays normally, but when
+## the player reaches the far bank they lose anyway: the puzzle is reported
+## complete, the player sinks, the glitch overlay flickers, the screen fades
+## to black, and `lose_scene_path` (the Knows All map) loads. Until that scene
+## exists it shows a placeholder message and reloads the level for testing.
+## If GameState has set_flag(), it is called as set_flag("pond_lost", true).
 
 @export var rocks_parent: Node
 @export var goal: Area2D
 @export var water: Control
+@export var play_area := Rect2(-100, 100, 1000, 400)  # player can't leave this
 @export var safe_ratio := 0.5
 @export var auto_reset := true
 @export var restart_delay := 1.0
@@ -34,6 +43,12 @@ extends Puzzle
 @export var ending_show_time := 3.0
 @export var show_instructions := true
 @export_multiline var instructions_text := "HOW TO CROSS\nArrow keys: aim at a stone\nSpace / Shift: jump to it\nWrong stones and water sink you\nReach the far bank to finish"
+@export_group("Story mode")
+@export var rigged_to_lose := false   # reach the far bank, then sink and lose anyway
+@export_file("*.tscn") var lose_scene_path := ""   # the Knows All map
+@export var glitch_time := 1.6      
+@export var fade_time := 1.2        
+@export var sink_at_bank := false  
 
 var _rocks: Array[LyingObject] = []
 var _player: Node2D
@@ -41,6 +56,7 @@ var _player_start := Vector2.ZERO
 var _player_modulate := Color.WHITE
 var _seed := 0
 var _hint_layer: CanvasLayer
+var _losing := false
 
 func _ready() -> void:
 	if puzzle_id == &"":
@@ -179,17 +195,22 @@ func _hop_to_goal() -> void:
 	var tw := create_tween()
 	tw.tween_method(_goal_hop_step.bind(player, from, to), 0.0, 1.0, goal_hop_time)
 	await tw.finished
+	if _losing:
+		return  # story mode: the sinking sequence has taken over
 	player.set_physics_process(true)
 	player.set_meta("hopping", false)
 
 func _goal_hop_step(t: float, player: Node2D, from: Vector2, to: Vector2) -> void:
 	player.global_position = from.lerp(to, t) + Vector2(0, -sin(t * PI) * 22.0)
 
-# --- Aiming, water -----------------------------------------------------
+# --- Aiming, water, boundaries -----------------------------------------
 
 func _physics_process(_delta: float) -> void:
-	if _player == null:
+	if _player == null or _losing:
 		return
+	# Keep the player inside the play area (not while hopping or sinking).
+	if play_area.has_area() and not _player.get_meta("hopping", false):
+		_player.global_position = _player.global_position.clamp(play_area.position, play_area.end)
 	if state != State.ACTIVE or _player.get_meta("hopping", false):
 		_set_target(null)
 		return
@@ -284,6 +305,10 @@ func _on_goal_entered(body: Node) -> void:
 	if body.is_in_group("player") or body is CharacterBody2D:
 		if state == State.ACTIVE:
 			_hide_instructions()
+			if rigged_to_lose:
+				complete()          # the puzzle counts as solved...
+				_lose_sequence()    # ...and then the player loses anyway
+				return
 			_play_ending()
 		complete()
 
@@ -302,6 +327,44 @@ func _respawn_player() -> void:
 	_player.set_physics_process(true)
 	_player.set_meta("hopping", false)
 
+# --- Story mode: reach the far bank, then lose anyway -------------------
+
+func _lose_sequence() -> void:
+	if _losing:
+		return
+	_losing = true
+	_set_target(null)
+	if _player:
+		_player.set_physics_process(false)  # no more moving
+		_player.set_meta("hopping", true)
+		if sink_at_bank:
+			create_tween().tween_property(_player, "modulate:a", 0.0, glitch_time * 0.6)
+	# The glitch builds up...
+	get_tree().call_group("glitch_overlay", "turn_on", glitch_time)
+	await get_tree().create_timer(glitch_time * 0.5).timeout
+	# ...and the screen fades to black while it keeps going.
+	var layer := CanvasLayer.new()
+	layer.layer = 100
+	var fade := ColorRect.new()
+	fade.color = Color.BLACK
+	fade.set_anchors_preset(Control.PRESET_FULL_RECT)
+	fade.modulate.a = 0.0
+	layer.add_child(fade)
+	get_tree().current_scene.add_child(layer)
+	var tw := create_tween()
+	tw.tween_property(fade, "modulate:a", 1.0, fade_time)
+	await tw.finished
+	if GameState.has_method("set_flag"):
+		GameState.set_flag("pond_lost", true)
+	if lose_scene_path != "" and ResourceLoader.exists(lose_scene_path):
+		get_tree().change_scene_to_file(lose_scene_path)
+		return
+	# No Knows All map yet: show a placeholder, then reload the level for testing.
+	push_warning("PuddlePuzzle: lose_scene_path is empty or missing, so the Knows All map was not loaded.")
+	_show_message("[Knows All map goes here]")
+	await get_tree().create_timer(2.5).timeout
+	get_tree().reload_current_scene()
+
 # --- Ending (placeholder until the designers decide) -------------------
 
 func _play_ending() -> void:
@@ -312,7 +375,7 @@ func _play_ending() -> void:
 
 func _show_message(text: String) -> void:
 	var layer := CanvasLayer.new()
-	layer.layer = 50
+	layer.layer = 120
 	var label := Label.new()
 	label.text = text
 	label.add_theme_font_size_override("font_size", 28)
