@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="DialogueData" format=3 uid="uid://dfsa1rlkof32p"]
+
+[ext_resource type="Script" uid="uid://cuib8na2qq78n" path="res://scripts/dialogue_line.gd" id="1_op15h"]
+[ext_resource type="Script" uid="uid://bilm6gbrl1knw" path="res://scripts/dialogue_data.gd" id="2_0t3cp"]
+
+[sub_resource type="Resource" id="Resource_op15h"]
+script = ExtResource("1_op15h")
+speaker = "Baker"
+text = "Placeholder: Baker confrontation"
+metadata/_custom_type_script = "uid://cuib8na2qq78n"
+
+[resource]
+script = ExtResource("2_0t3cp")
+npc_id = "baker"
+lines = Array[ExtResource("1_op15h")]([SubResource("Resource_op15h")])
+metadata/_custom_type_script = "uid://bilm6gbrl1knw"

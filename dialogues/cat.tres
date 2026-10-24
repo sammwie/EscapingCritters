@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="DialogueData" format=3 uid="uid://i1hsijw5ad7i"]
+
+[ext_resource type="Script" uid="uid://cuib8na2qq78n" path="res://scripts/dialogue_line.gd" id="1_sxw45"]
+[ext_resource type="Script" uid="uid://bilm6gbrl1knw" path="res://scripts/dialogue_data.gd" id="2_hlqgv"]
+
+[sub_resource type="Resource" id="Resource_sxw45"]
+script = ExtResource("1_sxw45")
+speaker = "cat"
+text = "Meow"
+metadata/_custom_type_script = "uid://cuib8na2qq78n"
+
+[resource]
+script = ExtResource("2_hlqgv")
+npc_id = "cat"
+lines = Array[ExtResource("1_sxw45")]([SubResource("Resource_sxw45")])
+metadata/_custom_type_script = "uid://bilm6gbrl1knw"
