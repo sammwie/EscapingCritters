@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://cerlyy1rpnpow"]
+
+[ext_resource type="PackedScene" uid="uid://btddjwtj7riu" path="res://scenes/glitch_overlay.tscn" id="3_xja51"]
+[ext_resource type="PackedScene" uid="uid://cvcw7h5ng6ydg" path="res://scenes/player.tscn" id="4_llsj4"]
+[ext_resource type="Script" uid="uid://dtumiis1i3266" path="res://scripts/hiding_puzzle.gd" id="4_upfvi"]
+[ext_resource type="PackedScene" uid="uid://cua0xve748asr" path="res://scenes/interact_prompt.tscn" id="5_up7oc"]
+[ext_resource type="Script" uid="uid://g8p3t85aef13" path="res://scripts/patrol_guard.gd" id="5_xvni6"]
+[ext_resource type="Script" uid="uid://dw7rjf2wjk2du" path="res://scripts/hiding_spot.gd" id="6_xvni6"]
+
+[node name="PuddleTest" type="Node2D" unique_id=555057888]
+
+[node name="Player" parent="." unique_id=2047223457 instance=ExtResource("4_llsj4")]
+position = Vector2(0, 250)
+
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=80499691]
+zoom = Vector2(2, 2)
+
+[node name="InteractPrompt" parent="." unique_id=1461623571 instance=ExtResource("5_up7oc")]
+
+[node name="Ground" type="ColorRect" parent="." unique_id=2014319951]
+z_index = -10
+offset_left = -100.0
+offset_top = 100.0
+offset_right = 900.0
+offset_bottom = 500.0
+color = Color(0.4745098, 1, 0.24705882, 1)
+
+[node name="CanvasLayer" parent="." unique_id=1462862614 instance=ExtResource("3_xja51")]
+
+[node name="Hiding_Puzzle" type="Node" parent="." unique_id=898482678 node_paths=PackedStringArray("guards_parent", "exit_marker", "start_marker")]
+script = ExtResource("4_upfvi")
+guards_parent = NodePath("../Guards")
+exit_marker = NodePath("../Exit")
+start_marker = NodePath("../Start")
+
+[node name="Guards" type="Node2D" parent="." unique_id=1142113504]
+
+[node name="Guard1" type="Node2D" parent="Guards" unique_id=612953366]
+position = Vector2(250, 150)
+script = ExtResource("5_xvni6")
+patrol_offset = Vector2(0, 220)
+
+[node name="Guard2" type="Node2D" parent="Guards" unique_id=1354633952]
+position = Vector2(520, 330)
+script = ExtResource("5_xvni6")
+patrol_offset = Vector2(0, -220)
+
+[node name="Bush1" type="Area2D" parent="." unique_id=427592006]
+position = Vector2(180, 250)
+script = ExtResource("6_xvni6")
+
+[node name="Bush2" type="Area2D" parent="." unique_id=313394348]
+position = Vector2(400, 330)
+script = ExtResource("6_xvni6")
+
+[node name="Bush3" type="Area2D" parent="." unique_id=1641022759]
+position = Vector2(650, 250)
+script = ExtResource("6_xvni6")
+
+[node name="Start" type="Marker2D" parent="." unique_id=1972016629]
+position = Vector2(0, 250)
+
+[node name="Exit" type="Marker2D" parent="." unique_id=1672998987]
+position = Vector2(800, 250)
