@@ -1,90 +1,67 @@
 class_name Bed
 extends Interactable
-## Press E on the bed to sleep: fade to black, advance the day, fade back in.
-## Emits `slept` after the day has advanced (Coder 1 connects the wake-up and
-## the new day-time map to this).
-## required_flag: optional GameState flag that must be true before the player
-## can sleep (e.g. the butcher note was read). Empty = always allowed. Needs
-## GameState.get_flag(); if that doesn't exist yet, sleeping is allowed.
-## On sleeping it calls GameState.set_flag("slept", true) if that exists.
+## Press E to sleep. Fades to black, starts a new day, and grows watered
+## crops through Level1Quest, since the field lives in the village scene.
+## Scene: Area2D (this script) > CollisionShape2D. Layer 2, mask empty.
+## Emits `slept` while the screen is still black (for story/scene hooks) and
+## sets the story flag "slept".
 
 signal slept
-
-@export var sleep_prompt := "Go to sleep"
-@export var not_tired_text := "Not tired yet."
-@export var required_flag: StringName = &""
-@export var fade_time := 1.0
-@export var black_time := 0.8
-@export var advances_day := true
 
 var _sleeping := false
 
 func _ready() -> void:
-	prompt_text = sleep_prompt
+	prompt_text = "Sleep"
 
-func _can_sleep() -> bool:
-	if required_flag == &"":
-		return true
-	if GameState.has_method("get_flag"):
-		return bool(GameState.call("get_flag", required_flag))
-	return true  # can't check yet, so don't block testing
-
-func _on_interact(_by: Node) -> void:
+func _on_interact(by: Node) -> void:
 	if _sleeping:
 		return
-	if not _can_sleep():
-		_toast(not_tired_text)
-		return
 	_sleeping = true
-	var player := get_tree().get_first_node_in_group("player")
-	if player:
-		player.set_physics_process(false)
+	enabled = false
+	if by:
+		by.set_physics_process(false)
+
 	var layer := CanvasLayer.new()
-	layer.layer = 100
-	var fade := ColorRect.new()
-	fade.color = Color.BLACK
-	fade.set_anchors_preset(Control.PRESET_FULL_RECT)
-	fade.modulate.a = 0.0
-	layer.add_child(fade)
-	get_tree().current_scene.add_child(layer)
-	var tw := create_tween()
-	tw.tween_property(fade, "modulate:a", 1.0, fade_time)
-	await tw.finished
-	_advance_day()
+	layer.layer = 50
+	add_child(layer)
+	var black := ColorRect.new()
+	black.color = Color(0.08, 0.06, 0.05, 0.0)
+	black.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	black.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(black)
+	var label := Label.new()
+	label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.add_theme_font_override("font", Level1Quest.FONT_BOLD)
+	label.add_theme_font_size_override("font_size", 64)
+	label.add_theme_color_override("font_color", Level1Quest.CREAM)
+	label.modulate.a = 0.0
+	layer.add_child(label)
+
+	var fade_in := create_tween()
+	fade_in.tween_property(black, "color:a", 1.0, 1.0)
+	await fade_in.finished
+
+	Level1Quest.sleep_through_night()
+	Level2Quest.wake_up()  # starts Level 2's morning once Level 1 is done
 	if GameState.has_method("set_flag"):
 		GameState.call("set_flag", "slept", true)
-	slept.emit()
-	await get_tree().create_timer(black_time).timeout
-	var tw2 := create_tween()
-	tw2.tween_property(fade, "modulate:a", 0.0, fade_time)
-	await tw2.finished
+	label.text = "Day %d" % GameState.current_day
+	var show_day := create_tween()
+	show_day.tween_property(label, "modulate:a", 1.0, 0.5)
+	show_day.tween_interval(1.2)
+	show_day.tween_property(label, "modulate:a", 0.0, 0.5)
+	await show_day.finished
+
+	slept.emit()  # still black here, so a scene/map swap is hidden
+
+	var fade_out := create_tween()
+	fade_out.tween_property(black, "color:a", 0.0, 1.0)
+	await fade_out.finished
+
 	layer.queue_free()
-	if player:
-		player.set_physics_process(true)
+	if is_instance_valid(by):
+		by.set_physics_process(true)
+	enabled = true
 	_sleeping = false
-
-func _advance_day() -> void:
-	if not advances_day:
-		return
-	if get_tree().has_group("farm_manager"):
-		get_tree().call_group("farm_manager", "end_day")  # advances the day and grows crops
-	elif GameState.has_method("advance_day"):
-		GameState.call("advance_day")
-
-func _toast(text: String) -> void:
-	var layer := CanvasLayer.new()
-	layer.layer = 90
-	var label := Label.new()
-	label.text = text
-	label.add_theme_font_size_override("font_size", 20)
-	label.add_theme_color_override("font_outline_color", Color.BLACK)
-	label.add_theme_constant_override("outline_size", 6)
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	label.position.y = 80
-	layer.add_child(label)
-	get_tree().current_scene.add_child(layer)
-	var tw := create_tween()
-	tw.tween_interval(1.2)
-	tw.tween_property(label, "modulate:a", 0.0, 0.5)
-	tw.tween_callback(layer.queue_free)
