@@ -17,6 +17,17 @@ static var _local_flags := {}
 
 var _story_npc_id := ""
 
+# Public helpers so other scripts (e.g. PetCat) share the same flags.
+static func get_story_flag(flag: String) -> bool:
+	if GameState.has_method("get_flag"):
+		return GameState.get_flag(flag)
+	return _local_flags.get(flag, false)
+
+static func set_story_flag(flag: String, value: bool) -> void:
+	_local_flags[flag] = value
+	if GameState.has_method("set_flag"):
+		GameState.set_flag(flag, value)
+
 func _process(_delta: float) -> void:
 	enabled = _flag_ok(active_flag)
 
@@ -26,7 +37,7 @@ func _on_interact(_by: Node) -> void:
 		return
 	var use_story := story_dialogue != null \
 		and _flag_ok(required_flag) \
-		and not (done_flag != "" and _get_flag(done_flag))
+		and not (done_flag != "" and get_story_flag(done_flag))
 	var data: DialogueData = story_dialogue if use_story else dialogue
 	if data == null:
 		return
@@ -41,20 +52,10 @@ func _on_conversation_ended(npc_id: String) -> void:
 		return
 	Dialogue.conversation_ended.disconnect(_on_conversation_ended)
 	if done_flag != "":
-		_set_flag(done_flag, true)
+		set_story_flag(done_flag, true)
 	if flicker_on_finish:
 		get_tree().call_group("glitch_overlay", "flicker", 0.8, 1.0)
 	story_beat_finished.emit()
 
 func _flag_ok(flag: String) -> bool:
-	return flag == "" or _get_flag(flag)
-
-func _get_flag(flag: String) -> bool:
-	if GameState.has_method("get_flag"):
-		return GameState.get_flag(flag)
-	return _local_flags.get(flag, false)
-
-func _set_flag(flag: String, value: bool) -> void:
-	_local_flags[flag] = value
-	if GameState.has_method("set_flag"):
-		GameState.set_flag(flag, value)
+	return flag == "" or get_story_flag(flag)

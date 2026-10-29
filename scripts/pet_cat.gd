@@ -2,13 +2,18 @@ class_name PetCat
 extends Interactable
 ## Mochi the cat. Swishes her tail, blinks, and shows hearts when petted.
 ## Scene: Area2D (this script) > CollisionShape2D. Layer 2, mask empty.
+## Once the story flag "cat_dead" is set, she can no longer be petted and
+## shows dead_texture (if the designers assign one).
 
 const SHEET := preload("res://art/animals/cat.png")
 const HEART := preload("res://art/animals/heart.png")
 
+@export var dead_texture: Texture2D
+
 var _sprite: Sprite2D
 var _t := 0.0
 var _blink := 0.0
+var _dead := false
 
 func _ready() -> void:
 	prompt_text = "Pet Mochi"
@@ -19,7 +24,20 @@ func _ready() -> void:
 	_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	add_child(_sprite)
 
+func _unhandled_input(event: InputEvent) -> void:
+	# Debug only: K toggles the cat_dead flag for testing the story chain.
+	if OS.is_debug_build() and event is InputEventKey and event.pressed \
+			and not event.echo and event.keycode == KEY_K:
+		StoryInteractable.set_story_flag("cat_dead", not StoryInteractable.get_story_flag("cat_dead"))
+
 func _process(delta: float) -> void:
+	var dead_now := StoryInteractable.get_story_flag("cat_dead")
+	if dead_now != _dead:
+		_dead = dead_now
+		_apply_dead_state()
+	enabled = not _dead
+	if _dead:
+		return
 	_t += delta
 	if _blink > 0.0:
 		_blink -= delta
@@ -28,6 +46,15 @@ func _process(delta: float) -> void:
 		_sprite.frame = 1 if fmod(_t, 1.6) < 0.5 else 0
 		if randf() < delta * 0.3:
 			_blink = 0.15
+
+func _apply_dead_state() -> void:
+	if _dead and dead_texture != null:
+		_sprite.texture = dead_texture
+		_sprite.hframes = 1
+		_sprite.frame = 0
+	else:
+		_sprite.texture = SHEET
+		_sprite.hframes = 3
 
 func _on_interact(_by: Node) -> void:
 	_blink = 0.8

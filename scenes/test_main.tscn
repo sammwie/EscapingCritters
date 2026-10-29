@@ -12,6 +12,7 @@
 [ext_resource type="Script" uid="uid://bcmywlq2hce5d" path="res://scripts/npc_look.gd" id="9_look"]
 [ext_resource type="PackedScene" path="res://levels/level_0.tscn" id="10_level"]
 [ext_resource type="Script" uid="uid://iwyytpx0fac3" path="res://scripts/scene_door.gd" id="11_door"]
+[ext_resource type="Resource" uid="uid://i1hsijw5ad7i" path="res://dialogues/cat.tres" id="11_x6rmf"]
 [ext_resource type="PackedScene" uid="uid://bolbbnnuwom14" path="res://scenes/farm_plot.tscn" id="12_plot"]
 [ext_resource type="Script" uid="uid://dfpuuu2bh75ss" path="res://scripts/level1_quest.gd" id="13_quest"]
 [ext_resource type="TileSet" uid="uid://chfk3gf3dhctt" path="res://levels/hollowbrook_tileset.tres" id="14_tiles"]
@@ -46,6 +47,9 @@ size = Vector2(30, 10)
 
 [sub_resource type="CircleShape2D" id="CatArea"]
 radius = 8.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_sg00f"]
+radius = 14.0
 
 [sub_resource type="RectangleShape2D" id="WallH"]
 size = Vector2(512, 32)
@@ -195,6 +199,17 @@ script = ExtResource("20_cat")
 
 [node name="Shape" type="CollisionShape2D" parent="Mochi" unique_id=1859560940]
 shape = SubResource("CatArea")
+
+[node name="CatStory" type="Area2D" parent="Mochi" unique_id=496817003]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("16_shy1u")
+dialogue = ExtResource("11_x6rmf")
+active_flag = "cat_dead"
+prompt_text = "Look"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Mochi/CatStory" unique_id=1753979394]
+shape = SubResource("CircleShape2D_sg00f")
 
 [node name="Farm" type="Node2D" parent="." unique_id=950043173]
 
