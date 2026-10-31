@@ -354,6 +354,7 @@ collision_mask = 0
 script = ExtResource("16_shy1u")
 dialogue = ExtResource("6_baker")
 story_dialogue = ExtResource("17_x6rmf")
+use_parent_dialogue = true
 required_flag = "cat_dead"
 done_flag = "baker_confronted"
 prompt_text = "Talk"
