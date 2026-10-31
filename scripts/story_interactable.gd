@@ -2,11 +2,16 @@ class_name StoryInteractable
 extends Interactable
 ## Interactable for story beats. Talks normally, then switches to a special
 ## conversation once a story flag is set (e.g. the Baker after the cat dies).
+##
+## use_parent_dialogue: when this is a child of an NPC, the normal
+## conversation is whatever dialogue the parent NPC currently has. Quest
+## scripts that swap the NPC's dialogue (like Level 1's Baker lines) keep working.
 
 signal story_beat_finished
 
 @export var dialogue: DialogueData          ## normal conversation
 @export var story_dialogue: DialogueData    ## special one-time conversation
+@export var use_parent_dialogue := false    ## use the parent NPC's current dialogue as the normal one
 @export var active_flag := ""               ## only interactable once this flag is set ("" = always)
 @export var required_flag := ""             ## story_dialogue plays only once this is set ("" = always)
 @export var done_flag := ""                 ## set when the story conversation ends
@@ -38,7 +43,12 @@ func _on_interact(_by: Node) -> void:
 	var use_story := story_dialogue != null \
 		and _flag_ok(required_flag) \
 		and not (done_flag != "" and get_story_flag(done_flag))
-	var data: DialogueData = story_dialogue if use_story else dialogue
+	var normal: DialogueData = dialogue
+	if use_parent_dialogue:
+		var parent_node := get_parent()
+		if parent_node != null and "dialogue" in parent_node and parent_node.dialogue != null:
+			normal = parent_node.dialogue
+	var data: DialogueData = story_dialogue if use_story else normal
 	if data == null:
 		return
 	if use_story:
