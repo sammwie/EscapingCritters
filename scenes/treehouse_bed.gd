@@ -25,10 +25,13 @@ func _draw() -> void:
 func _on_interact(_by: Node) -> void:
 	if treehouse == null:
 		return
+	GameState.set_night(true)
 	treehouse.rest()
 	var fm := _farm_manager()
 	if fm:
 		fm.end_day()
+	else:
+		GameState.advance_day()
 	queue_redraw()
 
 func _farm_manager() -> FarmManager:

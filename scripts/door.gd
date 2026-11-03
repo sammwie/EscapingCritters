@@ -20,7 +20,7 @@ func _on_interact(_by: Node) -> void:
 		return
 	opened.emit()
 	if target_scene != "":
-		get_tree().change_scene_to_file(target_scene)
+		GameState.change_scene.call_deferred(target_scene)
 
 func unlock() -> void:
 	locked = false
