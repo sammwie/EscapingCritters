@@ -50,6 +50,9 @@ extends Puzzle
 @export var fade_time := 1.2        
 @export var sink_at_bank := false  
 
+@export var lose_level := -1    ## level passed to GameState.set_progress on the loss (-1 = keep current)
+@export var lose_stage := -1    ## stage passed to GameState.set_progress (-1 = keep current)
+
 var _rocks: Array[LyingObject] = []
 var _player: Node2D
 var _player_start := Vector2.ZERO
@@ -354,11 +357,13 @@ func _lose_sequence() -> void:
 	var tw := create_tween()
 	tw.tween_property(fade, "modulate:a", 1.0, fade_time)
 	await tw.finished
+	if lose_scene_path != "" and ResourceLoader.exists(lose_scene_path):
+		var lvl: int = lose_level if lose_level >= 0 else GameState.current_level
+		var stg: int = lose_stage if lose_stage >= 0 else GameState.corruption_stage
+		GameState.finish_pond_loss(lose_scene_path, lvl, stg)
+		return
 	if GameState.has_method("set_flag"):
 		GameState.set_flag("pond_lost", true)
-	if lose_scene_path != "" and ResourceLoader.exists(lose_scene_path):
-		get_tree().change_scene_to_file(lose_scene_path)
-		return
 	# No Knows All map yet: show a placeholder, then reload the level for testing.
 	push_warning("PuddlePuzzle: lose_scene_path is empty or missing, so the Knows All map was not loaded.")
 	_show_message("[Knows All map goes here]")

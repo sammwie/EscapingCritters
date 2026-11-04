@@ -20,6 +20,7 @@ var _fade_rect: ColorRect
 var _label: Label
 
 func _ready() -> void:
+	puzzle_id = &"hiding"
 	_build_overlay()
 	if auto_start:
 		start.call_deferred()
