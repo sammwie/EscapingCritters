@@ -52,9 +52,20 @@ func _apply_dead_state() -> void:
 		_sprite.texture = dead_texture
 		_sprite.hframes = 1
 		_sprite.frame = 0
+	elif _dead:
+		# No dead sprite yet: lay the normal one on its side, eyes shut, greyed out.
+		_sprite.texture = SHEET
+		_sprite.hframes = 3
+		_sprite.frame = 2
+		_sprite.rotation_degrees = 90.0
+		_sprite.position = Vector2(0, 3)
+		_sprite.modulate = Color(0.55, 0.55, 0.6)
 	else:
 		_sprite.texture = SHEET
 		_sprite.hframes = 3
+		_sprite.rotation_degrees = 0.0
+		_sprite.position = Vector2.ZERO
+		_sprite.modulate = Color.WHITE
 
 func _on_interact(_by: Node) -> void:
 	_blink = 0.8

@@ -1,16 +1,62 @@
 [gd_resource type="Resource" script_class="DialogueData" format=3 uid="uid://dfsa1rlkof32p"]
 
-[ext_resource type="Script" uid="uid://cuib8na2qq78n" path="res://scripts/dialogue_line.gd" id="1_op15h"]
-[ext_resource type="Script" uid="uid://bilm6gbrl1knw" path="res://scripts/dialogue_data.gd" id="2_0t3cp"]
+[ext_resource type="Script" uid="uid://cuib8na2qq78n" path="res://scripts/dialogue_line.gd" id="1_l"]
+[ext_resource type="Script" uid="uid://bilm6gbrl1knw" path="res://scripts/dialogue_data.gd" id="2_d"]
 
-[sub_resource type="Resource" id="Resource_op15h"]
-script = ExtResource("1_op15h")
+[sub_resource type="Resource" id="Line_1"]
+script = ExtResource("1_l")
+speaker = "You"
+text = "Baker... it's Mochi. She's lying by my house and she won't wake up."
+metadata/_custom_type_script = "uid://cuib8na2qq78n"
+
+[sub_resource type="Resource" id="Line_2"]
+script = ExtResource("1_l")
+speaker = "You"
+text = "Do you know what happened to her?"
+metadata/_custom_type_script = "uid://cuib8na2qq78n"
+
+[sub_resource type="Resource" id="Line_3"]
+script = ExtResource("1_l")
 speaker = "Baker"
-text = "Placeholder: Baker confrontation"
+text = "Your cat? Why would I know anything about your cat?"
+metadata/_custom_type_script = "uid://cuib8na2qq78n"
+
+[sub_resource type="Resource" id="Line_4"]
+script = ExtResource("1_l")
+speaker = "Baker"
+text = "Unless... someone told you something. Was it the Butcher? Did he tell you about the pond?"
+metadata/_custom_type_script = "uid://cuib8na2qq78n"
+
+[sub_resource type="Resource" id="Line_5"]
+script = ExtResource("1_l")
+speaker = "You"
+text = "The pond? What pond?"
+metadata/_custom_type_script = "uid://cuib8na2qq78n"
+
+[sub_resource type="Resource" id="Line_6"]
+script = ExtResource("1_l")
+speaker = "Baker"
+text = "Nobody goes to the pond. NOBODY goes to the pond."
+glitch = true
+metadata/_custom_type_script = "uid://cuib8na2qq78n"
+
+[sub_resource type="Resource" id="Line_7"]
+script = ExtResource("1_l")
+speaker = "Baker"
+text = "You weren't supposed to be awake yet."
+glitch = true
+metadata/_custom_type_script = "uid://cuib8na2qq78n"
+
+[sub_resource type="Resource" id="Line_8"]
+script = ExtResource("1_l")
+speaker = "Baker"
+text = "Everyone! Come out! COME OUT!"
+glitch = true
 metadata/_custom_type_script = "uid://cuib8na2qq78n"
 
 [resource]
-script = ExtResource("2_0t3cp")
+script = ExtResource("2_d")
 npc_id = "baker"
-lines = Array[ExtResource("1_op15h")]([SubResource("Resource_op15h")])
+lines = Array[ExtResource("1_l")]([SubResource("Line_1"), SubResource("Line_2"), SubResource("Line_3"), SubResource("Line_4"), SubResource("Line_5"), SubResource("Line_6"), SubResource("Line_7"), SubResource("Line_8")])
+repeat_lines = Array[ExtResource("1_l")]([SubResource("Line_1"), SubResource("Line_2"), SubResource("Line_3"), SubResource("Line_4"), SubResource("Line_5"), SubResource("Line_6"), SubResource("Line_7"), SubResource("Line_8")])
 metadata/_custom_type_script = "uid://bilm6gbrl1knw"

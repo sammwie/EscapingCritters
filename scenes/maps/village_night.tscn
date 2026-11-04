@@ -1,0 +1,106 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://bx312bcq53pnj" path="res://scenes/test_main.tscn" id="1_village"]
+[ext_resource type="Script" path="res://scripts/hiding_puzzle.gd" id="2_hiding"]
+[ext_resource type="Script" path="res://scripts/patrol_guard.gd" id="3_guard"]
+[ext_resource type="Script" path="res://scripts/hiding_spot.gd" id="4_bush"]
+[ext_resource type="Script" path="res://scripts/patrol_villager_look.gd" id="5_look"]
+[ext_resource type="Script" path="res://scripts/knows_all_watcher.gd" id="6_watcher"]
+
+[node name="VillageNight" instance=ExtResource("1_village")]
+metadata/story_map = "night"
+
+[node name="HidingPuzzle" type="Node" parent="." node_paths=PackedStringArray("guards_parent", "exit_marker", "start_marker")]
+script = ExtResource("2_hiding")
+guards_parent = NodePath("../NightGuards")
+exit_marker = NodePath("../PondEntrance")
+start_marker = NodePath("../NightStart")
+puzzle_id = &"hiding"
+caught_text = "They saw you... back home, quickly."
+
+[node name="NightGuards" type="Node2D" parent="."]
+
+[node name="Guard1" type="Node2D" parent="NightGuards"]
+position = Vector2(200, 250)
+script = ExtResource("3_guard")
+patrol_offset = Vector2(140, 0)
+speed = 40.0
+wait_time = 0.5
+vision_range = 95.0
+body_color = Color(0, 0, 0, 0)
+
+[node name="Look" type="Node" parent="NightGuards/Guard1"]
+script = ExtResource("5_look")
+art_folder = "res://art/villager-01"
+
+[node name="Guard2" type="Node2D" parent="NightGuards"]
+position = Vector2(330, 320)
+script = ExtResource("3_guard")
+patrol_offset = Vector2(0, 150)
+speed = 40.0
+wait_time = 0.5
+vision_range = 95.0
+body_color = Color(0, 0, 0, 0)
+
+[node name="Look" type="Node" parent="NightGuards/Guard2"]
+script = ExtResource("5_look")
+art_folder = "res://art/villager-02"
+
+[node name="Guard3" type="Node2D" parent="NightGuards"]
+position = Vector2(170, 470)
+script = ExtResource("3_guard")
+patrol_offset = Vector2(150, 0)
+speed = 40.0
+wait_time = 0.5
+vision_range = 95.0
+body_color = Color(0, 0, 0, 0)
+
+[node name="Look" type="Node" parent="NightGuards/Guard3"]
+script = ExtResource("5_look")
+art_folder = "res://art/villager-01"
+
+[node name="Guard4" type="Node2D" parent="NightGuards"]
+position = Vector2(195, 556)
+script = ExtResource("3_guard")
+patrol_offset = Vector2(140, 0)
+speed = 45.0
+wait_time = 0.4
+vision_range = 85.0
+body_color = Color(0, 0, 0, 0)
+
+[node name="Look" type="Node" parent="NightGuards/Guard4"]
+script = ExtResource("5_look")
+art_folder = "res://art/villager-02"
+
+[node name="NightBushes" type="Node2D" parent="."]
+
+[node name="Bush1" type="Area2D" parent="NightBushes"]
+position = Vector2(150, 215)
+script = ExtResource("4_bush")
+
+[node name="Bush2" type="Area2D" parent="NightBushes"]
+position = Vector2(275, 300)
+script = ExtResource("4_bush")
+
+[node name="Bush3" type="Area2D" parent="NightBushes"]
+position = Vector2(235, 395)
+script = ExtResource("4_bush")
+
+[node name="Bush4" type="Area2D" parent="NightBushes"]
+position = Vector2(300, 505)
+script = ExtResource("4_bush")
+
+[node name="Bush5" type="Area2D" parent="NightBushes"]
+position = Vector2(225, 548)
+script = ExtResource("4_bush")
+
+[node name="NightStart" type="Marker2D" parent="."]
+position = Vector2(130, 155)
+
+[node name="PondEntrance" type="Marker2D" parent="."]
+position = Vector2(264, 575)
+
+[node name="KnowsAllWatcher" type="Node2D" parent="."]
+position = Vector2(455, 455)
+script = ExtResource("6_watcher")
+notice_range = 170.0

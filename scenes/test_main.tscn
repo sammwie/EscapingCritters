@@ -271,7 +271,7 @@ target_scene = "res://scenes/interiors/house_interior.tscn"
 shape = SubResource("DoorShape")
 
 [node name="Spawn_house_outside" type="Marker2D" parent="Doors" unique_id=92578830]
-position = Vector2(130, 164)
+position = Vector2(130, 155)
 metadata/facing = "south"
 
 [node name="BakeryDoor" type="Area2D" parent="Doors" unique_id=927184020]
@@ -286,7 +286,7 @@ target_scene = "res://scenes/interiors/bakery_interior.tscn"
 shape = SubResource("DoorShape")
 
 [node name="Spawn_bakery_outside" type="Marker2D" parent="Doors" unique_id=2052262648]
-position = Vector2(377, 164)
+position = Vector2(392, 155)
 metadata/facing = "south"
 
 [node name="ButcherDoor" type="Area2D" parent="Doors" unique_id=751048338]
@@ -301,7 +301,7 @@ target_scene = "res://scenes/interiors/butcher_interior.tscn"
 shape = SubResource("DoorShape")
 
 [node name="Spawn_butcher_outside" type="Marker2D" parent="Doors" unique_id=589784381]
-position = Vector2(220, 292)
+position = Vector2(220, 283)
 metadata/facing = "south"
 
 [node name="TownhallDoor" type="Area2D" parent="Doors" unique_id=1128958804]
@@ -316,7 +316,7 @@ target_scene = "res://scenes/interiors/townhall_interior.tscn"
 shape = SubResource("DoorShape")
 
 [node name="Spawn_townhall_outside" type="Marker2D" parent="Doors" unique_id=1394372397]
-position = Vector2(408, 404)
+position = Vector2(408, 395)
 metadata/facing = "south"
 
 [node name="Butcher" parent="." unique_id=1016802625 instance=ExtResource("2_31pel")]

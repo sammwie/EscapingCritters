@@ -50,7 +50,6 @@ static var note_pos := Vector2(259, 335)
 static var start_delay := 6.0
 static var _begun := false
 static var _version := 0
-static var _pending_banner := false
 
 var _scene: Node
 var _player: CharacterBody2D
@@ -81,13 +80,17 @@ static func wake_up() -> bool:
 	stage = Stage.EGGS
 	GameState.current_level = 2
 	GameState.corruption_stage = maxi(GameState.corruption_stage, 1)
-	_pending_banner = true
 	_version += 1
 	return true
 
 func _ready() -> void:
 	CombatInput.ensure()
 	_scene = get_parent()
+	# Level 3 rides along with Level 2, the same way Level 2 rides along with Level 1.
+	if _scene and _scene.get_node_or_null("Level3Quest") == null:
+		var l3 := Level3Quest.new()
+		l3.name = "Level3Quest"
+		_scene.add_child.call_deferred(l3)
 	_build_ui()
 	Dialogue.conversation_ended.connect(_on_conversation_ended)
 	_setup.call_deferred()
@@ -108,9 +111,8 @@ func _setup() -> void:
 	_version += 1
 
 func _process(_delta: float) -> void:
-	if _pending_banner and stage == Stage.EGGS and not Dialogue.active:
-		_pending_banner = false
-		_show_banner("Level 2", "Things get weird.")
+	if _panel.visible and Level3Quest.stage != Level3Quest.Stage.INACTIVE:
+		_version += 1  # hide this list once Level 3 takes over
 	if _seen_version != _version:
 		_seen_version = _version
 		_refresh()
@@ -336,7 +338,8 @@ func _say(speaker: String, lines: Array, id: String) -> void:
 # ---------- UI ----------
 
 func _refresh() -> void:
-	_panel.visible = stage != Stage.INACTIVE and stage != Stage.EVENING
+	_panel.visible = stage != Stage.INACTIVE and stage != Stage.EVENING \
+		and Level3Quest.stage == Level3Quest.Stage.INACTIVE  # Level 3 shows its own list
 	var active_index := 0
 	match stage:
 		Stage.EGGS, Stage.WALLS:

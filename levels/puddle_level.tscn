@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://cvcw7h5ng6ydg" path="res://scenes/player.tscn" id="3_2l3aq"]
 [ext_resource type="PackedScene" uid="uid://cua0xve748asr" path="res://scenes/interact_prompt.tscn" id="4_idtqy"]
 [ext_resource type="PackedScene" uid="uid://btddjwtj7riu" path="res://scenes/glitch_overlay.tscn" id="5_rnrjf"]
+[ext_resource type="Script" path="res://scripts/level3_quest.gd" id="6_l3quest"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_etr18"]
 size = Vector2(40, 120)
@@ -17,6 +18,7 @@ rocks_parent = NodePath("../Rocks")
 goal = NodePath("../Goal")
 water = NodePath("../Water")
 rigged_to_lose = true
+lose_scene_path = "res://scenes/maps/knows_all.tscn"
 
 [node name="Rocks" type="Node2D" parent="." unique_id=1441567082]
 
@@ -80,3 +82,6 @@ offset_bottom = 410.0
 color = Color(0.2138792, 0.75514585, 0.8681007, 1)
 
 [node name="CanvasLayer" parent="." unique_id=1462862614 instance=ExtResource("5_rnrjf")]
+
+[node name="Level3Quest" type="Node" parent="."]
+script = ExtResource("6_l3quest")

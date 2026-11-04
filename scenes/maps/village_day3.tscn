@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://bx312bcq53pnj" path="res://scenes/test_main.tscn" id="1_village"]
+
+[node name="VillageDay3" instance=ExtResource("1_village")]
+metadata/story_map = "day3"

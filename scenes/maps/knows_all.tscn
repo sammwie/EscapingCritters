@@ -1,0 +1,28 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/knows_all_placeholder.gd" id="1_ka"]
+[ext_resource type="PackedScene" uid="uid://cvcw7h5ng6ydg" path="res://scenes/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" uid="uid://dxbcaovcv123k" path="res://scenes/dialogue_box.tscn" id="3_db"]
+[ext_resource type="PackedScene" uid="uid://cua0xve748asr" path="res://scenes/interact_prompt.tscn" id="4_ip"]
+[ext_resource type="PackedScene" uid="uid://btddjwtj7riu" path="res://scenes/glitch_overlay.tscn" id="5_glitch"]
+[ext_resource type="Script" path="res://scripts/level3_quest.gd" id="6_l3"]
+
+[node name="KnowsAll" type="Node2D"]
+script = ExtResource("1_ka")
+metadata/story_map = "knows_all"
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(256, 330)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+zoom = Vector2(4, 4)
+position_smoothing_enabled = true
+
+[node name="DialogueBox" parent="." instance=ExtResource("3_db")]
+
+[node name="InteractPrompt" parent="." instance=ExtResource("4_ip")]
+
+[node name="GlitchOverlay" parent="." instance=ExtResource("5_glitch")]
+
+[node name="Level3Quest" type="Node" parent="."]
+script = ExtResource("6_l3")
