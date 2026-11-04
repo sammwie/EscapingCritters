@@ -90,3 +90,6 @@ func _apply_spawn() -> void:
 	for child in get_children():
 		if child is Camera2D:
 			child.reset_smoothing()
+			# Scene fades pause the tree, so push the camera to the spawn now
+			# instead of after the fade, when it would visibly jump.
+			child.force_update_scroll()
