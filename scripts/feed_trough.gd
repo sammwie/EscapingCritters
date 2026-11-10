@@ -6,6 +6,9 @@ extends Interactable
 
 const SHEET := preload("res://art/animals/trough.png")
 
+## Off when the trough is already drawn into the room's art (the coop).
+@export var draw_sprite := true
+
 var _sprite: Sprite2D
 
 func _ready() -> void:
@@ -15,6 +18,7 @@ func _ready() -> void:
 	_sprite.texture = SHEET
 	_sprite.hframes = 2
 	_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_sprite.visible = draw_sprite
 	add_child(_sprite)
 	refresh()
 

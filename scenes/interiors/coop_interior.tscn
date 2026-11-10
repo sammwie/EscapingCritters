@@ -1,0 +1,196 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://art/interiors/coop_interior.png" id="bg"]
+[ext_resource type="PackedScene" uid="uid://cvcw7h5ng6ydg" path="res://scenes/player.tscn" id="p"]
+[ext_resource type="PackedScene" uid="uid://dxbcaovcv123k" path="res://scenes/dialogue_box.tscn" id="db"]
+[ext_resource type="PackedScene" uid="uid://cua0xve748asr" path="res://scenes/interact_prompt.tscn" id="ip"]
+[ext_resource type="Script" path="res://scripts/scene_door.gd" id="door"]
+[ext_resource type="Script" path="res://scripts/level1_quest.gd" id="quest"]
+[ext_resource type="Script" path="res://scripts/level2_quest.gd" id="l2quest"]
+[ext_resource type="Script" path="res://scripts/feed_trough.gd" id="trough"]
+[ext_resource type="Script" path="res://scripts/wander_animal.gd" id="wander"]
+[ext_resource type="Texture2D" uid="uid://cwtt1lnhnwi4l" path="res://art/animals/chicken.png" id="chicken"]
+
+[sub_resource type="RectangleShape2D" id="R_Back"]
+size = Vector2(256, 56)
+
+[sub_resource type="RectangleShape2D" id="R_Left"]
+size = Vector2(16, 192)
+
+[sub_resource type="RectangleShape2D" id="R_Right"]
+size = Vector2(16, 192)
+
+[sub_resource type="RectangleShape2D" id="R_Bottom"]
+size = Vector2(256, 16)
+
+[sub_resource type="RectangleShape2D" id="R_Shelves"]
+size = Vector2(38, 77)
+
+[sub_resource type="RectangleShape2D" id="R_Feeder"]
+size = Vector2(28, 16)
+
+[sub_resource type="RectangleShape2D" id="R_Waterer"]
+size = Vector2(19, 16)
+
+[sub_resource type="RectangleShape2D" id="R_Hay"]
+size = Vector2(24, 54)
+
+[sub_resource type="RectangleShape2D" id="R_Sacks"]
+size = Vector2(27, 25)
+
+[sub_resource type="RectangleShape2D" id="R_Basket"]
+size = Vector2(28, 26)
+
+[sub_resource type="RectangleShape2D" id="R_Bucket"]
+size = Vector2(16, 18)
+
+[sub_resource type="RectangleShape2D" id="DoorShape"]
+size = Vector2(16, 12)
+
+[sub_resource type="RectangleShape2D" id="TroughShape"]
+size = Vector2(32, 22)
+
+[node name="CoopInterior" type="Node2D"]
+
+[node name="Darkness" type="ColorRect" parent="."]
+offset_left = -600.0
+offset_top = -400.0
+offset_right = 856.0
+offset_bottom = 592.0
+mouse_filter = 2
+color = Color(0.0784, 0.0588, 0.0471, 1)
+
+[node name="Background" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("bg")
+centered = false
+scale = Vector2(0.5, 0.5)
+
+[node name="Walls" type="StaticBody2D" parent="."]
+
+[node name="Back" type="CollisionShape2D" parent="Walls"]
+position = Vector2(128.0, 28.0)
+shape = SubResource("R_Back")
+
+[node name="Left" type="CollisionShape2D" parent="Walls"]
+position = Vector2(8.0, 96.0)
+shape = SubResource("R_Left")
+
+[node name="Right" type="CollisionShape2D" parent="Walls"]
+position = Vector2(248.0, 96.0)
+shape = SubResource("R_Right")
+
+[node name="Bottom" type="CollisionShape2D" parent="Walls"]
+position = Vector2(128.0, 184.0)
+shape = SubResource("R_Bottom")
+
+[node name="Shelves" type="CollisionShape2D" parent="Walls"]
+position = Vector2(41.0, 79.5)
+shape = SubResource("R_Shelves")
+
+[node name="Feeder" type="CollisionShape2D" parent="Walls"]
+position = Vector2(112.0, 108.0)
+shape = SubResource("R_Feeder")
+
+[node name="Waterer" type="CollisionShape2D" parent="Walls"]
+position = Vector2(149.5, 108.0)
+shape = SubResource("R_Waterer")
+
+[node name="Hay" type="CollisionShape2D" parent="Walls"]
+position = Vector2(222.0, 68.0)
+shape = SubResource("R_Hay")
+
+[node name="Sacks" type="CollisionShape2D" parent="Walls"]
+position = Vector2(38.5, 146.5)
+shape = SubResource("R_Sacks")
+
+[node name="Basket" type="CollisionShape2D" parent="Walls"]
+position = Vector2(202.0, 145.0)
+shape = SubResource("R_Basket")
+
+[node name="Bucket" type="CollisionShape2D" parent="Walls"]
+position = Vector2(224.0, 149.0)
+shape = SubResource("R_Bucket")
+
+[node name="Pen" type="Node2D" parent="."]
+
+[node name="Trough" type="Area2D" parent="Pen"]
+position = Vector2(112, 106)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("trough")
+draw_sprite = false
+
+[node name="Shape" type="CollisionShape2D" parent="Pen/Trough"]
+shape = SubResource("TroughShape")
+
+[node name="EggSpots" type="Node2D" parent="Pen"]
+
+[node name="Egg1" type="Marker2D" parent="Pen/EggSpots"]
+position = Vector2(100, 64)
+
+[node name="Egg2" type="Marker2D" parent="Pen/EggSpots"]
+position = Vector2(122, 64)
+
+[node name="Egg3" type="Marker2D" parent="Pen/EggSpots"]
+position = Vector2(160, 64)
+
+[node name="Chicken1" type="Node2D" parent="Pen"]
+position = Vector2(90, 140)
+script = ExtResource("wander")
+sheet = ExtResource("chicken")
+frame_count = 3
+idle_frame = 2
+area = Rect2(64, 122, 116, 44)
+speed = 12.0
+
+[node name="Chicken2" type="Node2D" parent="Pen"]
+position = Vector2(140, 150)
+script = ExtResource("wander")
+sheet = ExtResource("chicken")
+frame_count = 3
+idle_frame = 2
+area = Rect2(64, 122, 116, 44)
+speed = 12.0
+
+[node name="Chicken3" type="Node2D" parent="Pen"]
+position = Vector2(170, 128)
+script = ExtResource("wander")
+sheet = ExtResource("chicken")
+frame_count = 3
+idle_frame = 2
+area = Rect2(64, 122, 116, 44)
+speed = 12.0
+
+[node name="ExitDoor" type="Area2D" parent="."]
+position = Vector2(128, 176)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("door")
+target_scene = "res://scenes/test_main.tscn"
+spawn_at = "Spawn_coop_outside"
+label = "Leave"
+
+[node name="Shape" type="CollisionShape2D" parent="ExitDoor"]
+shape = SubResource("DoorShape")
+
+[node name="Spawn_inside" type="Marker2D" parent="."]
+position = Vector2(128, 162)
+metadata/facing = "north"
+
+[node name="Player" parent="." instance=ExtResource("p")]
+position = Vector2(128, 162)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(128, 96)
+zoom = Vector2(4, 4)
+
+[node name="DialogueBox" parent="." instance=ExtResource("db")]
+
+[node name="InteractPrompt" parent="." instance=ExtResource("ip")]
+
+[node name="Level1Quest" type="Node" parent="."]
+script = ExtResource("quest")
+
+[node name="Level2Quest" type="Node" parent="."]
+script = ExtResource("l2quest")
