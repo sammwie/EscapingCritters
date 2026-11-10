@@ -194,7 +194,6 @@ func _on_boss_defeated(at: Vector2) -> void:
 	await get_tree().create_timer(1.0).timeout
 	_unlock_camera()
 	_barrier.queue_free()
-	SFX.stop("fight_butcher")
 	won.emit(at)
 	await get_tree().create_timer(1.2).timeout
 	if _tint:

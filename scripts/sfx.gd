@@ -30,6 +30,7 @@ const SOUNDS := {
 	"fall_in_pond": "fall_in_pond.mp3",
 	"walls": "walls_closing_in.mp3",
 	"village_chase": "village_chase.mp3",
+	"level_2_done": "level_2_done.mp3",
 	"level_3_done": "level_3_done.mp3",
 	"scary": "scary_sudden_sound.mp3",
 	"horror_wind": "horror_wind_scary_search_minigame.mp3",
@@ -47,6 +48,7 @@ const SOUNDS := {
 }
 
 const STORY_AMBIENCE := ["horror_ambience", "day3_ambience", "night_ambience"]
+const BUTCHER_AMBIENCE_FRACTION := 0.7
 
 var _loops: Dictionary = {}
 var _indoor_filter := AudioEffectLowPassFilter.new()
@@ -155,6 +157,8 @@ func set_level_mix(level: int, night := false, ambience_enabled := true) -> void
 		stop("opening_music")
 	if level >= 2 and Level2Quest.stage >= Level2Quest.Stage.NOTE:
 		music_fraction *= 0.1
+	if level == 2 and Level2Quest.stage == Level2Quest.Stage.NOTE:
+		ambience_fraction = BUTCHER_AMBIENCE_FRACTION
 	_music_fraction = music_fraction
 	_ambience_fraction = ambience_fraction if ambience_enabled else 0.0
 	_nightfall_gain = 1.0
@@ -181,7 +185,7 @@ func set_nightfall_gain(gain: float) -> void:
 
 func set_fight_mix() -> void:
 	_music_fraction = 0.0
-	_ambience_fraction = 0.7
+	_ambience_fraction = BUTCHER_AMBIENCE_FRACTION
 	_update_mix_buses()
 
 func set_sfx_volume() -> void:

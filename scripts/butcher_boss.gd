@@ -265,7 +265,6 @@ func take_hit(damage: int, from_pos: Vector2) -> void:
 	if mode != Mode.FIGHT or hp <= 0:
 		return
 	var multiplier := 2 if st == St.STUNNED else 1
-	SFX.play("butcher_hit")
 	hp = maxi(hp - damage * multiplier, 0)
 	health_changed.emit(hp, max_hp)
 	_kb = (global_position - from_pos).normalized() * 110.0
@@ -274,8 +273,11 @@ func take_hit(damage: int, from_pos: Vector2) -> void:
 	flash.tween_property(_sprite, "modulate", Color.WHITE, 0.14)
 	if hp <= 0:
 		_die()
+	else:
+		SFX.play("butcher_hit")
 
 func _die() -> void:
+	SFX.stop("fight_butcher")
 	SFX.play("butcher_death")
 	mode = Mode.DEAD
 	st = St.WAIT

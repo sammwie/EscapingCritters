@@ -25,6 +25,7 @@ static func open_log(host: Node) -> NoteViewer:
 func _ready() -> void:
 	layer = 80
 	add_to_group("note_viewer")
+	SFX.play("open_any_note", false, 0.46)
 	for node in get_tree().get_nodes_in_group("player"):
 		if node.is_physics_processing():
 			node.set_physics_process(false)

@@ -325,6 +325,7 @@ func _on_note_read() -> void:
 	GameState.current_level = 3
 	SFX.set_level_mix(2, false, false)
 	_version += 1
+	SFX.play("level_2_done")
 	_show_banner("Level 2 Complete", "Press N to read your notes. Level 3 is next.")
 
 # ---------- helpers ----------
@@ -422,8 +423,6 @@ func _build_ui() -> void:
 		_task_labels.append(label)
 
 func _show_banner(heading: String, sub: String) -> void:
-	if heading == "Level 2 Complete":
-		SFX.play("menu_select")
 	var layer := CanvasLayer.new()
 	layer.layer = 60
 	add_child(layer)
