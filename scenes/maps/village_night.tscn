@@ -6,9 +6,37 @@
 [ext_resource type="Script" path="res://scripts/hiding_spot.gd" id="4_bush"]
 [ext_resource type="Script" path="res://scripts/patrol_villager_look.gd" id="5_look"]
 [ext_resource type="Script" path="res://scripts/knows_all_watcher.gd" id="6_watcher"]
+[ext_resource type="Shader" path="res://smoke_or_fog.gdshader" id="7_fog"]
+
+[sub_resource type="Gradient" id="NightFogGradient"]
+offsets = PackedFloat32Array(0, 0.45, 1)
+colors = PackedColorArray(0.08, 0.12, 0.2, 0.08, 0.17, 0.21, 0.31, 0.4, 0.38, 0.43, 0.55, 0.72)
+
+[sub_resource type="GradientTexture1D" id="NightFogGradientTexture"]
+gradient = SubResource("NightFogGradient")
+width = 256
+
+[sub_resource type="ShaderMaterial" id="NightFogMaterial"]
+shader = ExtResource("7_fog")
+shader_parameter/octaves = 4
+shader_parameter/color_gradient = SubResource("NightFogGradientTexture")
+shader_parameter/speed_1 = 0.12
+shader_parameter/speed_2 = 0.05
 
 [node name="VillageNight" instance=ExtResource("1_village")]
 metadata/story_map = "night"
+
+[node name="NightFogLayer" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="NightFog" type="ColorRect" parent="NightFogLayer"]
+material = SubResource("NightFogMaterial")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="HidingPuzzle" type="Node" parent="." node_paths=PackedStringArray("guards_parent", "exit_marker", "start_marker")]
 script = ExtResource("2_hiding")
