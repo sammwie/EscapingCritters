@@ -123,7 +123,7 @@ func _make_button(text: String, callback: Callable) -> Button:
 	button.add_theme_stylebox_override("pressed", _button_style(WOOD_DARK))
 	button.pressed.connect(callback)
 	button.pressed.connect(func() -> void: SFX.play("menu_select"))
-	button.mouse_entered.connect(func() -> void: SFX.play("menu_cycle"))
+	button.mouse_entered.connect(func() -> void: SFX.play("menu_hover"))
 	button.focus_entered.connect(func() -> void: SFX.play("menu_cycle"))
 	return button
 

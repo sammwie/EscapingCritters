@@ -49,10 +49,7 @@ func _on_interact(_by: Node) -> void:
 	get_tree().call_group("glitch_overlay", "flicker", 0.35, 1.0)
 	SFX.play("egg_crack")
 	SFX.play("egg_glitch", false, 0.25)
-	SFX.play("scary_search", true)
-	SFX.play("horror_wind", true)
 	show_cracked()
-	await get_tree().create_timer(0.35).timeout
 	cracked.emit()
 
 ## Shows the cracked state immediately (also used when the scene reloads).

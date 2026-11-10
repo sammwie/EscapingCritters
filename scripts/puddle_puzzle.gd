@@ -62,6 +62,7 @@ var _hint_layer: CanvasLayer
 var _losing := false
 
 func _ready() -> void:
+	SFX.play("pond_ambience", true)
 	SFX.play("pond_crossing", true)
 	SFX.play("pond_water", true)
 	if puzzle_id == &"":
@@ -77,6 +78,11 @@ func _ready() -> void:
 	start()
 	if show_instructions:
 		_build_instructions()
+
+func _exit_tree() -> void:
+	SFX.stop("pond_ambience")
+	SFX.stop("pond_crossing")
+	SFX.stop("pond_water")
 
 func _find_player() -> Node2D:
 	var p := get_tree().get_first_node_in_group("player")

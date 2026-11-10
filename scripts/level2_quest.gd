@@ -82,6 +82,7 @@ static func wake_up() -> bool:
 		return false
 	stage = Stage.EGGS
 	GameState.current_level = 2
+	SFX.set_level_mix(2, false, false)
 	GameState.corruption_stage = maxi(GameState.corruption_stage, 1)
 	_version += 1
 	return true
@@ -143,8 +144,7 @@ func _unhandled_input(event: InputEvent) -> void:
 # The Baker hands over the loaf (Level 1's last line), then asks about
 # tomorrow's eggs as plain dialogue. Sleeping in the house starts the morning.
 func _begin_evening() -> void:
-	SFX.set_level_mix(2)
-	SFX.play("horror_ambience", true)
+	SFX.set_level_mix(2, false, false)
 	await get_tree().create_timer(start_delay).timeout
 	while Dialogue.active:
 		await get_tree().process_frame
@@ -241,9 +241,13 @@ func _on_egg_cracked(spot_name: String) -> void:
 		return
 	eggs_cracked.append(spot_name)
 	_version += 1
-	if eggs_cracked.size() == 1:
+	var cracked_count := eggs_cracked.size()
+	if cracked_count == 1:
+		SFX.set_level_mix(2)
+	await get_tree().create_timer(0.35).timeout
+	if cracked_count == 1:
 		_say("You", ["...It's empty."], "l2_first_egg")
-	if eggs_cracked.size() >= NEEDED:
+	if cracked_count >= NEEDED:
 		await get_tree().create_timer(1.2).timeout
 		while Dialogue.active:
 			await get_tree().process_frame
@@ -317,6 +321,7 @@ func _spawn_note(pos: Vector2) -> void:
 func _on_note_read() -> void:
 	stage = Stage.DONE
 	GameState.current_level = 3
+	SFX.set_level_mix(2, false, false)
 	_version += 1
 	_show_banner("Level 2 Complete", "Press N to read your notes. Level 3 is next.")
 

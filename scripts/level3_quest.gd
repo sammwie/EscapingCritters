@@ -75,9 +75,11 @@ const SURROUND_RADIUS := 28.0
 const SURROUND_SPEED := 38.0
 const VILLAGER_ART := ["res://art/villager-01", "res://art/villager-02"]
 
+const FLASHLIGHT_AUDIO_RANGE := 40.0
+
 static var stage: int = Stage.INACTIVE
 static var _version := 0
-static var _night_entry_sound_played := false
+static var _wind_time_remaining := 18.0
 
 var _scene: Node
 var _player: CharacterBody2D
@@ -98,7 +100,7 @@ var _near_flashlight_view := false
 ## Call when a brand new game starts.
 static func reset() -> void:
 	stage = Stage.INACTIVE
-	_night_entry_sound_played = false
+	_wind_time_remaining = 18.0
 	_version += 1
 
 func _ready() -> void:
@@ -122,13 +124,11 @@ func _setup() -> void:
 				_nightfall()
 		"day3":
 			SFX.set_level_mix(3)
-			SFX.play("horror_ambience", true)
 			_add_tint(DAY3_TINT)
 			_ensure_glitch_overlay()
 			_setup_day3()
 		"night":
 			SFX.set_level_mix(3, true)
-			SFX.play("horror_ambience", true)
 			_add_tint(NIGHT_TINT)
 			_ensure_glitch_overlay()
 			CorruptionScreen.ensure(_scene).step_to(NIGHT_PIXEL, 0.4, NIGHT_GRADE)
@@ -136,7 +136,6 @@ func _setup() -> void:
 		"pond":
 			SFX.set_level_mix(4)
 			SFX.stop("cozy_level_1")
-			SFX.play("horror_ambience", true)
 			_setup_pond()
 		"knows_all":
 			if stage < Stage.KNOWS_ALL:
@@ -171,6 +170,11 @@ func _process(delta: float) -> void:
 		_move_crowd(delta)
 	if _map == "night":
 		_update_flashlight_audio()
+	if stage >= Stage.ASK_BAKER and stage < Stage.KNOWS_ALL:
+		_wind_time_remaining -= delta
+		if _wind_time_remaining <= 0.0:
+			SFX.play("horror_wind", false, 0.23)
+			_wind_time_remaining = randf_range(24.0, 40.0)
 
 func _input(event: InputEvent) -> void:
 	if _scripted and Dialogue.active and event.is_action_pressed("interact"):
@@ -197,6 +201,7 @@ func _on_slept() -> void:
 	if stage != Stage.GO_TO_BED:
 		return
 	stage = Stage.ASK_BAKER
+	SFX.set_level_mix(3)
 	# Mochi dies overnight.
 	StoryInteractable.set_story_flag("cat_dead", true)
 	GameState.set_night(false)
@@ -439,6 +444,7 @@ func _nightfall() -> void:
 	stage = Stage.SNEAK
 	_version += 1
 	GameState.set_night(true)
+	SFX.set_level_mix(3, true)
 	_add_tint(NIGHT_TINT)
 	var fade := create_tween()
 	fade.tween_property(black, "color:a", 0.0, 1.2)
@@ -454,10 +460,6 @@ func _nightfall() -> void:
 # ---------- SNEAK: the night map ----------
 
 func _setup_night() -> void:
-	SFX.play("pond_night_ambience", true)
-	if not _night_entry_sound_played:
-		SFX.play("horror_2")
-		_night_entry_sound_played = true
 	# Everyone is out patrolling instead (the guards in the scene).
 	for n in ["Baker", "Villager01", "Villager02"]:
 		var v := _scene.get_node_or_null(n)
@@ -487,12 +489,12 @@ func _update_flashlight_audio() -> void:
 		if guard == null:
 			continue
 		var to_player: Vector2 = _player.global_position - guard.global_position
-		if to_player.length() <= guard.vision_range + 24.0 \
+		if to_player.length() <= FLASHLIGHT_AUDIO_RANGE \
 				and absf(rad_to_deg(guard.facing.angle_to(to_player))) <= guard.vision_angle * 0.5:
 			near_view = true
 			break
 	if near_view and not _near_flashlight_view:
-		SFX.play("horror_wind")
+		SFX.play("horror_2")
 	_near_flashlight_view = near_view
 
 ## Knows All's first appearance: far off, silent, never approaching.

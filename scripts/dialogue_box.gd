@@ -19,7 +19,7 @@ func _ready() -> void:
 
 func _on_line_shown(speaker: String, text: String) -> void:
 	if speaker.to_lower().contains("butcher"):
-		SFX.play("butcher_speaking")
+		SFX.play("butcher_speaking", false, 0.24)
 	panel.show()
 	speaker_label.text = speaker
 	text_label.text = text

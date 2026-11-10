@@ -15,7 +15,7 @@ func _ready() -> void:
 	$ButtonList/CreditsButton.pressed.connect(_on_credits_pressed)
 	for button in $ButtonList.get_children():
 		if button is Button:
-			button.mouse_entered.connect(func() -> void: SFX.play("menu_cycle"))
+			button.mouse_entered.connect(func() -> void: SFX.play("menu_hover"))
 			button.pressed.connect(func() -> void: SFX.play("menu_select"))
 
 	# Disable Continue if there is no save yet.

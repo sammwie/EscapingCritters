@@ -50,7 +50,7 @@ var _task_labels: Array[Label] = []
 var _bonus_label: Label
 var _seen_version := -1
 var _ui_layer: CanvasLayer
-var _chicken_sound_active := false
+var _active_chicken_sound := ""
 
 # Call this when a brand new game starts.
 static func reset() -> void:
@@ -90,12 +90,13 @@ static func sleep_through_night() -> void:
 	_version += 1
 
 func _ready() -> void:
-	var active_level := 1
-	if Level3Quest.stage != Level3Quest.Stage.INACTIVE:
-		active_level = 3
+	if Level2Quest.stage == Level2Quest.Stage.DONE:
+		var night := Level3Quest.stage == Level3Quest.Stage.SNEAK
+		SFX.set_level_mix(3, night, Level3Quest.stage >= Level3Quest.Stage.ASK_BAKER)
 	elif Level2Quest.stage != Level2Quest.Stage.INACTIVE:
-		active_level = 2
-	SFX.set_level_mix(active_level)
+		SFX.set_level_mix(2, false, not Level2Quest.eggs_cracked.is_empty())
+	else:
+		SFX.set_level_mix(1)
 	SFX.play("cozy_level_1", true)
 	SFX.set_indoor_music(get_tree().current_scene.scene_file_path.contains("interiors/"))
 	# Level 2 rides along with Level 1: any scene that has this node also gets
@@ -109,26 +110,38 @@ func _ready() -> void:
 	Dialogue.conversation_ended.connect(_on_conversation_ended)
 	_setup_village.call_deferred()
 
-func _update_chicken_ambience() -> void:
-	var pen := get_parent().get_node_or_null("Pen") as Node2D
+func _exit_tree() -> void:
+	if not _active_chicken_sound.is_empty():
+		SFX.stop(_active_chicken_sound)
+
+func _nearby_chicken_sound() -> String:
+	if GameState.current_level >= 3:
+		return ""
 	var player := get_tree().get_first_node_in_group("player") as Node2D
-	var nearby := false
-	if pen != null and player != null:
+	if player == null:
+		return ""
+	var coop_door := get_parent().get_node_or_null("Doors/CoopDoor") as Node2D
+	if coop_door != null and player.global_position.distance_to(coop_door.global_position) <= 80.0:
+		return "chicken_coop_outside"
+	var pen := get_parent().get_node_or_null("Pen") as Node2D
+	if pen != null:
 		for chicken_name in ["Chicken1", "Chicken2", "Chicken3"]:
 			var chicken := pen.get_node_or_null(chicken_name) as Node2D
 			if chicken and player.global_position.distance_to(chicken.global_position) <= 120.0:
-				nearby = true
-				break
-	if nearby == _chicken_sound_active:
+				return "chicken_coop"
+	return ""
+
+func _update_chicken_ambience() -> void:
+	var sound_name := _nearby_chicken_sound()
+	if sound_name == _active_chicken_sound:
 		return
-	_chicken_sound_active = nearby
-	if nearby:
-		SFX.play("chicken_coop", true)
-	else:
-		SFX.stop("chicken_coop")
+	if not _active_chicken_sound.is_empty():
+		SFX.stop(_active_chicken_sound)
+	_active_chicken_sound = sound_name
+	if not sound_name.is_empty():
+		SFX.play(sound_name, true)
 
 func _process(_delta: float) -> void:
-	_update_chicken_ambience()
 	_update_chicken_ambience()
 	# Level 2 brings its own task list, so hide this one once it starts.
 	if _ui_layer:
@@ -168,10 +181,12 @@ func _setup_plot(plot: FarmPlot) -> void:
 	_update_crop(plot)
 
 func _on_planted(_crop_id: StringName, _plot: FarmPlot) -> void:
+	SFX.play("item_pickup")
 	planted += 1
 	_check()
 
 func _on_watered(_plot: FarmPlot) -> void:
+	SFX.play_limited("watering_plants", 1.0)
 	watered += 1
 	_check()
 

@@ -23,12 +23,18 @@ static func play(host: Node, camera: Camera2D) -> void:
 	await scare._run(camera)
 	scare.queue_free()
 
+func _enter_tree() -> void:
+	SFX.set_wall_squeeze_active(true)
+
+func _exit_tree() -> void:
+	SFX.set_wall_squeeze_active(false)
+
 func _run(camera: Camera2D) -> void:
 	layer = 60
 	_camera = camera
 	_size = get_viewport().get_visible_rect().size
 	_build()
-	SFX.play_limited("walls", 2.0)
+	SFX.play_limited("walls", 3.0)
 	SFX.play_limited("scary", 1.5)
 	get_tree().call_group("glitch_overlay", "flicker", 0.5, 1.0)
 	await get_tree().create_timer(0.4).timeout
