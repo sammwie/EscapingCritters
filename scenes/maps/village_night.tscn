@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/patrol_villager_look.gd" id="5_look"]
 [ext_resource type="Script" path="res://scripts/knows_all_watcher.gd" id="6_watcher"]
 [ext_resource type="Shader" path="res://smoke_or_fog.gdshader" id="7_fog"]
+[ext_resource type="Script" path="res://scripts/night_lamp_flicker.gd" id="8_flicker"]
 
 [sub_resource type="Gradient" id="NightFogGradient"]
 offsets = PackedFloat32Array(0, 0.45, 1)
@@ -39,6 +40,7 @@ height = 128
 metadata/story_map = "night"
 
 [node name="NightLights" type="Node2D" parent="."]
+script = ExtResource("8_flicker")
 
 [node name="HomeLampLight" type="PointLight2D" parent="NightLights"]
 position = Vector2(72, 106)
