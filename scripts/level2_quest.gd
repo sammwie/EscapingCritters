@@ -300,9 +300,9 @@ func _start_fight() -> void:
 	arena.begin(_player, _boss, ARENA)
 
 func _on_butcher_defeated(at: Vector2) -> void:
-	SFX.set_level_mix(2)
 	note_pos = at
 	stage = Stage.NOTE
+	SFX.set_level_mix(2)
 	_version += 1
 	_spawn_note(at)
 

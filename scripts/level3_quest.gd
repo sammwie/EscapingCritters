@@ -108,6 +108,10 @@ func _ready() -> void:
 	_build_ui()
 	_setup.call_deferred()
 
+func _exit_tree() -> void:
+	if _map == "day3":
+		SFX.stop("village_chase")
+
 func _setup() -> void:
 	_player = get_tree().get_first_node_in_group("player") as CharacterBody2D
 	_map = _detect_map()
@@ -141,6 +145,7 @@ func _setup() -> void:
 			if stage < Stage.KNOWS_ALL:
 				stage = Stage.KNOWS_ALL
 				_version += 1
+				SFX.play("level_3_done")
 			GameState.set_flag("pond_lost", true)
 	_version += 1
 
@@ -314,6 +319,8 @@ func _on_baker_confronted() -> void:
 	_start_surround(true)
 
 func _start_surround(fresh: bool) -> void:
+	SFX.stop("cozy_level_1")
+	SFX.play("village_chase", true)
 	_crowd_mode = CrowdMode.SURROUND
 	_crowd_radius = SURROUND_RADIUS
 	_crowd_speed = SURROUND_SPEED
@@ -433,8 +440,11 @@ func _nightfall() -> void:
 	label.modulate.a = 0.0
 	layer.add_child(label)
 
-	for text in ["You bolt the door behind you.", "Footsteps circle the house for hours...", "Night falls."]:
-		label.text = text
+	var nightfall_lines := ["You bolt the door behind you.", "Footsteps circle the house for hours...", "Night falls."]
+	for i in nightfall_lines.size():
+		label.text = nightfall_lines[i]
+		if i == nightfall_lines.size() - 1:
+			create_tween().tween_method(SFX.set_nightfall_gain, 1.0, 0.0, 2.4)
 		var tw := create_tween()
 		tw.tween_property(label, "modulate:a", 1.0, 0.6)
 		tw.tween_interval(1.4)

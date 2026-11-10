@@ -34,7 +34,7 @@ func _run(camera: Camera2D) -> void:
 	_camera = camera
 	_size = get_viewport().get_visible_rect().size
 	_build()
-	SFX.play_limited("walls", 3.0)
+	SFX.play_limited("walls", 4.2)
 	SFX.play_limited("scary", 1.5)
 	get_tree().call_group("glitch_overlay", "flicker", 0.5, 1.0)
 	await get_tree().create_timer(0.4).timeout

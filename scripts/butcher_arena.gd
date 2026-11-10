@@ -58,6 +58,7 @@ func begin(p_player: CharacterBody2D, p_boss: ButcherBoss, p_rect: Rect2) -> voi
 	boss.health_changed.connect(hud.set_boss_hp)
 	boss.defeated.connect(_on_boss_defeated)
 
+	SFX.play("fight_butcher", true)
 	boss.begin_fight(player, rect)
 	boss.set_physics_process(true)
 	await _fade_to(0.0, 0.5)
@@ -66,6 +67,9 @@ func begin(p_player: CharacterBody2D, p_boss: ButcherBoss, p_rect: Rect2) -> voi
 	hud.show_boss("THE BUTCHER", boss.hp, boss.max_hp)
 	hud.flash_message("FIGHT!", 0.6)
 	player.set_physics_process(true)
+
+func _exit_tree() -> void:
+	SFX.stop("fight_butcher")
 
 func _process(delta: float) -> void:
 	_t += delta
@@ -190,6 +194,7 @@ func _on_boss_defeated(at: Vector2) -> void:
 	await get_tree().create_timer(1.0).timeout
 	_unlock_camera()
 	_barrier.queue_free()
+	SFX.stop("fight_butcher")
 	won.emit(at)
 	await get_tree().create_timer(1.2).timeout
 	if _tint:

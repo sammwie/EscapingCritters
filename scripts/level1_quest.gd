@@ -97,7 +97,8 @@ func _ready() -> void:
 		SFX.set_level_mix(2, false, not Level2Quest.eggs_cracked.is_empty())
 	else:
 		SFX.set_level_mix(1)
-	SFX.play("cozy_level_1", true)
+	if Level3Quest.stage != Level3Quest.Stage.RUN_HOME:
+		SFX.play("cozy_level_1", true)
 	SFX.set_indoor_music(get_tree().current_scene.scene_file_path.contains("interiors/"))
 	# Level 2 rides along with Level 1: any scene that has this node also gets
 	# a Level2Quest, so it never has to be added to scenes by hand.
@@ -115,7 +116,7 @@ func _exit_tree() -> void:
 		SFX.stop(_active_chicken_sound)
 
 func _nearby_chicken_sound() -> String:
-	if GameState.current_level >= 3:
+	if GameState.current_level >= 3 or not Level2Quest.eggs_cracked.is_empty():
 		return ""
 	var player := get_tree().get_first_node_in_group("player") as Node2D
 	if player == null:

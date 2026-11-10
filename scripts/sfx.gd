@@ -20,6 +20,7 @@ const SOUNDS := {
 	"dialogue_loop": "better_dialogue_text_blip_loop.mp3",
 	"butcher_speaking": "butcher_when_talking.mp3",
 	"butcher_death": "butcher_death_grunt.mp3",
+	"fight_butcher": "fight_butcher.mp3",
 	"cat_1": "cat_meow_1.mp3",
 	"cat_2": "cat_meow_2.mp3",
 	"chicken_coop": "chicken_coop.mp3",
@@ -28,6 +29,8 @@ const SOUNDS := {
 	"pond_water": "flowing_water_near_pond.mp3",
 	"fall_in_pond": "fall_in_pond.mp3",
 	"walls": "walls_closing_in.mp3",
+	"village_chase": "village_chase.mp3",
+	"level_3_done": "level_3_done.mp3",
 	"scary": "scary_sudden_sound.mp3",
 	"horror_wind": "horror_wind_scary_search_minigame.mp3",
 	"horror_2": "horror_sfx_2.mp3",
@@ -51,6 +54,8 @@ var _music_bus := -1
 var _ambience_bus := -1
 var _music_fraction := 1.0
 var _ambience_fraction := 0.0
+var _nightfall_gain := 1.0
+var _quiet_night_sfx := false
 var _indoor_music := false
 var _wall_squeeze_active := false
 
@@ -84,6 +89,10 @@ func play(sound_name: String, loop := false, start_offset := 0.0) -> AudioStream
 		player.volume_db = 12.0
 	elif sound_name == "watering_plants":
 		player.volume_db = -10.0
+	elif sound_name == "walls":
+		player.volume_db = -4.0
+	elif sound_name == "fight_butcher":
+		player.volume_db = -5.0
 	elif sound_name == "day3_ambience":
 		player.volume_db = -12.0
 	elif sound_name in ["chicken_coop", "chicken_coop_outside"]:
@@ -96,6 +105,10 @@ func play(sound_name: String, loop := false, start_offset := 0.0) -> AudioStream
 		player.volume_db = -5.0
 	elif sound_name == "horror_wind":
 		player.volume_db = -24.0
+	if _quiet_night_sfx and sound_name in [
+		"outdoor_footsteps", "indoor_left_foot", "indoor_right_foot", "dialogue", "dialogue_loop",
+	]:
+		player.volume_db -= 4.0
 	player.stream.loop = loop
 	add_child(player)
 	player.play(start_offset)
@@ -132,7 +145,7 @@ func set_indoor_music(indoor: bool) -> void:
 	_update_mix_buses()
 
 func set_level_mix(level: int, night := false, ambience_enabled := true) -> void:
-	var music_fraction := 1.0 if level <= 1 else 0.5 if level == 2 else 0.15
+	var music_fraction := 1.0 if level <= 1 else 0.5 if level == 2 else 0.12
 	var ambience_fraction := 0.0 if level <= 1 else 0.35 if level == 2 else 0.85
 	if night or level >= 4:
 		music_fraction = 0.0
@@ -140,8 +153,12 @@ func set_level_mix(level: int, night := false, ambience_enabled := true) -> void
 	if level >= 4:
 		stop("cozy_level_1")
 		stop("opening_music")
+	if level >= 2 and Level2Quest.stage >= Level2Quest.Stage.NOTE:
+		music_fraction *= 0.1
 	_music_fraction = music_fraction
 	_ambience_fraction = ambience_fraction if ambience_enabled else 0.0
+	_nightfall_gain = 1.0
+	_quiet_night_sfx = level == 3 and night
 	_update_mix_buses()
 	if _ambience_fraction > 0.0:
 		var track := "night_ambience" if night else "day3_ambience" if level == 3 else "horror_ambience"
@@ -158,6 +175,10 @@ func set_wall_squeeze_active(active: bool) -> void:
 	_wall_squeeze_active = active
 	_update_mix_buses()
 
+func set_nightfall_gain(gain: float) -> void:
+	_nightfall_gain = gain
+	_update_mix_buses()
+
 func set_fight_mix() -> void:
 	_music_fraction = 0.0
 	_ambience_fraction = 0.7
@@ -170,12 +191,12 @@ func _update_mix_buses() -> void:
 	var music_level := float(GameSettings.get_value("music")) * _music_fraction
 	var indoor_multiplier := 0.56 if _indoor_music else 1.0
 	var music_index := _ensure_bus("Music")
-	var music_volume := music_level * indoor_multiplier
+	var music_volume := music_level * indoor_multiplier * _nightfall_gain
 	if _wall_squeeze_active:
 		music_volume *= 0.1
 	AudioServer.set_bus_volume_db(music_index, linear_to_db(maxf(music_volume, 0.0001)))
 	AudioServer.set_bus_mute(music_index, music_volume <= 0.001)
-	var ambience_volume := float(GameSettings.get_value("sfx")) * _ambience_fraction
+	var ambience_volume := float(GameSettings.get_value("sfx")) * _ambience_fraction * _nightfall_gain
 	var ambience_index := _ensure_bus("Ambience")
 	AudioServer.set_bus_volume_db(ambience_index, linear_to_db(maxf(ambience_volume, 0.0001)))
 	AudioServer.set_bus_mute(ambience_index, ambience_volume <= 0.001)
