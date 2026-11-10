@@ -53,14 +53,18 @@ func advance() -> void:
 	line_started.emit(current_npc_id)
 	line_shown.emit(line.speaker, text)
 
-# Randomly swaps characters; more corruption = more scrambling.
+# Randomly swaps characters; more corruption = more scrambling. Kept light
+# and never touches the first letter of a word, so the line stays readable.
 func _glitch(text: String, stage: int) -> String:
-	var chance := clampf(0.04 * stage, 0.02, 0.3)
-	var junk := "#@%&?/\\0123456789"
+	var chance := clampf(0.025 * stage, 0.02, 0.12)
+	var junk := "#@%&?/0123456789"
 	var out := ""
+	var prev := " "
 	for c in text:
-		if c != " " and randf() < chance:
+		var word_start := prev == " "
+		if c != " " and not word_start and c.to_lower() != c.to_upper() and randf() < chance:
 			out += junk[randi() % junk.length()]
 		else:
 			out += c
+		prev = c
 	return out

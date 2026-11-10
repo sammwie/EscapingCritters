@@ -19,6 +19,10 @@ static func ensure(scene: Node) -> CorruptionScreen:
 	var screen := CorruptionScreen.new()
 	screen.name = "CorruptionScreen"
 	scene.add_child(screen)
+	# The dialogue box and interact prompt are also on CanvasLayer 1, and
+	# same-layer canvases draw in tree order. Going first keeps the
+	# pixelation off their text.
+	scene.move_child(screen, 0)
 	return screen
 
 func _init() -> void:

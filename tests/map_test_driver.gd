@@ -98,13 +98,33 @@ func _run() -> void:
 	check(not can_reach(grid, Vector2(180, 640)), "pond water blocked")
 	check(not can_reach(grid, Vector2(90, 200)), "inside the farm fence blocked")
 	# Farm plots reachable from outside the fence (Interactor radius 24 + plot half 8).
+	# A plot can be used when the Interactor circle (r 24) touches its 32x32 area.
 	for plot in scene().get_node("Farm").get_children():
 		var ok := false
 		for cell in grid:
-			if (Vector2(cell) * 4.0).distance_to(plot.global_position) < 30.0:
+			var d: Vector2 = (Vector2(cell) * 4.0 - (plot as Node2D).global_position).abs() - Vector2(16, 16)
+			if Vector2(maxf(d.x, 0), maxf(d.y, 0)).length() < 23.0:
 				ok = true
 				break
 		check(ok, "%s reachable from outside the fence" % plot.name)
+
+	# Bed only works when the story says to sleep.
+	await go("res://scenes/interiors/house_interior.tscn", "Spawn_inside")
+	var bed := scene().get_node("Bed")
+	check(not Bed.can_sleep(), "can't sleep before the Level 1 sleep task")
+	bed.interact(player())
+	await get_tree().create_timer(0.3).timeout
+	check(Dialogue.active and not bed._sleeping, "bed gives a 'not tired' thought instead")
+	await wait(1.0)
+	Level1Quest.stage = Level1Quest.Stage.SLEEP
+	check(Bed.can_sleep(), "can sleep at the Level 1 sleep task")
+	Level1Quest.stage = Level1Quest.Stage.FEED
+	var g := Dialogue._glitch("Something is wrong in this town", 2)
+	var firsts_ok := true
+	for w in g.split(" "):
+		firsts_ok = firsts_ok and w.length() > 0 and w[0].to_lower() != w[0].to_upper()
+	check(firsts_ok, "glitched text keeps every word's first letter (%s)" % g)
+	await go("res://scenes/test_main.tscn")
 
 	# Round trip through every door.
 	for pair in [["HouseDoor", "Spawn_house_outside"], ["BakeryDoor", "Spawn_bakery_outside"], ["TownhallDoor", "Spawn_townhall_outside"], ["ButcherDoor", "Spawn_butcher_outside"], ["CoopDoor", "Spawn_coop_outside"]]:

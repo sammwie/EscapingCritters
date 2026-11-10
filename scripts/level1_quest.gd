@@ -238,6 +238,7 @@ func _set_stage(new_stage: int) -> void:
 func _refresh() -> void:
 	for plot in _plots:
 		plot.enabled = stage >= Stage.PLANT
+		plot.queue_redraw()
 	_spawn_eggs()
 	get_tree().call_group("feed_troughs", "refresh")
 	if _baker and "dialogue" in _baker:

@@ -76,7 +76,14 @@ const SURROUND_SPEED := 38.0
 const VILLAGER_ART := ["res://art/villager-01", "res://art/villager-02"]
 
 static var stage: int = Stage.INACTIVE
+## The newest stage whose task has been announced with a pop-up. The task
+## list on the left only shows up to this, so a new task appears in the list
+## at the same moment its pop-up slides in, never before.
+static var announced: int = Stage.INACTIVE
 static var _version := 0
+## When the Butcher note was read, so the bed pop-up can wait for Level 2's banner.
+static var _note_read_at := 0
+const BANNER_WAIT := 5.5
 
 var _scene: Node
 var _player: CharacterBody2D
@@ -89,6 +96,7 @@ var _crowd_speed := 22.0
 var _crowd_t := 0.0
 var _hostile_t := 0.0
 var _scripted := false
+var _busy := false  # a scripted beat is running; hold back catch-up pop-ups
 var _panel: PanelContainer
 var _task_labels: Array[Label] = []
 var _seen_version := -1
@@ -96,6 +104,7 @@ var _seen_version := -1
 ## Call when a brand new game starts.
 static func reset() -> void:
 	stage = Stage.INACTIVE
+	announced = Stage.INACTIVE
 	_version += 1
 
 func _ready() -> void:
@@ -132,6 +141,33 @@ func _setup() -> void:
 				_version += 1
 			GameState.set_flag("pond_lost", true)
 	_version += 1
+	_catch_up_announcement.call_deferred()
+
+## If a pop-up was still waiting when the player changed scenes, its task
+## never got announced. Show it now so the list doesn't get stuck behind.
+func _catch_up_announcement() -> void:
+	await get_tree().create_timer(0.6).timeout
+	if _busy or Dialogue.active or announced >= stage:
+		return
+	if stage == Stage.GO_TO_BED:
+		# still within Level 2's "complete" banner: wait it out
+		var left := BANNER_WAIT - (Time.get_ticks_msec() - _note_read_at) / 1000.0
+		if left > 0.0:
+			await get_tree().create_timer(left).timeout
+		while Dialogue.active:
+			await get_tree().process_frame
+		if announced >= stage:
+			return
+	if stage in [Stage.GO_TO_BED, Stage.ASK_BAKER, Stage.SNEAK, Stage.POND]:
+		_announce(stage)
+
+## Shows the task pop-up for `which` and adds it to the list at the same time.
+func _announce(which: int) -> void:
+	if which <= announced:
+		return
+	announced = which
+	_version += 1
+	TaskPopup.show_task(self, TASKS[which - Stage.GO_TO_BED])
 
 func _detect_map() -> String:
 	var tag := String(_scene.get_meta("story_map", ""))
@@ -147,6 +183,7 @@ func _process(delta: float) -> void:
 	# The Butcher's note was just read: Level 3 begins with going to bed.
 	if stage == Stage.INACTIVE and Level2Quest.stage == Level2Quest.Stage.DONE:
 		stage = Stage.GO_TO_BED
+		_note_read_at = Time.get_ticks_msec()
 		_version += 1
 		GameState.set_flag("note_read", true)
 		_announce_after_banner()
@@ -172,16 +209,17 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _announce_after_banner() -> void:
 	# Let Level 2's "Level 2 Complete" banner finish first.
-	await get_tree().create_timer(5.5).timeout
+	await get_tree().create_timer(BANNER_WAIT).timeout
 	while Dialogue.active:
 		await get_tree().process_frame
 	if stage == Stage.GO_TO_BED:
-		TaskPopup.show_task(self, TASKS[0])
+		_announce(Stage.GO_TO_BED)
 
 ## The Bed emits `slept` while the screen is still black.
 func _on_slept() -> void:
 	if stage != Stage.GO_TO_BED:
 		return
+	_busy = true
 	stage = Stage.ASK_BAKER
 	# Mochi dies overnight.
 	StoryInteractable.set_story_flag("cat_dead", true)
@@ -191,7 +229,8 @@ func _on_slept() -> void:
 	# Wait for the Bed's fade back in, then point the player outside.
 	await get_tree().create_timer(1.4).timeout
 	await _say("You", ["(...It's so quiet this morning. Where's Mochi?)"], "l3_wake")
-	TaskPopup.show_task(self, TASKS[1])
+	_busy = false
+	_announce(Stage.ASK_BAKER)
 
 # ---------- ASK_BAKER and RUN_HOME: the changed day map ----------
 #
@@ -319,7 +358,7 @@ func _start_surround(fresh: bool) -> void:
 		get_tree().call_group("glitch_overlay", "flicker", 0.8, 1.0)
 		await get_tree().create_timer(0.4).timeout
 		await _say("You", ["(They're all staring at me.)", "(I need to get home. Now.)"], "l3_run")
-	TaskPopup.show_task(self, TASKS[2])
+	_announce(Stage.RUN_HOME)
 
 func _spawn_villager(i: int) -> Node2D:
 	var v := (load("res://scenes/npc.tscn") as PackedScene).instantiate() as Node2D
@@ -394,6 +433,7 @@ func _cold_dialogue(id: String, lines: Array) -> DialogueData:
 
 ## Getting home fades straight to night, no second sleep needed.
 func _nightfall() -> void:
+	_busy = true
 	_freeze(true)
 	var layer := CanvasLayer.new()
 	layer.layer = 50
@@ -435,7 +475,8 @@ func _nightfall() -> void:
 		"(Whatever they're hiding is there. I'm going tonight.)",
 	], "l3_night_thought")
 	_freeze(false)
-	TaskPopup.show_task(self, TASKS[3])
+	_busy = false
+	_announce(Stage.SNEAK)
 
 # ---------- SNEAK: the night map ----------
 
@@ -445,7 +486,7 @@ func _setup_night() -> void:
 		var v := _scene.get_node_or_null(n)
 		if v:
 			v.queue_free()
-	for path in ["Doors/BakeryDoor", "Doors/ButcherDoor", "Doors/TownhallDoor"]:
+	for path in ["Doors/BakeryDoor", "Doors/ButcherDoor", "Doors/TownhallDoor", "Doors/CoopDoor"]:
 		var door := _scene.get_node_or_null(path)
 		if door and "locked" in door:
 			door.locked = true
@@ -505,7 +546,7 @@ func _setup_pond() -> void:
 	if stage == Stage.POND:
 		_add_tint(NIGHT_TINT.lightened(0.25))
 		CorruptionScreen.ensure(_scene).step_to(NIGHT_PIXEL, 0.4, NIGHT_GRADE)
-		TaskPopup.show_task(self, TASKS[4])
+		_announce(Stage.POND)
 
 # ---------- helpers ----------
 
@@ -548,6 +589,7 @@ func _debug_skip_to_level3() -> void:
 	Level2Quest._begun = true
 	GameState.current_level = 3
 	stage = Stage.GO_TO_BED
+	announced = Stage.GO_TO_BED
 	_version += 1
 	get_tree().root.set_meta("intro_played", true)
 	get_tree().root.set_meta("spawn_at", "Spawn_inside")
@@ -556,8 +598,9 @@ func _debug_skip_to_level3() -> void:
 # ---------- UI ----------
 
 func _refresh() -> void:
-	_panel.visible = stage >= Stage.GO_TO_BED and stage < Stage.KNOWS_ALL
-	var active := stage - Stage.GO_TO_BED
+	var shown := mini(stage, announced)
+	_panel.visible = shown >= Stage.GO_TO_BED and stage < Stage.KNOWS_ALL
+	var active := shown - Stage.GO_TO_BED
 	for i in _task_labels.size():
 		var label := _task_labels[i]
 		label.visible = i <= active

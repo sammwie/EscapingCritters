@@ -16,6 +16,15 @@ func _ready() -> void:
 	$ButtonList/ContinueButton.disabled = not FileAccess.file_exists("user://save.dat")
 
 func _on_new_game_pressed() -> void:
+	# Story progress lives in static vars that outlast scenes, so a new game
+	# has to clear it, or a second playthrough starts mid-story.
+	GameState.new_playthrough()
+	Level1Quest.reset()
+	Level2Quest.reset()
+	Level3Quest.reset()
+	for key in ["intro_played", "spawn_at"]:
+		if get_tree().root.has_meta(key):
+			get_tree().root.remove_meta(key)
 	get_tree().change_scene_to_file(new_game_scene_path)
 
 func _on_continue_pressed() -> void:

@@ -44,10 +44,24 @@ func _run() -> void:
 	await wait(0.5)
 	check(l2 != null and not l2._panel.visible, "level 2 task list hidden")
 
+	var l3panel := get_tree().current_scene.get_node("Level3Quest")
+	await wait(5.5)
+	check(Level3Quest.announced == Level3Quest.Stage.GO_TO_BED and l3panel._task_labels[0].visible, "bed task pops up and joins the list together")
 	var day_before := GameState.current_day
 	get_tree().current_scene.get_node("Bed").interact(player())
-	await wait(9.0)
+	# Sleep fade + day card take ~3.2s; check the list right after waking,
+	# before the "ask the Baker" pop-up has come in.
+	await get_tree().create_timer(3.6).timeout
+	check(Level3Quest.stage == Level3Quest.Stage.ASK_BAKER and not l3panel._task_labels[1].visible, "new task not in the list before its pop-up")
+	await wait(5.4)
 	check(Level3Quest.stage == Level3Quest.Stage.ASK_BAKER, "slept -> ask baker")
+	check(l3panel._task_labels[1].visible and Level3Quest.announced == Level3Quest.Stage.ASK_BAKER, "task list updates with the pop-up")
+	var day_now := GameState.current_day
+	get_tree().current_scene.get_node("Bed").interact(player())
+	await get_tree().create_timer(0.3).timeout
+	check(Dialogue.active and not get_tree().current_scene.get_node("Bed")._sleeping, "can't go back to sleep after waking")
+	await wait(1.0)
+	check(GameState.current_day == day_now and Level3Quest.stage == Level3Quest.Stage.ASK_BAKER, "day and task unchanged")
 	check(StoryInteractable.get_story_flag("cat_dead"), "cat died overnight")
 	check(GameState.get_flag("note_read") and GameState.get_flag("cat_dead"), "GameState flags note_read + cat_dead set")
 	check(GameState.current_day == day_before + 1, "day advanced once")
@@ -100,13 +114,22 @@ func _run() -> void:
 	check(get_tree().current_scene.get_node_or_null("StoryTint") != null, "house is night-tinted")
 	check(GameState.is_night, "GameState.is_night on")
 	check(player().is_physics_processing(), "player unfrozen after nightfall")
+	var night_day := GameState.current_day
+	get_tree().current_scene.get_node("Bed").interact(player())
+	await get_tree().create_timer(0.3).timeout
+	check(Dialogue.active and not get_tree().current_scene.get_node("Bed")._sleeping, "can't sleep before sneaking out")
+	await wait(1.0)
+	check(GameState.current_day == night_day and Level3Quest.stage == Level3Quest.Stage.SNEAK, "still night, still sneak task")
+	var hl := get_tree().current_scene.get_node("Level3Quest")
+	check(hl._task_labels[3].visible, "sneak task in the list")
 
 	get_tree().current_scene.get_node("ExitDoor").interact(player())
 	await wait(1.5)
 	check(scene_path() == StoryRouter.VILLAGE_NIGHT, "house exit -> night map (%s)" % scene_path())
 	var night := get_tree().current_scene
 	check(night.get_node_or_null("Baker") == null or night.get_node("Baker").is_queued_for_deletion(), "day npcs cleared")
-	check(night.get_node("Doors/BakeryDoor").locked, "other doors locked at night")
+	check(night.get_node("Doors/BakeryDoor").locked and night.get_node("Doors/CoopDoor").locked, "other doors locked at night")
+	check(night.get_node("CorruptionScreen").get_index() < night.get_node("DialogueBox").get_index(), "pixelation drawn under the dialogue box")
 	var hp := night.get_node("HidingPuzzle")
 	check(hp.state == Puzzle.State.ACTIVE, "hiding puzzle running")
 	# get caught once: stand in front of a guard

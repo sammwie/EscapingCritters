@@ -5,6 +5,8 @@ extends Interactable
 ## Scene: Area2D (this script) > CollisionShape2D. Layer 2, mask empty.
 ## Emits `slept` while the screen is still black (for story/scene hooks) and
 ## sets the story flag "slept".
+## Sleeping only works when the story calls for it (see can_sleep()); any
+## other time the player just gets a short thought instead.
 
 signal slept
 
@@ -13,8 +15,45 @@ var _sleeping := false
 func _ready() -> void:
 	prompt_text = "Sleep"
 
+## True only at the points in the story where the player is told to sleep:
+## Level 1's "Sleep" task, the evening after Level 1, and Level 3's
+## "Go home and get some sleep".
+static func can_sleep() -> bool:
+	if Level3Quest.stage == Level3Quest.Stage.GO_TO_BED:
+		return true
+	if Level3Quest.stage != Level3Quest.Stage.INACTIVE:
+		return false
+	if Level1Quest.stage == Level1Quest.Stage.SLEEP:
+		return true
+	return Level1Quest.stage == Level1Quest.Stage.DONE \
+		and Level2Quest.stage <= Level2Quest.Stage.EVENING
+
+## What the player thinks when they try to sleep at the wrong time.
+static func not_tired_line() -> String:
+	match Level3Quest.stage:
+		Level3Quest.Stage.ASK_BAKER:
+			return "(I can't sleep. Not until I find out what happened to Mochi.)"
+		Level3Quest.Stage.RUN_HOME, Level3Quest.Stage.SNEAK:
+			return "(No time to sleep. I have to get to the pond tonight.)"
+	if Level2Quest.stage >= Level2Quest.Stage.EGGS:
+		return "(I can't sleep. Something is wrong in this town.)"
+	return "(I'm not tired yet. There's still work to do today.)"
+
 func _on_interact(by: Node) -> void:
 	if _sleeping:
+		return
+	if Dialogue.active:
+		Dialogue.request_advance()
+		return
+	if not can_sleep():
+		var data := DialogueData.new()
+		data.npc_id = "bed_not_tired"
+		var line := DialogueLine.new()
+		line.speaker = "You"
+		line.text = not_tired_line()
+		data.lines.append(line)
+		data.repeat_lines.append(line)
+		Dialogue.start(data)
 		return
 	_sleeping = true
 	enabled = false

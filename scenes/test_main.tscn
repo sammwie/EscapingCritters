@@ -413,24 +413,27 @@ shape = SubResource("CircleShape2D_sg00f")
 
 
 [node name="Plot1" parent="Farm" unique_id=1042517521 instance=ExtResource("12_plot")]
-position = Vector2(120, 186)
+position = Vector2(73, 185)
 crop_id = &"wheat"
 days_to_grow = 1
-size = Vector2(16, 16)
+size = Vector2(12, 12)
+soft_look = true
 
 
 [node name="Plot2" parent="Farm" unique_id=98165336 instance=ExtResource("12_plot")]
-position = Vector2(120, 206)
+position = Vector2(106, 185)
 crop_id = &"wheat"
 days_to_grow = 1
-size = Vector2(16, 16)
+size = Vector2(12, 12)
+soft_look = true
 
 
 [node name="Plot3" parent="Farm" unique_id=731140688 instance=ExtResource("12_plot")]
-position = Vector2(120, 226)
+position = Vector2(118, 217)
 crop_id = &"wheat"
 days_to_grow = 1
-size = Vector2(16, 16)
+size = Vector2(12, 12)
+soft_look = true
 
 
 [node name="Doors" type="Node2D" parent="." unique_id=176819495]
