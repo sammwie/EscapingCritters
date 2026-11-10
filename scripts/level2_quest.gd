@@ -19,14 +19,16 @@ extends Node
 ## it survives walking in and out of buildings.
 ##
 ## In the village it looks for these sibling nodes by name:
-##   "Butcher" (NPC), "Doors/ButcherDoor", "Doors/Spawn_house_outside",
-##   "Pen/EggSpots" (Marker2Ds), and the player's "Camera2D".
+##   "Map" (VillageMap), "Butcher" (NPC), "Doors/ButcherDoor",
+##   "Doors/Spawn_house_outside", and the player's "Camera2D".
+## The eggs crack in the coop interior, which has "Pen/EggSpots".
 
 enum Stage { INACTIVE, EVENING, EGGS, WALLS, BUTCHER, FIGHT, NOTE, DONE }
 
 const NEEDED := 3
-## The fight happens in this rectangle of the village, outside the butcher shop.
-const ARENA := Rect2(180, 282, 158, 106)
+## The fight happens in this rectangle of the village: the walled yard below
+## the butcher shop on the Level 2 map (art/maps/level1_map.png).
+const ARENA := Rect2(368, 482, 98, 92)
 const WARNING_DIALOGUE := "res://dialogues/butcher_l2_warning.tres"
 const CHALLENGE_DIALOGUE := "res://dialogues/butcher_l2_challenge.tres"
 
@@ -44,7 +46,7 @@ const INK := Color(0.22745098, 0.15686275, 0.11764706)
 
 static var stage: int = Stage.INACTIVE
 static var eggs_cracked: Array[String] = []
-static var note_pos := Vector2(259, 335)
+static var note_pos := Vector2(416, 530)
 ## Seconds to wait after Level 1 ends (so its banner can finish) before the
 ## fade to the next morning. Tests set this lower.
 static var start_delay := 6.0
@@ -58,6 +60,7 @@ var _is_village := false
 var _scripted := false
 var _door_hooked := false
 var _task_labels: Array[Label] = []
+var _has_eggs := false  # the coop, where the eggs crack
 var _panel: PanelContainer
 var _seen_version := -1
 
@@ -65,7 +68,7 @@ var _seen_version := -1
 static func reset() -> void:
 	stage = Stage.INACTIVE
 	eggs_cracked.clear()
-	note_pos = Vector2(259, 335)
+	note_pos = Vector2(416, 530)
 	_begun = false
 	NotesLog.reset()
 	_version += 1
@@ -102,7 +105,10 @@ func _setup() -> void:
 			break
 	if _player == null:
 		_player = get_tree().get_first_node_in_group("player") as CharacterBody2D
-	_is_village = _scene.get_node_or_null("Butcher") != null and _scene.get_node_or_null("Pen/EggSpots") != null
+	_is_village = _scene.get_node_or_null("Map") is VillageMap
+	_has_eggs = _scene.get_node_or_null("Pen/EggSpots") != null
+	if _has_eggs and stage >= Stage.EGGS:
+		_spawn_eggs()
 	if _is_village:
 		_ensure_glitch_overlay()
 		if stage == Stage.FIGHT or stage == Stage.WALLS:
@@ -163,18 +169,14 @@ func _apply_village_state() -> void:
 		Stage.EGGS:
 			if npc and "dialogue" in npc:
 				npc.dialogue = load(WARNING_DIALOGUE)
-			_spawn_eggs()
 		Stage.BUTCHER:
-			_spawn_eggs()
 			_lock_door()
 			_make_follower()
 		Stage.NOTE:
-			_spawn_eggs()
 			_lock_door()
 			_remove_butcher_npc()
 			_spawn_note(note_pos)
 		Stage.DONE:
-			_spawn_eggs()
 			_lock_door()
 			_remove_butcher_npc()
 
@@ -213,7 +215,7 @@ func _lock_door() -> void:
 func _make_follower() -> void:
 	if _boss != null and is_instance_valid(_boss):
 		return
-	var pos := Vector2(248, 284)
+	var pos := Vector2(404, 394)
 	var npc := _scene.get_node_or_null("Butcher")
 	if npc:
 		pos = (npc as Node2D).global_position
@@ -251,7 +253,7 @@ func _start_walls() -> void:
 	stage = Stage.WALLS
 	_version += 1
 	_freeze(true)
-	var cam := _player.get_node_or_null("Camera2D") as Camera2D
+	var cam := get_viewport().get_camera_2d()
 	await WallSqueeze.play(_scene, cam)
 	GameState.corruption_stage = maxi(GameState.corruption_stage, 2)
 	_freeze(false)

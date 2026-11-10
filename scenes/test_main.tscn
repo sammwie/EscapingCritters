@@ -1,204 +1,400 @@
 [gd_scene format=4 uid="uid://bx312bcq53pnj"]
 
+
 [ext_resource type="PackedScene" uid="uid://cvcw7h5ng6ydg" path="res://scenes/player.tscn" id="1_7yu4j"]
+
 [ext_resource type="Script" uid="uid://dhnmc67u0ahpy" path="res://scripts/intro_cutscene.gd" id="1_bcbe7"]
+
 [ext_resource type="PackedScene" uid="uid://binbn40xn3oiy" path="res://scenes/npc.tscn" id="2_31pel"]
+
 [ext_resource type="Resource" uid="uid://jiyifxwnop0f" path="res://dialogues/butcher.tres" id="3_31pel"]
+
 [ext_resource type="PackedScene" uid="uid://dxbcaovcv123k" path="res://scenes/dialogue_box.tscn" id="4_4jmdl"]
+
 [ext_resource type="PackedScene" uid="uid://cua0xve748asr" path="res://scenes/interact_prompt.tscn" id="5_31pel"]
+
 [ext_resource type="Resource" uid="uid://c118lohe8xwfg" path="res://dialogues/baker.tres" id="6_baker"]
+
 [ext_resource type="Resource" uid="uid://bsv8c01k1tnpf" path="res://dialogues/villager_01.tres" id="7_vil01"]
+
 [ext_resource type="Resource" uid="uid://fhvb0rv6ylek" path="res://dialogues/villager_02.tres" id="8_vil02"]
+
 [ext_resource type="Script" uid="uid://bcmywlq2hce5d" path="res://scripts/npc_look.gd" id="9_look"]
-[ext_resource type="PackedScene" path="res://levels/level_0.tscn" id="10_level"]
+
 [ext_resource type="Script" uid="uid://iwyytpx0fac3" path="res://scripts/scene_door.gd" id="11_door"]
+
 [ext_resource type="Resource" uid="uid://i1hsijw5ad7i" path="res://dialogues/cat.tres" id="11_x6rmf"]
+
 [ext_resource type="PackedScene" uid="uid://bolbbnnuwom14" path="res://scenes/farm_plot.tscn" id="12_plot"]
+
 [ext_resource type="Script" uid="uid://dfpuuu2bh75ss" path="res://scripts/level1_quest.gd" id="13_quest"]
-[ext_resource type="TileSet" uid="uid://chfk3gf3dhctt" path="res://levels/hollowbrook_tileset.tres" id="14_tiles"]
-[ext_resource type="Texture2D" uid="uid://dmql2tr4wevd6" path="res://art/animals/coop.png" id="15_coop"]
-[ext_resource type="Texture2D" uid="uid://cwtt1lnhnwi4l" path="res://art/animals/chicken.png" id="16_chicken"]
+
 [ext_resource type="Script" uid="uid://65hyqlbfrhv4" path="res://scripts/story_interactable.gd" id="16_shy1u"]
+
 [ext_resource type="Texture2D" uid="uid://v15q4deobe8g" path="res://art/animals/duck.png" id="17_duck"]
+
 [ext_resource type="Resource" uid="uid://dfsa1rlkof32p" path="res://dialogues/baker_confrontation.tres" id="17_x6rmf"]
+
 [ext_resource type="Script" uid="uid://dcr4t7w3pi8hs" path="res://scripts/wander_animal.gd" id="18_wander"]
-[ext_resource type="Script" uid="uid://bu4opw6gl280s" path="res://scripts/feed_trough.gd" id="19_trough"]
+
 [ext_resource type="Script" uid="uid://bo583m85w7fc2" path="res://scripts/pet_cat.gd" id="20_cat"]
+
 [ext_resource type="Script" uid="uid://dvth7epdb73w8" path="res://scripts/butterflies.gd" id="21_flies"]
+
 [ext_resource type="Script" uid="uid://o2iaogqmg1uj" path="res://scripts/level2_quest.gd" id="l2quest"]
 
-[sub_resource type="RectangleShape2D" id="PenH"]
-size = Vector2(128, 12)
 
-[sub_resource type="RectangleShape2D" id="PenV"]
-size = Vector2(8, 96)
+[ext_resource type="Script" path="res://scripts/village_map.gd" id="30_vmap"]
 
-[sub_resource type="RectangleShape2D" id="PenGatePost"]
-size = Vector2(8, 32)
+[ext_resource type="Texture2D" path="res://art/maps/level0_map.png" id="31_map0"]
 
-[sub_resource type="RectangleShape2D" id="CoopBody"]
-size = Vector2(28, 14)
-
-[sub_resource type="RectangleShape2D" id="TroughArea"]
-size = Vector2(18, 10)
-
-[sub_resource type="RectangleShape2D" id="HayBody"]
-size = Vector2(30, 10)
+[ext_resource type="Texture2D" path="res://art/maps/level1_map.png" id="32_map1"]
 
 [sub_resource type="CircleShape2D" id="CatArea"]
 radius = 8.0
 
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_sg00f"]
 radius = 14.0
 
-[sub_resource type="RectangleShape2D" id="WallH"]
-size = Vector2(512, 32)
-
-[sub_resource type="RectangleShape2D" id="WallV"]
-size = Vector2(32, 768)
-
-[sub_resource type="RectangleShape2D" id="LakeHalf"]
-size = Vector2(128, 96)
 
 [sub_resource type="RectangleShape2D" id="DoorShape"]
 size = Vector2(20, 16)
 
+
 [sub_resource type="CircleShape2D" id="NPCBody"]
 radius = 4.0
+
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_etr18"]
 radius = 40.0
 
+
+[sub_resource type="RectangleShape2D" id="Map_TreesTop"]
+size = Vector2(512, 40)
+
+[sub_resource type="RectangleShape2D" id="Map_TreesBottom"]
+size = Vector2(512, 38)
+
+[sub_resource type="RectangleShape2D" id="Map_TreesLeft"]
+size = Vector2(30, 768)
+
+[sub_resource type="RectangleShape2D" id="Map_TreesRight"]
+size = Vector2(32, 768)
+
+[sub_resource type="RectangleShape2D" id="Map_Home"]
+size = Vector2(77, 77)
+
+[sub_resource type="RectangleShape2D" id="Map_HomeLamp"]
+size = Vector2(8, 15)
+
+[sub_resource type="RectangleShape2D" id="Map_HomeSign"]
+size = Vector2(44, 12)
+
+[sub_resource type="RectangleShape2D" id="Map_Bakery"]
+size = Vector2(94, 77)
+
+[sub_resource type="RectangleShape2D" id="Map_BakeryCart"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="Map_BakeryLamp"]
+size = Vector2(10, 14)
+
+[sub_resource type="RectangleShape2D" id="Map_BakerySign"]
+size = Vector2(44, 12)
+
+[sub_resource type="RectangleShape2D" id="Map_MarketStall"]
+size = Vector2(30, 22)
+
+[sub_resource type="RectangleShape2D" id="Map_TownHall"]
+size = Vector2(126, 91)
+
+[sub_resource type="RectangleShape2D" id="Map_HallLamp"]
+size = Vector2(10, 18)
+
+[sub_resource type="RectangleShape2D" id="Map_HallSign"]
+size = Vector2(44, 12)
+
+[sub_resource type="RectangleShape2D" id="Map_Barn"]
+size = Vector2(60, 60)
+
+[sub_resource type="RectangleShape2D" id="Map_FenceTop"]
+size = Vector2(102, 12)
+
+[sub_resource type="RectangleShape2D" id="Map_FenceBottom"]
+size = Vector2(102, 14)
+
+[sub_resource type="RectangleShape2D" id="Map_FenceLeft"]
+size = Vector2(7, 94)
+
+[sub_resource type="RectangleShape2D" id="Map_FenceRight"]
+size = Vector2(7, 94)
+
+[sub_resource type="RectangleShape2D" id="Map_Gazebo"]
+size = Vector2(63, 62)
+
+[sub_resource type="RectangleShape2D" id="Map_NoticeBoard"]
+size = Vector2(28, 16)
+
+[sub_resource type="RectangleShape2D" id="Map_ButcherShop"]
+size = Vector2(93, 76)
+
+[sub_resource type="RectangleShape2D" id="Map_ButcherLamp"]
+size = Vector2(8, 14)
+
+[sub_resource type="RectangleShape2D" id="Map_PondLeft"]
+size = Vector2(124, 90)
+
+[sub_resource type="RectangleShape2D" id="Map_PondRight"]
+size = Vector2(140, 90)
+
+[sub_resource type="RectangleShape2D" id="Map_ButcherSign"]
+size = Vector2(46, 12)
+
+[sub_resource type="RectangleShape2D" id="Map_Well"]
+size = Vector2(32, 28)
+
+[sub_resource type="RectangleShape2D" id="Map_Logs"]
+size = Vector2(32, 16)
+
+[sub_resource type="RectangleShape2D" id="Map_SmallTree"]
+size = Vector2(12, 18)
+
+[sub_resource type="RectangleShape2D" id="Map_ArenaPillarL"]
+size = Vector2(12, 48)
+
+[sub_resource type="RectangleShape2D" id="Map_ArenaPillarR"]
+size = Vector2(12, 48)
+
+[sub_resource type="RectangleShape2D" id="Map_ArenaTopL"]
+size = Vector2(46, 16)
+
+[sub_resource type="RectangleShape2D" id="Map_ArenaTopR"]
+size = Vector2(46, 16)
+
+[sub_resource type="RectangleShape2D" id="Map_ArenaLeft"]
+size = Vector2(14, 112)
+
+[sub_resource type="RectangleShape2D" id="Map_ArenaRight"]
+size = Vector2(13, 112)
+
+[sub_resource type="RectangleShape2D" id="Map_ArenaBottom"]
+size = Vector2(128, 16)
+
+[sub_resource type="RectangleShape2D" id="Map_ButcherSignArena"]
+size = Vector2(38, 12)
+
+[sub_resource type="RectangleShape2D" id="CoopDoorShape"]
+size = Vector2(20, 16)
+
 [node name="TestMain" type="Node2D" unique_id=1053836896]
 script = ExtResource("1_bcbe7")
 
-[node name="Village" parent="." unique_id=1388808463 instance=ExtResource("10_level")]
 
-[node name="Decor" type="TileMapLayer" parent="." unique_id=308861844]
+[node name="Map" type="Sprite2D" parent="."]
+script = ExtResource("30_vmap")
+normal_map = ExtResource("31_map0")
+corrupted_map = ExtResource("32_map1")
+texture = ExtResource("31_map0")
+centered = false
+z_index = -10
 texture_filter = 1
-tile_map_data = PackedByteArray("AAACAAQAAAAGAAMAAAACABAAAAAGAAMAAAACABoAAAAFAAMAAAACACcAAAAEAAMAAAACACwAAAAFAAMAAAADAAQAAAAGAAMAAAADAAkAAAAHAAMAAAADAAoAAAAEAAMAAAADABMAAAAIAAQAAAADABQAAAAIAAQAAAADABUAAAAIAAQAAAADABYAAAAIAAQAAAADABcAAAAIAAQAAAADABgAAAAIAAQAAAADABsAAAAFAAMAAAADABwAAAAFAAMAAAADACcAAAAHAAMAAAADACgAAAAEAAMAAAADACsAAAAGAAMAAAADACwAAAAEAAMAAAAEAAQAAAAEAAMAAAAEAAkAAAAHAAMAAAAEABAAAAAGAAMAAAAEABEAAAAGAAMAAAAEABMAAAAHAAQAAAAEABgAAAAHAAQAAAAEABkAAAADAAUAAAAEABsAAAAFAAMAAAAEABwAAAAFAAMAAAAEACgAAAAGAAMAAAAEACkAAAAEAAMAAAAEACoAAAAGAAMAAAAEACsAAAAGAAMAAAAEACwAAAAFAAMAAAAFABMAAAAHAAQAAAAFABgAAAAHAAQAAAAFABkAAAADAAUAAAAFACAAAAAEAAMAAAAFACYAAAAEAAMAAAAFACkAAAAEAAMAAAAGABMAAAAHAAQAAAAGABgAAAAHAAQAAAAGABsAAAAHAAMAAAAGACcAAAAGAAMAAAAGACgAAAAEAAMAAAAGACkAAAAGAAMAAAAGACwAAAAAAAUAAAAHABEAAAAEAAMAAAAHABMAAAAHAAQAAAAHABgAAAAHAAQAAAAHABoAAAAHAAMAAAAIABMAAAAHAAQAAAAIABgAAAAHAAQAAAAIABsAAAAHAAMAAAAIAB0AAAAEAAMAAAAIACIAAAAEAAMAAAAJABAAAAAEAAMAAAAJABMAAAAHAAQAAAAJABgAAAAHAAQAAAAJAB0AAAAEAAMAAAAJACAAAAAGAAMAAAAJACIAAAAGAAMAAAAKAA8AAAAEAAMAAAAKABAAAAAEAAMAAAAKABMAAAAIAAQAAAAKABQAAAAIAAQAAAAKABcAAAAIAAQAAAAKABgAAAAIAAQAAAAKACIAAAAGAAMAAAAKACQAAAAGAAMAAAAKACwAAAAHAAMAAAALABsAAAAEAAMAAAALACIAAAAGAAMAAAALACMAAAAGAAMAAAALACQAAAAGAAMAAAALACsAAAAHAAMAAAAMAAUAAAAEAAMAAAAMABMAAAAEAAMAAAAMABQAAAAGAAMAAAAMABYAAAAEAAMAAAAMABgAAAAHAAMAAAAMAB8AAAAFAAMAAAAMACEAAAAFAAMAAAAMACIAAAAGAAMAAAAMACsAAAAHAAMAAAAMACwAAAAEAAMAAAANABYAAAAHAAMAAAANAB4AAAAEAAMAAAANAB8AAAAFAAMAAAANACAAAAAFAAMAAAANACEAAAAFAAMAAAANACwAAAAFAAMAAAAOABcAAAAFAAMAAAAOAB0AAAAEAAMAAAAOAB8AAAAFAAMAAAAOACAAAAAFAAMAAAAPAAoAAAAFAAMAAAAPABoAAAAEAAMAAAAPAB0AAAAFAAMAAAAPACAAAAAGAAMAAAAPACsAAAAEAAMAAAAQAAYAAAAEAAMAAAAQACwAAAAEAAMAAAARAB8AAAAEAAMAAAATACwAAAAEAAMAAAAUAAcAAAAEAAMAAAAUACsAAAAEAAMAAAAUACwAAAAEAAMAAAAVAA4AAAAEAAMAAAAVABcAAAACAAUAAAAWAB0AAAAEAAMAAAAXABsAAAAEAAMAAAAXABwAAAAHAAMAAAAYAB0AAAAHAAMAAAAYACwAAAAEAAMAAAAZAAsAAAAEAAMAAAAZABwAAAAGAAMAAAAZAB0AAAAGAAMAAAAaAC0AAAAAAAUAAAAbAB0AAAAEAAMAAAAbACEAAAAAAAUAAAAbACgAAAAEAAMAAAAcAAUAAAAFAAMAAAAcAAkAAAAHAAMAAAAcABwAAAAEAAMAAAAdAAMAAAAFAAMAAAAdAAQAAAAEAAMAAAAdABUAAAAEAAMAAAAdACQAAAAEAAMAAAAdACcAAAAEAAMAAAA=")
-tile_set = ExtResource("14_tiles")
 
-[node name="Pen" type="Node2D" parent="." unique_id=1658336371]
+[node name="MapCollision" type="StaticBody2D" parent="."]
 
-[node name="Fence" type="StaticBody2D" parent="Pen" unique_id=787960482]
+[node name="TreesTop" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(256.0, 20.0)
+shape = SubResource("Map_TreesTop")
 
-[node name="Top" type="CollisionShape2D" parent="Pen/Fence" unique_id=2012547740]
-position = Vector2(112, 312)
-shape = SubResource("PenH")
+[node name="TreesBottom" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(256.0, 749.0)
+shape = SubResource("Map_TreesBottom")
 
-[node name="Bottom" type="CollisionShape2D" parent="Pen/Fence" unique_id=686861495]
-position = Vector2(112, 392)
-shape = SubResource("PenH")
+[node name="TreesLeft" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(15.0, 384.0)
+shape = SubResource("Map_TreesLeft")
 
-[node name="Left" type="CollisionShape2D" parent="Pen/Fence" unique_id=968590705]
-position = Vector2(56, 352)
-shape = SubResource("PenV")
+[node name="TreesRight" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(496.0, 384.0)
+shape = SubResource("Map_TreesRight")
 
-[node name="RightTop" type="CollisionShape2D" parent="Pen/Fence" unique_id=1477475434]
-position = Vector2(168, 320)
-shape = SubResource("PenGatePost")
+[node name="Home" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(119.5, 86.5)
+shape = SubResource("Map_Home")
 
-[node name="RightBottom" type="CollisionShape2D" parent="Pen/Fence" unique_id=1782111177]
-position = Vector2(168, 384)
-shape = SubResource("PenGatePost")
+[node name="HomeLamp" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(72.0, 119.5)
+shape = SubResource("Map_HomeLamp")
 
-[node name="Coop" type="Sprite2D" parent="Pen" unique_id=675422959]
-texture_filter = 1
-position = Vector2(88, 329)
-texture = ExtResource("15_coop")
+[node name="HomeSign" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(184.0, 104.0)
+shape = SubResource("Map_HomeSign")
 
-[node name="Body" type="StaticBody2D" parent="Pen/Coop" unique_id=989265955]
+[node name="Bakery" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(400.0, 102.5)
+shape = SubResource("Map_Bakery")
 
-[node name="Shape" type="CollisionShape2D" parent="Pen/Coop/Body" unique_id=546242064]
-position = Vector2(0, 4)
-shape = SubResource("CoopBody")
+[node name="BakeryCart" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(464.0, 112.0)
+shape = SubResource("Map_BakeryCart")
 
-[node name="Trough" type="Area2D" parent="Pen" unique_id=1123541891]
-position = Vector2(132, 330)
-collision_layer = 2
-collision_mask = 0
-script = ExtResource("19_trough")
+[node name="BakeryLamp" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(455.0, 169.0)
+shape = SubResource("Map_BakeryLamp")
 
-[node name="Shape" type="CollisionShape2D" parent="Pen/Trough" unique_id=221607573]
-shape = SubResource("TroughArea")
+[node name="BakerySign" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(422.0, 198.0)
+shape = SubResource("Map_BakerySign")
 
-[node name="EggSpots" type="Node2D" parent="Pen" unique_id=1015099280]
+[node name="MarketStall" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(383.0, 241.0)
+shape = SubResource("Map_MarketStall")
 
-[node name="Egg1" type="Marker2D" parent="Pen/EggSpots" unique_id=1648245761]
-position = Vector2(76, 352)
+[node name="TownHall" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(225.0, 223.5)
+shape = SubResource("Map_TownHall")
 
-[node name="Egg2" type="Marker2D" parent="Pen/EggSpots" unique_id=257522851]
-position = Vector2(102, 368)
+[node name="HallLamp" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(201.0, 293.0)
+shape = SubResource("Map_HallLamp")
 
-[node name="Egg3" type="Marker2D" parent="Pen/EggSpots" unique_id=1663525802]
-position = Vector2(80, 374)
+[node name="HallSign" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(264.0, 294.0)
+shape = SubResource("Map_HallSign")
 
-[node name="HayBales" type="StaticBody2D" parent="Pen" unique_id=1576943721]
+[node name="Barn" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(80.0, 286.0)
+shape = SubResource("Map_Barn")
 
-[node name="Shape" type="CollisionShape2D" parent="Pen/HayBales" unique_id=38382644]
-position = Vector2(80, 408)
-shape = SubResource("HayBody")
+[node name="FenceTop" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(88.0, 166.0)
+shape = SubResource("Map_FenceTop")
 
-[node name="Chicken1" type="Node2D" parent="Pen" unique_id=1968210060]
-position = Vector2(110, 350)
-script = ExtResource("18_wander")
-sheet = ExtResource("16_chicken")
-frame_count = 3
-idle_frame = 2
-area = Rect2(68, 346, 88, 30)
-speed = 12.0
+[node name="FenceBottom" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(88.0, 247.0)
+shape = SubResource("Map_FenceBottom")
 
-[node name="Chicken2" type="Node2D" parent="Pen" unique_id=689082606]
-position = Vector2(140, 362)
-script = ExtResource("18_wander")
-sheet = ExtResource("16_chicken")
-frame_count = 3
-idle_frame = 2
-area = Rect2(68, 346, 88, 30)
-speed = 12.0
+[node name="FenceLeft" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(40.5, 207.0)
+shape = SubResource("Map_FenceLeft")
 
-[node name="Chicken3" type="Node2D" parent="Pen" unique_id=1536819457]
-position = Vector2(124, 374)
-script = ExtResource("18_wander")
-sheet = ExtResource("16_chicken")
-frame_count = 3
-idle_frame = 2
-area = Rect2(68, 346, 88, 30)
-speed = 12.0
+[node name="FenceRight" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(135.5, 207.0)
+shape = SubResource("Map_FenceRight")
+
+[node name="Gazebo" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(111.5, 383.0)
+shape = SubResource("Map_Gazebo")
+
+[node name="NoticeBoard" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(272.0, 384.0)
+shape = SubResource("Map_NoticeBoard")
+
+[node name="ButcherShop" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(415.5, 343.0)
+shape = SubResource("Map_ButcherShop")
+
+[node name="ButcherLamp" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(424.0, 393.0)
+shape = SubResource("Map_ButcherLamp")
+
+[node name="PondLeft" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(178.0, 641.0)
+shape = SubResource("Map_PondLeft")
+
+[node name="PondRight" type="CollisionShape2D" parent="MapCollision"]
+position = Vector2(342.0, 641.0)
+shape = SubResource("Map_PondRight")
+
+[node name="NormalOnly" type="StaticBody2D" parent="."]
+
+[node name="ButcherSign" type="CollisionShape2D" parent="NormalOnly"]
+position = Vector2(375.0, 452.0)
+shape = SubResource("Map_ButcherSign")
+
+[node name="Well" type="CollisionShape2D" parent="NormalOnly"]
+position = Vector2(398.0, 498.0)
+shape = SubResource("Map_Well")
+
+[node name="Logs" type="CollisionShape2D" parent="NormalOnly"]
+position = Vector2(446.0, 502.0)
+shape = SubResource("Map_Logs")
+
+[node name="SmallTree" type="CollisionShape2D" parent="NormalOnly"]
+position = Vector2(358.0, 511.0)
+shape = SubResource("Map_SmallTree")
+
+[node name="CorruptedOnly" type="StaticBody2D" parent="."]
+
+[node name="ArenaPillarL" type="CollisionShape2D" parent="CorruptedOnly"]
+position = Vector2(392.0, 456.0)
+shape = SubResource("Map_ArenaPillarL")
+
+[node name="ArenaPillarR" type="CollisionShape2D" parent="CorruptedOnly"]
+position = Vector2(440.0, 456.0)
+shape = SubResource("Map_ArenaPillarR")
+
+[node name="ArenaTopL" type="CollisionShape2D" parent="CorruptedOnly"]
+position = Vector2(375.0, 472.0)
+shape = SubResource("Map_ArenaTopL")
+
+[node name="ArenaTopR" type="CollisionShape2D" parent="CorruptedOnly"]
+position = Vector2(457.0, 472.0)
+shape = SubResource("Map_ArenaTopR")
+
+[node name="ArenaLeft" type="CollisionShape2D" parent="CorruptedOnly"]
+position = Vector2(359.0, 536.0)
+shape = SubResource("Map_ArenaLeft")
+
+[node name="ArenaRight" type="CollisionShape2D" parent="CorruptedOnly"]
+position = Vector2(473.5, 536.0)
+shape = SubResource("Map_ArenaRight")
+
+[node name="ArenaBottom" type="CollisionShape2D" parent="CorruptedOnly"]
+position = Vector2(416.0, 584.0)
+shape = SubResource("Map_ArenaBottom")
+
+[node name="ButcherSignArena" type="CollisionShape2D" parent="CorruptedOnly"]
+position = Vector2(361.0, 458.0)
+shape = SubResource("Map_ButcherSignArena")
 
 [node name="Duck1" type="Node2D" parent="." unique_id=1209444752]
-position = Vector2(150, 620)
+position = Vector2(160, 630)
 script = ExtResource("18_wander")
 sheet = ExtResource("17_duck")
-area = Rect2(124, 604, 104, 72)
+area = Rect2(126, 606, 104, 70)
 speed = 6.0
 shadow = false
+
 
 [node name="Duck2" type="Node2D" parent="." unique_id=1706709377]
-position = Vector2(200, 660)
+position = Vector2(200, 662)
 script = ExtResource("18_wander")
 sheet = ExtResource("17_duck")
-area = Rect2(124, 604, 104, 72)
+area = Rect2(126, 606, 104, 70)
 speed = 6.0
 shadow = false
+
 
 [node name="Duck3" type="Node2D" parent="." unique_id=167049993]
-position = Vector2(350, 640)
+position = Vector2(340, 640)
 script = ExtResource("18_wander")
 sheet = ExtResource("17_duck")
-area = Rect2(300, 604, 104, 72)
+area = Rect2(282, 606, 120, 70)
 speed = 6.0
 shadow = false
 
+
 [node name="Mochi" type="Area2D" parent="." unique_id=2048461]
-position = Vector2(72, 124)
+position = Vector2(52, 140)
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("20_cat")
 
+
 [node name="Shape" type="CollisionShape2D" parent="Mochi" unique_id=1859560940]
 shape = SubResource("CatArea")
+
 
 [node name="CatStory" type="Area2D" parent="Mochi" unique_id=496817003]
 collision_layer = 2
@@ -208,145 +404,162 @@ dialogue = ExtResource("11_x6rmf")
 active_flag = "cat_dead"
 prompt_text = "Look"
 
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Mochi/CatStory" unique_id=1753979394]
 shape = SubResource("CircleShape2D_sg00f")
 
+
 [node name="Farm" type="Node2D" parent="." unique_id=950043173]
 
+
 [node name="Plot1" parent="Farm" unique_id=1042517521 instance=ExtResource("12_plot")]
-position = Vector2(72, 200)
+position = Vector2(120, 186)
 crop_id = &"wheat"
 days_to_grow = 1
 size = Vector2(16, 16)
+
 
 [node name="Plot2" parent="Farm" unique_id=98165336 instance=ExtResource("12_plot")]
-position = Vector2(104, 200)
+position = Vector2(120, 206)
 crop_id = &"wheat"
 days_to_grow = 1
 size = Vector2(16, 16)
+
 
 [node name="Plot3" parent="Farm" unique_id=731140688 instance=ExtResource("12_plot")]
-position = Vector2(136, 200)
+position = Vector2(120, 226)
 crop_id = &"wheat"
 days_to_grow = 1
 size = Vector2(16, 16)
 
-[node name="Bounds" type="StaticBody2D" parent="." unique_id=1862737525]
-
-[node name="Top" type="CollisionShape2D" parent="Bounds" unique_id=1153108197]
-position = Vector2(256, 16)
-shape = SubResource("WallH")
-
-[node name="Bottom" type="CollisionShape2D" parent="Bounds" unique_id=313184005]
-position = Vector2(256, 752)
-shape = SubResource("WallH")
-
-[node name="Left" type="CollisionShape2D" parent="Bounds" unique_id=1783095502]
-position = Vector2(16, 384)
-shape = SubResource("WallV")
-
-[node name="Right" type="CollisionShape2D" parent="Bounds" unique_id=514484777]
-position = Vector2(496, 384)
-shape = SubResource("WallV")
-
-[node name="LakeLeft" type="CollisionShape2D" parent="Bounds" unique_id=1691135319]
-position = Vector2(176, 640)
-shape = SubResource("LakeHalf")
-
-[node name="LakeRight" type="CollisionShape2D" parent="Bounds" unique_id=525171030]
-position = Vector2(352, 640)
-shape = SubResource("LakeHalf")
 
 [node name="Doors" type="Node2D" parent="." unique_id=176819495]
 
+
 [node name="HouseDoor" type="Area2D" parent="Doors" unique_id=887209279]
-position = Vector2(130, 150)
+position = Vector2(120, 120)
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("11_door")
 spawn_at = "Spawn_inside"
 target_scene = "res://scenes/interiors/house_interior.tscn"
 
+
 [node name="Shape" type="CollisionShape2D" parent="Doors/HouseDoor" unique_id=1827481767]
 shape = SubResource("DoorShape")
 
+
 [node name="Spawn_house_outside" type="Marker2D" parent="Doors" unique_id=92578830]
-position = Vector2(130, 155)
+position = Vector2(120, 136)
 metadata/facing = "south"
 
+
 [node name="BakeryDoor" type="Area2D" parent="Doors" unique_id=927184020]
-position = Vector2(377, 150)
+position = Vector2(420, 136)
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("11_door")
 spawn_at = "Spawn_inside"
 target_scene = "res://scenes/interiors/bakery_interior.tscn"
 
+
 [node name="Shape" type="CollisionShape2D" parent="Doors/BakeryDoor" unique_id=1486247887]
 shape = SubResource("DoorShape")
 
+
 [node name="Spawn_bakery_outside" type="Marker2D" parent="Doors" unique_id=2052262648]
-position = Vector2(392, 155)
+position = Vector2(420, 152)
 metadata/facing = "south"
 
+
 [node name="ButcherDoor" type="Area2D" parent="Doors" unique_id=751048338]
-position = Vector2(220, 278)
+position = Vector2(438, 376)
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("11_door")
 spawn_at = "Spawn_inside"
 target_scene = "res://scenes/interiors/butcher_interior.tscn"
 
+
 [node name="Shape" type="CollisionShape2D" parent="Doors/ButcherDoor" unique_id=1808961489]
 shape = SubResource("DoorShape")
 
+
 [node name="Spawn_butcher_outside" type="Marker2D" parent="Doors" unique_id=589784381]
-position = Vector2(220, 283)
+position = Vector2(438, 393)
 metadata/facing = "south"
 
+
 [node name="TownhallDoor" type="Area2D" parent="Doors" unique_id=1128958804]
-position = Vector2(408, 390)
+position = Vector2(224, 264)
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("11_door")
 spawn_at = "Spawn_inside"
 target_scene = "res://scenes/interiors/townhall_interior.tscn"
 
+
 [node name="Shape" type="CollisionShape2D" parent="Doors/TownhallDoor" unique_id=801554507]
 shape = SubResource("DoorShape")
 
+
 [node name="Spawn_townhall_outside" type="Marker2D" parent="Doors" unique_id=1394372397]
-position = Vector2(408, 395)
+position = Vector2(224, 280)
+metadata/facing = "south"
+
+
+[node name="CoopDoor" type="Area2D" parent="Doors"]
+position = Vector2(80, 312)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("11_door")
+spawn_at = "Spawn_inside"
+target_scene = "res://scenes/interiors/coop_interior.tscn"
+label = "Enter coop"
+
+[node name="Shape" type="CollisionShape2D" parent="Doors/CoopDoor"]
+shape = SubResource("CoopDoorShape")
+
+[node name="Spawn_coop_outside" type="Marker2D" parent="Doors"]
+position = Vector2(80, 328)
 metadata/facing = "south"
 
 [node name="Butcher" parent="." unique_id=1016802625 instance=ExtResource("2_31pel")]
-position = Vector2(248, 284)
+position = Vector2(404, 394)
 dialogue = ExtResource("3_31pel")
 prompt_text = "Talk"
+
 
 [node name="NPCLook" type="Node" parent="Butcher" unique_id=401495329]
 script = ExtResource("9_look")
 art_folder = "res://art/butcher"
 
+
 [node name="Body" type="StaticBody2D" parent="Butcher" unique_id=1301032960]
+
 
 [node name="Shape" type="CollisionShape2D" parent="Butcher/Body" unique_id=1675552858]
 shape = SubResource("NPCBody")
 
+
 [node name="Baker" parent="." unique_id=392043355 instance=ExtResource("2_31pel")]
-position = Vector2(372, 158)
+position = Vector2(392, 152)
 dialogue = ExtResource("6_baker")
 prompt_text = "Talk"
 enabled = false
+
 
 [node name="NPCLook" type="Node" parent="Baker" unique_id=2007204751]
 script = ExtResource("9_look")
 art_folder = "res://art/baker"
 
+
 [node name="Body" type="StaticBody2D" parent="Baker" unique_id=408684694]
+
 
 [node name="Shape" type="CollisionShape2D" parent="Baker/Body" unique_id=773584511]
 shape = SubResource("NPCBody")
+
 
 [node name="Baker2D" type="Area2D" parent="Baker" unique_id=603753688]
 collision_layer = 2
@@ -359,38 +572,49 @@ required_flag = "cat_dead"
 done_flag = "baker_confronted"
 prompt_text = "Talk"
 
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Baker/Baker2D" unique_id=30051660]
 shape = SubResource("CircleShape2D_etr18")
 
+
 [node name="Villager01" parent="." unique_id=46802055 instance=ExtResource("2_31pel")]
-position = Vector2(189, 152)
+position = Vector2(200, 142)
 dialogue = ExtResource("7_vil01")
 prompt_text = "Talk"
+
 
 [node name="NPCLook" type="Node" parent="Villager01" unique_id=1176223194]
 script = ExtResource("9_look")
 
+
 [node name="Body" type="StaticBody2D" parent="Villager01" unique_id=657193413]
+
 
 [node name="Shape" type="CollisionShape2D" parent="Villager01/Body" unique_id=1010214728]
 shape = SubResource("NPCBody")
 
+
 [node name="Villager02" parent="." unique_id=1819750218 instance=ExtResource("2_31pel")]
-position = Vector2(446, 404)
+position = Vector2(282, 412)
 dialogue = ExtResource("8_vil02")
 prompt_text = "Talk"
+
 
 [node name="NPCLook" type="Node" parent="Villager02" unique_id=1572103673]
 script = ExtResource("9_look")
 art_folder = "res://art/villager-02"
 
+
 [node name="Body" type="StaticBody2D" parent="Villager02" unique_id=2004866091]
+
 
 [node name="Shape" type="CollisionShape2D" parent="Villager02/Body" unique_id=84349895]
 shape = SubResource("NPCBody")
 
+
 [node name="Player" parent="." unique_id=2047223457 instance=ExtResource("1_7yu4j")]
-position = Vector2(321, 340)
+position = Vector2(318, 340)
+
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=1715918235]
 zoom = Vector2(4, 4)
@@ -401,15 +625,20 @@ limit_bottom = 768
 position_smoothing_enabled = true
 position_smoothing_speed = 6.0
 
+
 [node name="Butterflies" type="Node2D" parent="." unique_id=1610432002]
 script = ExtResource("21_flies")
 
+
 [node name="DialogueBox" parent="." unique_id=104292372 instance=ExtResource("4_4jmdl")]
+
 
 [node name="InteractPrompt" parent="." unique_id=1461623571 instance=ExtResource("5_31pel")]
 
+
 [node name="Level1Quest" type="Node" parent="." unique_id=1314917491]
 script = ExtResource("13_quest")
+
 
 [node name="Level2Quest" type="Node" parent="." unique_id=342181831]
 script = ExtResource("l2quest")

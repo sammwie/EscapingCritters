@@ -21,9 +21,9 @@ caught_text = "They saw you... back home, quickly."
 [node name="NightGuards" type="Node2D" parent="."]
 
 [node name="Guard1" type="Node2D" parent="NightGuards"]
-position = Vector2(200, 250)
+position = Vector2(140, 290)
 script = ExtResource("3_guard")
-patrol_offset = Vector2(140, 0)
+patrol_offset = Vector2(90, 0)
 speed = 40.0
 wait_time = 0.5
 vision_range = 95.0
@@ -34,9 +34,9 @@ script = ExtResource("5_look")
 art_folder = "res://art/villager-01"
 
 [node name="Guard2" type="Node2D" parent="NightGuards"]
-position = Vector2(330, 320)
+position = Vector2(340, 300)
 script = ExtResource("3_guard")
-patrol_offset = Vector2(0, 150)
+patrol_offset = Vector2(0, 170)
 speed = 40.0
 wait_time = 0.5
 vision_range = 95.0
@@ -47,9 +47,9 @@ script = ExtResource("5_look")
 art_folder = "res://art/villager-02"
 
 [node name="Guard3" type="Node2D" parent="NightGuards"]
-position = Vector2(170, 470)
+position = Vector2(56, 470)
 script = ExtResource("3_guard")
-patrol_offset = Vector2(150, 0)
+patrol_offset = Vector2(160, 0)
 speed = 40.0
 wait_time = 0.5
 vision_range = 95.0
@@ -60,9 +60,9 @@ script = ExtResource("5_look")
 art_folder = "res://art/villager-01"
 
 [node name="Guard4" type="Node2D" parent="NightGuards"]
-position = Vector2(195, 556)
+position = Vector2(180, 562)
 script = ExtResource("3_guard")
-patrol_offset = Vector2(140, 0)
+patrol_offset = Vector2(150, 0)
 speed = 45.0
 wait_time = 0.4
 vision_range = 85.0
@@ -75,32 +75,36 @@ art_folder = "res://art/villager-02"
 [node name="NightBushes" type="Node2D" parent="."]
 
 [node name="Bush1" type="Area2D" parent="NightBushes"]
-position = Vector2(150, 215)
+position = Vector2(156, 236)
 script = ExtResource("4_bush")
 
 [node name="Bush2" type="Area2D" parent="NightBushes"]
-position = Vector2(275, 300)
+position = Vector2(44, 336)
 script = ExtResource("4_bush")
 
 [node name="Bush3" type="Area2D" parent="NightBushes"]
-position = Vector2(235, 395)
+position = Vector2(196, 438)
 script = ExtResource("4_bush")
 
 [node name="Bush4" type="Area2D" parent="NightBushes"]
-position = Vector2(300, 505)
+position = Vector2(110, 524)
 script = ExtResource("4_bush")
 
 [node name="Bush5" type="Area2D" parent="NightBushes"]
-position = Vector2(225, 548)
+position = Vector2(232, 560)
+script = ExtResource("4_bush")
+
+[node name="Bush6" type="Area2D" parent="NightBushes"]
+position = Vector2(292, 430)
 script = ExtResource("4_bush")
 
 [node name="NightStart" type="Marker2D" parent="."]
-position = Vector2(130, 155)
+position = Vector2(120, 136)
 
 [node name="PondEntrance" type="Marker2D" parent="."]
-position = Vector2(264, 575)
+position = Vector2(256, 582)
 
 [node name="KnowsAllWatcher" type="Node2D" parent="."]
-position = Vector2(455, 455)
+position = Vector2(452, 646)
 script = ExtResource("6_watcher")
 notice_range = 170.0

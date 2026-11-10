@@ -60,7 +60,7 @@ const NIGHT_GRADE := Color(0.9, 0.95, 1.1)
 const STALK_AT := 20.0
 const CLOSE_AT := 45.0
 ## Extra villagers standing around the day 3 map, staring.
-const ONLOOKER_SPOTS := [Vector2(200, 190), Vector2(262, 120), Vector2(300, 205)]
+const ONLOOKER_SPOTS := [Vector2(176, 150), Vector2(262, 142), Vector2(340, 236)]
 const COLD_LINES := [
 	["...", "We don't talk to you anymore."],
 	["You shouldn't be outside today.", "Go back inside."],

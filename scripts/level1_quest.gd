@@ -10,7 +10,8 @@ extends Node
 ## in and out of buildings for the whole play session.
 ##
 ## In the village it also looks for sibling nodes named "Baker" (an NPC),
-## "Farm" (holding FarmPlot instances) and "Pen/EggSpots" (Marker2Ds where
+## "Farm" (holding FarmPlot instances). In the coop interior it finds
+## "Pen/EggSpots" (Marker2Ds where
 ## eggs appear once the chickens are fed) and wires them up.
 
 enum Stage { TALK_BAKER, FEED, EGGS, PLANT, WATER, SLEEP, HARVEST, DELIVER, DONE }
@@ -245,7 +246,7 @@ func _refresh() -> void:
 
 	var tasks := [
 		"Say good morning to the Baker",
-		"Feed the chickens in the pen",
+		"Feed the chickens in the coop",
 		"Collect eggs from the coop (%d/%d)" % [mini(eggs_taken.size(), NEEDED), NEEDED],
 		"Plant wheat in the farm field (%d/%d)" % [mini(planted, NEEDED), NEEDED],
 		"Water the seeds (%d/%d)" % [mini(watered, NEEDED), NEEDED],
