@@ -14,5 +14,6 @@ func _ready() -> void:
 
 func _on_interact(_by: Node) -> void:
 	enabled = false
+	SFX.play("item_pickup")
 	picked_up.emit(item_id)
 	queue_free()

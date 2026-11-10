@@ -43,6 +43,7 @@ func set_intensity(value: float) -> void:
 func flicker(duration := 0.4, strength := 1.0) -> void:
 	if _mat == null:
 		return
+	SFX.play("glitch")
 	_kill_tween()
 	_tween = create_tween()
 	var steps := maxi(int(duration / 0.05), 1)

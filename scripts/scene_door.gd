@@ -18,6 +18,7 @@ func _on_interact(_by: Node) -> void:
 		bumped_locked.emit()
 		return
 	opened.emit()
+	SFX.play("open_door")
 	if target_scene != "":
 		var path := target_scene
 		if StoryRouter.is_village(path):

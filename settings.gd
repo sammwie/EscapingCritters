@@ -28,6 +28,9 @@ func _ready() -> void:
 	%ResetButton.pressed.connect(_on_reset_pressed)
 	_load_into_controls()
 	%BackButton.grab_focus()
+	for button in get_tree().current_scene.find_children("*", "Button", true, false):
+		button.mouse_entered.connect(func() -> void: SFX.play("menu_cycle"))
+		button.pressed.connect(func() -> void: SFX.play("menu_select"))
 
 # Pull the current values into the controls without triggering saves.
 func _load_into_controls() -> void:

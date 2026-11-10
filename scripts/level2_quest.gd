@@ -143,6 +143,8 @@ func _unhandled_input(event: InputEvent) -> void:
 # The Baker hands over the loaf (Level 1's last line), then asks about
 # tomorrow's eggs as plain dialogue. Sleeping in the house starts the morning.
 func _begin_evening() -> void:
+	SFX.set_level_mix(2)
+	SFX.play("horror_ambience", true)
 	await get_tree().create_timer(start_delay).timeout
 	while Dialogue.active:
 		await get_tree().process_frame
@@ -282,6 +284,7 @@ func _on_conversation_ended(npc_id: String) -> void:
 func _start_fight() -> void:
 	if _boss == null or not is_instance_valid(_boss):
 		return
+	SFX.set_fight_mix()
 	stage = Stage.FIGHT
 	_version += 1
 	var arena := ButcherArena.new()
@@ -291,6 +294,7 @@ func _start_fight() -> void:
 	arena.begin(_player, _boss, ARENA)
 
 func _on_butcher_defeated(at: Vector2) -> void:
+	SFX.set_level_mix(2)
 	note_pos = at
 	stage = Stage.NOTE
 	_version += 1
@@ -411,6 +415,8 @@ func _build_ui() -> void:
 		_task_labels.append(label)
 
 func _show_banner(heading: String, sub: String) -> void:
+	if heading == "Level 2 Complete":
+		SFX.play("menu_select")
 	var layer := CanvasLayer.new()
 	layer.layer = 60
 	add_child(layer)

@@ -194,6 +194,7 @@ func _fight(delta: float) -> void:
 			_face(_aim)
 			if _timer <= 0.0:
 				st = St.CHARGE
+				SFX.play("butcher_charge")
 				_timer = 0.55
 				_charge_hit = false
 		St.CHARGE:
@@ -264,6 +265,7 @@ func take_hit(damage: int, from_pos: Vector2) -> void:
 	if mode != Mode.FIGHT or hp <= 0:
 		return
 	var multiplier := 2 if st == St.STUNNED else 1
+	SFX.play("butcher_hit")
 	hp = maxi(hp - damage * multiplier, 0)
 	health_changed.emit(hp, max_hp)
 	_kb = (global_position - from_pos).normalized() * 110.0
@@ -274,6 +276,7 @@ func take_hit(damage: int, from_pos: Vector2) -> void:
 		_die()
 
 func _die() -> void:
+	SFX.play("butcher_death")
 	mode = Mode.DEAD
 	st = St.WAIT
 	velocity = Vector2.ZERO

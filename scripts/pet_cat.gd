@@ -68,6 +68,7 @@ func _apply_dead_state() -> void:
 		_sprite.modulate = Color.WHITE
 
 func _on_interact(_by: Node) -> void:
+	SFX.play("cat_%d" % randi_range(1, 2))
 	_blink = 0.8
 	for i in 3:
 		var heart := Sprite2D.new()

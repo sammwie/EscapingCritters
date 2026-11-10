@@ -43,6 +43,9 @@ func _draw() -> void:
 
 func _on_interact(_by: Node) -> void:
 	enabled = false
+	SFX.play("open_any_note")
+	if note_id == "l1_note":
+		SFX.play("pickup_note_L1")
 	NotesLog.add(note_id, title, body)
 	var viewer := NoteViewer.open_note(get_tree().current_scene, title, body)
 	await viewer.closed
