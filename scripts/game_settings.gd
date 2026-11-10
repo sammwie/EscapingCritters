@@ -61,8 +61,14 @@ static func apply(key: String) -> void:
 			_set_bus_volume("Master", float(values["master"]))
 		"music":
 			_set_bus_volume("Music", float(values["music"]))
+			var tree := Engine.get_main_loop() as SceneTree
+			if tree != null and tree.root.has_node("SFX"):
+				tree.root.get_node("SFX").set_sfx_volume()
 		"sfx":
 			_set_bus_volume("SFX", float(values["sfx"]))
+			var tree := Engine.get_main_loop() as SceneTree
+			if tree != null and tree.root.has_node("SFX"):
+				tree.root.get_node("SFX").set_sfx_volume()
 		"fullscreen":
 			var mode := DisplayServer.WINDOW_MODE_FULLSCREEN if values["fullscreen"] else DisplayServer.WINDOW_MODE_WINDOWED
 			DisplayServer.window_set_mode(mode)

@@ -111,6 +111,8 @@ func _setup() -> void:
 	_map = _detect_map()
 	match _map:
 		"house":
+			if stage >= Stage.SNEAK and stage < Stage.POND:
+				SFX.set_level_mix(3, true)
 			var bed := _scene.get_node_or_null("Bed")
 			if bed and bed.has_signal("slept"):
 				bed.slept.connect(_on_slept)
@@ -132,7 +134,8 @@ func _setup() -> void:
 			CorruptionScreen.ensure(_scene).step_to(NIGHT_PIXEL, 0.4, NIGHT_GRADE)
 			_setup_night()
 		"pond":
-			SFX.set_level_mix(3)
+			SFX.set_level_mix(4)
+			SFX.stop("cozy_level_1")
 			SFX.play("horror_ambience", true)
 			_setup_pond()
 		"knows_all":
@@ -479,8 +482,11 @@ func _update_flashlight_audio() -> void:
 	if _player == null:
 		return
 	var near_view := false
-	for guard in get_tree().get_nodes_in_group("patrol_guard"):
-		var to_player := _player.global_position - guard.global_position
+	for guard_node in get_tree().get_nodes_in_group("patrol_guard"):
+		var guard := guard_node as PatrolGuard
+		if guard == null:
+			continue
+		var to_player: Vector2 = _player.global_position - guard.global_position
 		if to_player.length() <= guard.vision_range + 24.0 \
 				and absf(rad_to_deg(guard.facing.angle_to(to_player))) <= guard.vision_angle * 0.5:
 			near_view = true

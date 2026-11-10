@@ -43,7 +43,13 @@ const SOUNDS := {
 var _loops: Dictionary = {}
 var _indoor_filter := AudioEffectLowPassFilter.new()
 var _music_bus := -1
-var _ambience_boost_db := 0.0
+var _ambience_bus := -1
+var _music_fraction := 1.0
+var _ambience_fraction := 0.0
+var _indoor_music := false
+
+func _ready() -> void:
+	_ambience_bus = _ensure_bus("Ambience")
 
 func play(sound_name: String, loop := false, start_offset := 0.0) -> AudioStreamPlayer:
 	if not SOUNDS.has(sound_name):
@@ -57,13 +63,13 @@ func play(sound_name: String, loop := false, start_offset := 0.0) -> AudioStream
 		return null
 	var player := AudioStreamPlayer.new()
 	player.stream = stream
-	player.bus = "Music" if sound_name in ["cozy_level_1", "opening_music"] else "SFX"
+	player.bus = "Music" if sound_name in ["cozy_level_1", "opening_music"] else "Ambience" if _is_ambience(sound_name) else "SFX"
 	if sound_name == "outdoor_footsteps":
-		player.volume_db = -2.0
+		player.volume_db = -3.0
 	elif sound_name == "opening_music":
 		player.volume_db = 4.0
 	elif sound_name in ["indoor_left_foot", "indoor_right_foot"]:
-		player.volume_db = 0.0
+		player.volume_db = -1.0
 	elif sound_name == "chicken_coop":
 		player.volume_db = 5.0
 	elif sound_name in ["butcher_charge", "butcher_hit", "butcher_speaking", "butcher_death"]:
@@ -71,13 +77,7 @@ func play(sound_name: String, loop := false, start_offset := 0.0) -> AudioStream
 	elif sound_name == "horror_2":
 		player.volume_db = -5.0
 	elif sound_name == "horror_wind":
-		player.volume_db = -6.0
-	elif sound_name in ["scary_search", "night_ambience", "pond_night_ambience", "pond_water", "pond_crossing", "chicken_coop"]:
-		player.volume_db = _ambience_boost_db
-		if sound_name == "pond_night_ambience":
-			player.volume_db -= 8.0
-		if sound_name == "pond_water":
-			player.volume_db += 6.0
+		player.volume_db = -10.0
 	player.stream.loop = loop
 	add_child(player)
 	player.play(start_offset)
@@ -98,6 +98,7 @@ func play_limited(sound_name: String, duration: float) -> void:
 	)
 
 func set_indoor_music(indoor: bool) -> void:
+	_indoor_music = indoor
 	_music_bus = AudioServer.get_bus_index("Music")
 	if _music_bus == -1:
 		return
@@ -110,23 +111,56 @@ func set_indoor_music(indoor: bool) -> void:
 		_indoor_filter.cutoff_hz = 1800.0
 		AudioServer.add_bus_effect(_music_bus, _indoor_filter)
 		AudioServer.set_bus_effect_enabled(_music_bus, AudioServer.get_bus_effect_count(_music_bus) - 1, indoor)
-	var music_level := float(GameSettings.get_value("music"))
-	AudioServer.set_bus_volume_db(_music_bus, linear_to_db(maxf(music_level, 0.0001)) + (-5.0 if indoor else 0.0))
+	_update_mix_buses()
 
 func set_level_mix(level: int, night := false) -> void:
-	_ambience_boost_db = -8.0 if level <= 1 else -3.0 if level == 2 else 4.0
-	_music_bus = AudioServer.get_bus_index("Music")
-	if _music_bus >= 0:
-		var music_level := float(GameSettings.get_value("music"))
-		var attenuation := 0.0 if level <= 1 else -6.0 if level == 2 else -18.0
-		AudioServer.set_bus_volume_db(_music_bus, linear_to_db(maxf(music_level, 0.0001)) + attenuation)
-	for sound_name in ["horror_ambience", "night_ambience", "pond_water"]:
-		var ambient := _loops.get(sound_name) as AudioStreamPlayer
-		if is_instance_valid(ambient):
-			ambient.volume_db = _ambience_boost_db + (6.0 if sound_name == "pond_water" else 0.0)
-	if night:
+	var music_fraction := 1.0 if level <= 1 else 0.5 if level == 2 else 0.15
+	var ambience_fraction := 0.0 if level <= 1 else 0.5 if level == 2 else 0.85
+	if night or level >= 4:
+		music_fraction = 0.0
+		ambience_fraction = 1.0
+	if level >= 4:
 		stop("cozy_level_1")
 		stop("opening_music")
+	if level <= 1:
+		for sound_name in ["horror_ambience", "night_ambience", "scary_search", "horror_wind", "pond_night_ambience", "pond_water", "pond_crossing"]:
+			stop(sound_name)
+	_music_fraction = music_fraction
+	_ambience_fraction = ambience_fraction
+	_update_mix_buses()
+
+func set_fight_mix() -> void:
+	_music_fraction = 0.3
+	_ambience_fraction = 0.7
+	_update_mix_buses()
+
+func set_sfx_volume() -> void:
+	_update_mix_buses()
+
+func _update_mix_buses() -> void:
+	var music_level := float(GameSettings.get_value("music")) * _music_fraction
+	var indoor_multiplier := 0.56 if _indoor_music else 1.0
+	var music_index := _ensure_bus("Music")
+	var music_volume := music_level * indoor_multiplier
+	AudioServer.set_bus_volume_db(music_index, linear_to_db(maxf(music_volume, 0.0001)))
+	AudioServer.set_bus_mute(music_index, music_volume <= 0.001)
+	var ambience_volume := float(GameSettings.get_value("sfx")) * _ambience_fraction
+	var ambience_index := _ensure_bus("Ambience")
+	AudioServer.set_bus_volume_db(ambience_index, linear_to_db(maxf(ambience_volume, 0.0001)))
+	AudioServer.set_bus_mute(ambience_index, ambience_volume <= 0.001)
+
+func _ensure_bus(bus_name: String) -> int:
+	var bus_index := AudioServer.get_bus_index(bus_name)
+	if bus_index >= 0:
+		return bus_index
+	AudioServer.add_bus()
+	bus_index = AudioServer.bus_count - 1
+	AudioServer.set_bus_name(bus_index, bus_name)
+	AudioServer.set_bus_send(bus_index, "Master")
+	return bus_index
+
+func _is_ambience(sound_name: String) -> bool:
+	return sound_name in ["horror_ambience", "night_ambience", "pond_night_ambience", "scary_search", "horror_wind", "pond_water", "pond_crossing"]
 
 func stop(sound_name: String) -> void:
 	var player := _loops.get(sound_name) as AudioStreamPlayer

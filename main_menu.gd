@@ -6,6 +6,7 @@ extends Control
 func _ready() -> void:
 	# Apply saved volume / fullscreen / text-speed options as soon as the game starts.
 	GameSettings.load_and_apply()
+	SFX.set_level_mix(1)
 	SFX.play("opening_music", true)
 
 	$ButtonList/NewGameButton.pressed.connect(_on_new_game_pressed)
