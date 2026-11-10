@@ -49,6 +49,7 @@ var _task_labels: Array[Label] = []
 var _bonus_label: Label
 var _seen_version := -1
 var _ui_layer: CanvasLayer
+var _chicken_sound_active := false
 
 # Call this when a brand new game starts.
 static func reset() -> void:
@@ -88,6 +89,14 @@ static func sleep_through_night() -> void:
 	_version += 1
 
 func _ready() -> void:
+	var active_level := 1
+	if Level3Quest.stage != Level3Quest.Stage.INACTIVE:
+		active_level = 3
+	elif Level2Quest.stage != Level2Quest.Stage.INACTIVE:
+		active_level = 2
+	SFX.set_level_mix(active_level)
+	SFX.play("cozy_level_1", true)
+	SFX.set_indoor_music(get_tree().current_scene.scene_file_path.contains("interiors/"))
 	# Level 2 rides along with Level 1: any scene that has this node also gets
 	# a Level2Quest, so it never has to be added to scenes by hand.
 	var parent := get_parent()
@@ -99,7 +108,27 @@ func _ready() -> void:
 	Dialogue.conversation_ended.connect(_on_conversation_ended)
 	_setup_village.call_deferred()
 
+func _update_chicken_ambience() -> void:
+	var pen := get_parent().get_node_or_null("Pen") as Node2D
+	var player := get_tree().get_first_node_in_group("player") as Node2D
+	var nearby := false
+	if pen != null and player != null:
+		for chicken_name in ["Chicken1", "Chicken2", "Chicken3"]:
+			var chicken := pen.get_node_or_null(chicken_name) as Node2D
+			if chicken and player.global_position.distance_to(chicken.global_position) <= 120.0:
+				nearby = true
+				break
+	if nearby == _chicken_sound_active:
+		return
+	_chicken_sound_active = nearby
+	if nearby:
+		SFX.play("chicken_coop", true)
+	else:
+		SFX.stop("chicken_coop")
+
 func _process(_delta: float) -> void:
+	_update_chicken_ambience()
+	_update_chicken_ambience()
 	# Level 2 brings its own task list, so hide this one once it starts.
 	if _ui_layer:
 		_ui_layer.visible = Level2Quest.stage <= Level2Quest.Stage.EVENING
@@ -146,6 +175,7 @@ func _on_watered(_plot: FarmPlot) -> void:
 	_check()
 
 func _on_harvested(_crop_id: StringName, _plot: FarmPlot) -> void:
+	SFX.play("item_pickup")
 	harvested += 1
 	_check()
 
@@ -312,6 +342,8 @@ func _build_ui() -> void:
 	box.add_child(_bonus_label)
 
 func _show_banner(heading: String, sub: String) -> void:
+	if heading == "Level 1 Complete":
+		SFX.play("menu_select")
 	var layer := CanvasLayer.new()
 	layer.layer = 60
 	add_child(layer)

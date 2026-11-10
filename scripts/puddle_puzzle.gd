@@ -62,6 +62,8 @@ var _hint_layer: CanvasLayer
 var _losing := false
 
 func _ready() -> void:
+	SFX.play("pond_crossing", true)
+	SFX.play("pond_water", true)
 	if puzzle_id == &"":
 		puzzle_id = &"puddle"
 	_seed = randi() if randomize_each_visit else GameState.puzzle_seed
@@ -130,6 +132,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _player.get_meta("hopping", false):
 		return
 	if _try_jump():
+		SFX.play("jump")
 		get_viewport().set_input_as_handled()
 
 func _input_dir() -> Vector2:
@@ -316,6 +319,7 @@ func _on_goal_entered(body: Node) -> void:
 		complete()
 
 func _on_failed() -> void:
+	SFX.play("fall_in_pond")
 	if not auto_reset:
 		return
 	await get_tree().create_timer(restart_delay).timeout

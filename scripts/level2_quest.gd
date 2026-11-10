@@ -137,6 +137,8 @@ func _unhandled_input(event: InputEvent) -> void:
 # The Baker hands over the loaf (Level 1's last line), then asks about
 # tomorrow's eggs as plain dialogue. Sleeping in the house starts the morning.
 func _begin_evening() -> void:
+	SFX.set_level_mix(2)
+	SFX.play("horror_ambience", true)
 	await get_tree().create_timer(start_delay).timeout
 	while Dialogue.active:
 		await get_tree().process_frame

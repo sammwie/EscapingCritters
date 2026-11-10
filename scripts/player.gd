@@ -13,6 +13,8 @@ const DIRS := ["east", "south-east", "south", "south-west", "west", "north-west"
 
 var sprite: AnimatedSprite2D
 var facing := "south"
+var _step_timer := 0.0
+var _step_side := false
 
 func _ready() -> void:
 	add_to_group("player")
@@ -33,16 +35,30 @@ func _ready() -> void:
 func _physics_process(_delta: float) -> void:
 	if Dialogue.active:
 		velocity = Vector2.ZERO
+		_step_timer = 0.0
 		_play("idle")
 		return
 	var dir := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	velocity = dir * speed
 	move_and_slide()
 	if dir == Vector2.ZERO:
+		_step_timer = 0.0
 		_play("idle")
 	else:
 		facing = DIRS[wrapi(roundi(dir.angle() / (PI / 4.0)), 0, 8)]
 		_play("walk")
+		var indoor := get_tree().current_scene.scene_file_path.contains("interior")
+		if indoor:
+			_step_timer -= _delta
+			if _step_timer <= 0.0:
+				SFX.play("indoor_left_foot" if _step_side else "indoor_right_foot")
+				_step_side = not _step_side
+				_step_timer = 0.34
+		else:
+			_step_timer -= _delta
+			if _step_timer <= 0.0:
+				SFX.play("outdoor_footsteps")
+				_step_timer = 0.34
 
 func _play(kind: String) -> void:
 	var anim: String = kind + "_" + facing

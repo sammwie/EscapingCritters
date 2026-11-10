@@ -55,7 +55,7 @@ func advance() -> void:
 
 # Randomly swaps characters; more corruption = more scrambling.
 func _glitch(text: String, stage: int) -> String:
-	var chance := clampf(0.04 * stage, 0.02, 0.3)
+	var chance := clampf(0.02 * stage, 0.01, 0.12)
 	var junk := "#@%&?/\\0123456789"
 	var out := ""
 	for c in text:

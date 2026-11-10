@@ -25,6 +25,8 @@ func _draw() -> void:
 	draw_circle(Vector2.ZERO, 10.0, col)
 
 func _play_reveal() -> void:
+	if is_safe:
+		SFX.play("item_pickup")
 	opened = true
 	enabled = false
 	prompt_text = ""

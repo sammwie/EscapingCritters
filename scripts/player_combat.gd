@@ -99,6 +99,7 @@ func _do_attack() -> void:
 
 func _do_dodge() -> void:
 	_dodge_cd = dodge_cooldown
+	SFX.play("dash")
 	_dodge_t = dodge_time
 	var dir := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	_dodge_dir = dir.normalized() if dir != Vector2.ZERO else facing_vector()

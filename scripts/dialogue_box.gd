@@ -18,6 +18,8 @@ func _ready() -> void:
 	Dialogue.skip_typing.connect(_finish_typing)
 
 func _on_line_shown(speaker: String, text: String) -> void:
+	if speaker.to_lower().contains("butcher"):
+		SFX.play("butcher_speaking")
 	panel.show()
 	speaker_label.text = speaker
 	text_label.text = text
@@ -26,6 +28,7 @@ func _on_line_shown(speaker: String, text: String) -> void:
 		_tween.kill()
 	var duration := maxf(text.length() / (chars_per_second * GameSettings.text_speed_multiplier()), 0.05)
 	Dialogue.line_typing = true
+	SFX.play("dialogue_loop", true)
 	_tween = create_tween()
 	_tween.tween_property(text_label, "visible_ratio", 1.0, duration)
 	_tween.finished.connect(_on_typing_done)
@@ -38,8 +41,10 @@ func _finish_typing() -> void:
 
 func _on_typing_done() -> void:
 	Dialogue.line_typing = false
+	SFX.stop("dialogue_loop")
 
 func _on_finished() -> void:
+	SFX.stop("dialogue_loop")
 	if _tween:
 		_tween.kill()
 	Dialogue.line_typing = false
