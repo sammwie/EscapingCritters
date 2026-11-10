@@ -53,14 +53,24 @@ func advance() -> void:
 	line_started.emit(current_npc_id)
 	line_shown.emit(line.speaker, text)
 
-# Randomly swaps characters; more corruption = more scrambling.
+const LOOKALIKES := {"A": "4", "E": "3", "I": "1", "O": "0", "S": "5", "T": "7", "B": "8", "G": "6"}
+
+# Garbles some letters but keeps every word readable: only letters inside a
+# word are swapped (never the first or last), never two in a row, and only
+# for look-alike characters (O -> 0, E -> 3, ...).
 func _glitch(text: String, stage: int) -> String:
-	var chance := clampf(0.02 * stage, 0.01, 0.12)
-	var junk := "#@%&?/\\0123456789"
+	var chance := clampf(0.06 * stage, 0.06, 0.3)
 	var out := ""
-	for c in text:
-		if c != " " and randf() < chance:
-			out += junk[randi() % junk.length()]
+	var prev_swapped := false
+	var count := text.length()
+	for i in count:
+		var c := text[i]
+		var inside := i > 0 and i < count - 1 and text[i - 1] != " " and text[i + 1] != " "
+		var key := c.to_upper()
+		if inside and not prev_swapped and LOOKALIKES.has(key) and randf() < chance:
+			out += LOOKALIKES[key]
+			prev_swapped = true
 		else:
 			out += c
+			prev_swapped = false
 	return out

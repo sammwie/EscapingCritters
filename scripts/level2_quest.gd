@@ -110,6 +110,8 @@ func _setup() -> void:
 	_has_eggs = _scene.get_node_or_null("Pen/EggSpots") != null
 	if _has_eggs and stage >= Stage.EGGS:
 		_spawn_eggs()
+	if _has_eggs:
+		_ensure_glitch_overlay()
 	if _is_village:
 		_ensure_glitch_overlay()
 		if stage == Stage.FIGHT or stage == Stage.WALLS:
