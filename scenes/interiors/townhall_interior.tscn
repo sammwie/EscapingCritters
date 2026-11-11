@@ -1,16 +1,18 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://buf23l7mg2u7c"]
 
-[ext_resource type="Texture2D" path="res://art/interiors/townhall_interior.png" id="bg"]
-[ext_resource type="PackedScene" uid="uid://cvcw7h5ng6ydg" path="res://scenes/player.tscn" id="p"]
-[ext_resource type="PackedScene" uid="uid://dxbcaovcv123k" path="res://scenes/dialogue_box.tscn" id="db"]
-[ext_resource type="PackedScene" uid="uid://cua0xve748asr" path="res://scenes/interact_prompt.tscn" id="ip"]
-[ext_resource type="Script" path="res://scripts/scene_door.gd" id="door"]
-[ext_resource type="Script" path="res://scripts/level1_quest.gd" id="quest"]
-[ext_resource type="PackedScene" uid="uid://binbn40xn3oiy" path="res://scenes/npc.tscn" id="npc"]
-[ext_resource type="Script" path="res://scripts/npc_look.gd" id="look"]
-[ext_resource type="Resource" path="res://dialogues/mayor.tres" id="mayor_dlg"]
+[ext_resource type="Script" uid="uid://s2qs1wc0487k" path="res://scripts/word_puzzle.gd" id="12_ucesb"]
+[ext_resource type="Script" uid="uid://b0mpktn6jr14s" path="res://scripts/puzzle_trigger.gd" id="13_4ikch"]
+[ext_resource type="Texture2D" uid="uid://brgkpx4q1lmbc" path="res://art/interiors/townhall_interior.png" id="bg"]
 [ext_resource type="PackedScene" uid="uid://ucutbk8pmsh5" path="res://scenes/notice_board.tscn" id="board"]
-[ext_resource type="Script" path="res://scripts/level2_quest.gd" id="l2quest"]
+[ext_resource type="PackedScene" uid="uid://dxbcaovcv123k" path="res://scenes/dialogue_box.tscn" id="db"]
+[ext_resource type="Script" uid="uid://iwyytpx0fac3" path="res://scripts/scene_door.gd" id="door"]
+[ext_resource type="PackedScene" uid="uid://cua0xve748asr" path="res://scenes/interact_prompt.tscn" id="ip"]
+[ext_resource type="Script" uid="uid://o2iaogqmg1uj" path="res://scripts/level2_quest.gd" id="l2quest"]
+[ext_resource type="Script" uid="uid://bcmywlq2hce5d" path="res://scripts/npc_look.gd" id="look"]
+[ext_resource type="Resource" uid="uid://da7jwq6xnuwdo" path="res://dialogues/mayor.tres" id="mayor_dlg"]
+[ext_resource type="PackedScene" uid="uid://binbn40xn3oiy" path="res://scenes/npc.tscn" id="npc"]
+[ext_resource type="PackedScene" uid="uid://cvcw7h5ng6ydg" path="res://scenes/player.tscn" id="p"]
+[ext_resource type="Script" uid="uid://dfpuuu2bh75ss" path="res://scripts/level1_quest.gd" id="quest"]
 
 [sub_resource type="RectangleShape2D" id="R0"]
 size = Vector2(256, 32)
@@ -45,18 +47,18 @@ size = Vector2(12, 10)
 [sub_resource type="RectangleShape2D" id="R10"]
 size = Vector2(10, 10)
 
-[sub_resource type="RectangleShape2D" id="DoorShape"]
-size = Vector2(32, 12)
-
 [sub_resource type="CircleShape2D" id="NPCBody"]
 radius = 4.0
 
-[sub_resource type="RectangleShape2D" id="BoardShape"]
-size = Vector2(20, 16)
+[sub_resource type="RectangleShape2D" id="DoorShape"]
+size = Vector2(32, 12)
 
-[node name="TownhallInterior" type="Node2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_etr18"]
+size = Vector2(48, 32)
 
-[node name="Darkness" type="ColorRect" parent="."]
+[node name="TownhallInterior" type="Node2D" unique_id=619000612]
+
+[node name="Darkness" type="ColorRect" parent="." unique_id=675159372]
 offset_left = -600.0
 offset_top = -400.0
 offset_right = 856.0
@@ -64,178 +66,186 @@ offset_bottom = 592.0
 mouse_filter = 2
 color = Color(0.0784, 0.0588, 0.0471, 1)
 
-[node name="Background" type="Sprite2D" parent="."]
+[node name="Background" type="Sprite2D" parent="." unique_id=1497700834]
+scale = Vector2(0.5, 0.5)
 texture = ExtResource("bg")
 centered = false
-scale = Vector2(0.5, 0.5)
 
-[node name="Walls" type="StaticBody2D" parent="."]
+[node name="Walls" type="StaticBody2D" parent="." unique_id=1880210434]
 
-[node name="Top" type="CollisionShape2D" parent="Walls"]
+[node name="Top" type="CollisionShape2D" parent="Walls" unique_id=1649923885]
 position = Vector2(128, 16)
 shape = SubResource("R0")
 
-[node name="Left" type="CollisionShape2D" parent="Walls"]
+[node name="Left" type="CollisionShape2D" parent="Walls" unique_id=360505375]
 position = Vector2(8, 96)
 shape = SubResource("R1")
 
-[node name="Right" type="CollisionShape2D" parent="Walls"]
+[node name="Right" type="CollisionShape2D" parent="Walls" unique_id=1128244606]
 position = Vector2(248, 96)
 shape = SubResource("R1")
 
-[node name="Bottom" type="CollisionShape2D" parent="Walls"]
+[node name="Bottom" type="CollisionShape2D" parent="Walls" unique_id=1520524405]
 position = Vector2(128, 176)
 shape = SubResource("R0")
 
-[node name="PlatformFrontL" type="CollisionShape2D" parent="Walls"]
+[node name="PlatformFrontL" type="CollisionShape2D" parent="Walls" unique_id=245761270]
 position = Vector2(80, 91)
 shape = SubResource("R2")
 
-[node name="PlatformFrontR" type="CollisionShape2D" parent="Walls"]
+[node name="PlatformFrontR" type="CollisionShape2D" parent="Walls" unique_id=51172499]
 position = Vector2(168, 91)
 shape = SubResource("R2")
 
-[node name="PlatformSideL" type="CollisionShape2D" parent="Walls"]
+[node name="PlatformSideL" type="CollisionShape2D" parent="Walls" unique_id=508655332]
 position = Vector2(54, 59)
 shape = SubResource("R3")
 
-[node name="PlatformSideR" type="CollisionShape2D" parent="Walls"]
+[node name="PlatformSideR" type="CollisionShape2D" parent="Walls" unique_id=547195067]
 position = Vector2(194, 59)
 shape = SubResource("R3")
 
-[node name="MayorDesk" type="CollisionShape2D" parent="Walls"]
+[node name="MayorDesk" type="CollisionShape2D" parent="Walls" unique_id=1494221277]
 position = Vector2(88, 58)
 shape = SubResource("R4")
 
-[node name="Globe" type="CollisionShape2D" parent="Walls"]
+[node name="Globe" type="CollisionShape2D" parent="Walls" unique_id=721121221]
 position = Vector2(104, 46)
 shape = SubResource("R5")
 
-[node name="Podium" type="CollisionShape2D" parent="Walls"]
+[node name="Podium" type="CollisionShape2D" parent="Walls" unique_id=201852583]
 position = Vector2(168, 57)
 shape = SubResource("R6")
 
-[node name="BannerL" type="CollisionShape2D" parent="Walls"]
+[node name="BannerL" type="CollisionShape2D" parent="Walls" unique_id=1033070277]
 position = Vector2(65, 44)
 shape = SubResource("R7")
 
-[node name="BannerR" type="CollisionShape2D" parent="Walls"]
+[node name="BannerR" type="CollisionShape2D" parent="Walls" unique_id=1596818282]
 position = Vector2(186, 44)
 shape = SubResource("R7")
 
-[node name="CabinetL" type="CollisionShape2D" parent="Walls"]
+[node name="CabinetL" type="CollisionShape2D" parent="Walls" unique_id=1627874817]
 position = Vector2(24, 57)
 shape = SubResource("R8")
 
-[node name="CabinetR" type="CollisionShape2D" parent="Walls"]
+[node name="CabinetR" type="CollisionShape2D" parent="Walls" unique_id=932868184]
 position = Vector2(232, 57)
 shape = SubResource("R8")
 
-[node name="PillarL1" type="CollisionShape2D" parent="Walls"]
+[node name="PillarL1" type="CollisionShape2D" parent="Walls" unique_id=1126261240]
 position = Vector2(24, 107)
 shape = SubResource("R5")
 
-[node name="PillarL2" type="CollisionShape2D" parent="Walls"]
+[node name="PillarL2" type="CollisionShape2D" parent="Walls" unique_id=279398542]
 position = Vector2(24, 140)
 shape = SubResource("R5")
 
-[node name="PillarR1" type="CollisionShape2D" parent="Walls"]
+[node name="PillarR1" type="CollisionShape2D" parent="Walls" unique_id=2134098417]
 position = Vector2(232, 107)
 shape = SubResource("R5")
 
-[node name="PillarR2" type="CollisionShape2D" parent="Walls"]
+[node name="PillarR2" type="CollisionShape2D" parent="Walls" unique_id=1326583924]
 position = Vector2(232, 140)
 shape = SubResource("R5")
 
-[node name="BenchL1" type="CollisionShape2D" parent="Walls"]
+[node name="BenchL1" type="CollisionShape2D" parent="Walls" unique_id=511551332]
 position = Vector2(64, 112)
 shape = SubResource("R4")
 
-[node name="BenchL2" type="CollisionShape2D" parent="Walls"]
+[node name="BenchL2" type="CollisionShape2D" parent="Walls" unique_id=880254375]
 position = Vector2(64, 136)
 shape = SubResource("R4")
 
-[node name="BenchR1" type="CollisionShape2D" parent="Walls"]
+[node name="BenchR1" type="CollisionShape2D" parent="Walls" unique_id=885106610]
 position = Vector2(200, 112)
 shape = SubResource("R4")
 
-[node name="BenchR2" type="CollisionShape2D" parent="Walls"]
+[node name="BenchR2" type="CollisionShape2D" parent="Walls" unique_id=705032242]
 position = Vector2(200, 136)
 shape = SubResource("R4")
 
-[node name="CandleL" type="CollisionShape2D" parent="Walls"]
+[node name="CandleL" type="CollisionShape2D" parent="Walls" unique_id=2075415488]
 position = Vector2(112, 126)
 shape = SubResource("R9")
 
-[node name="CandleR" type="CollisionShape2D" parent="Walls"]
+[node name="CandleR" type="CollisionShape2D" parent="Walls" unique_id=662710924]
 position = Vector2(144, 126)
 shape = SubResource("R9")
 
-[node name="PlantL" type="CollisionShape2D" parent="Walls"]
+[node name="PlantL" type="CollisionShape2D" parent="Walls" unique_id=1184440641]
 position = Vector2(97, 153)
 shape = SubResource("R9")
 
-[node name="PlantR" type="CollisionShape2D" parent="Walls"]
+[node name="PlantR" type="CollisionShape2D" parent="Walls" unique_id=1456699934]
 position = Vector2(169, 153)
 shape = SubResource("R9")
 
-[node name="BallotBox" type="CollisionShape2D" parent="Walls"]
+[node name="BallotBox" type="CollisionShape2D" parent="Walls" unique_id=210063787]
 position = Vector2(208, 154)
 shape = SubResource("R10")
 
-[node name="Mayor" parent="." instance=ExtResource("npc")]
+[node name="Mayor" parent="." unique_id=1856920838 instance=ExtResource("npc")]
 position = Vector2(88, 39)
-prompt_text = "Talk"
 dialogue = ExtResource("mayor_dlg")
+prompt_text = "Talk"
 
-[node name="NPCLook" type="Node" parent="Mayor"]
+[node name="NPCLook" type="Node" parent="Mayor" unique_id=777209965]
 script = ExtResource("look")
 art_folder = "res://art/villager-02"
 
-[node name="Body" type="StaticBody2D" parent="Mayor"]
+[node name="Body" type="StaticBody2D" parent="Mayor" unique_id=1673433476]
 
-[node name="Shape" type="CollisionShape2D" parent="Mayor/Body"]
+[node name="Shape" type="CollisionShape2D" parent="Mayor/Body" unique_id=1963308783]
 shape = SubResource("NPCBody")
 
-[node name="NoticeBox" parent="." instance=ExtResource("board")]
+[node name="NoticeBox" parent="." unique_id=1986889837 instance=ExtResource("board")]
 position = Vector2(208, 154)
 size = Vector2(0, 0)
 
-[node name="CollisionShape2D" parent="NoticeBox" index="0"]
-shape = SubResource("BoardShape")
-
-[node name="TownSquare" parent="NoticeBox" index="1"]
-announcements = Array[String](["Town Hall notice: The Baker needs help with the morning bread. Say hello at the bakery.", "Butcher's shop is open. Fresh cuts every day, just off the main road.", "Fishing is good at the lake this week. The pond is south of the road.", "The farm field is free for everyone. Plant it, water it, sleep on it.", "Reminder: every road in Hollowbrook leads back to the square."])
-
-[node name="ExitDoor" type="Area2D" parent="."]
+[node name="ExitDoor" type="Area2D" parent="." unique_id=1023589752]
 position = Vector2(128, 160)
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("door")
-target_scene = "res://scenes/test_main.tscn"
 spawn_at = "Spawn_townhall_outside"
 label = "Leave"
+target_scene = "res://scenes/test_main.tscn"
 
-[node name="Shape" type="CollisionShape2D" parent="ExitDoor"]
+[node name="Shape" type="CollisionShape2D" parent="ExitDoor" unique_id=516356254]
 shape = SubResource("DoorShape")
 
-[node name="Spawn_inside" type="Marker2D" parent="."]
+[node name="Spawn_inside" type="Marker2D" parent="." unique_id=1798158192]
 position = Vector2(128, 142)
 metadata/facing = "north"
 
-[node name="Player" parent="." instance=ExtResource("p")]
+[node name="Player" parent="." unique_id=359688287 instance=ExtResource("p")]
 position = Vector2(128, 142)
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=626972143]
 position = Vector2(128, 96)
 zoom = Vector2(4, 4)
 
-[node name="DialogueBox" parent="." instance=ExtResource("db")]
+[node name="DialogueBox" parent="." unique_id=1330714891 instance=ExtResource("db")]
 
-[node name="InteractPrompt" parent="." instance=ExtResource("ip")]
+[node name="InteractPrompt" parent="." unique_id=2084542104 instance=ExtResource("ip")]
 
-[node name="Level1Quest" type="Node" parent="."]
+[node name="Level1Quest" type="Node" parent="." unique_id=1764020081]
 script = ExtResource("quest")
 
-[node name="Level2Quest" type="Node" parent="."]
+[node name="Level2Quest" type="Node" parent="." unique_id=1402263012]
 script = ExtResource("l2quest")
+
+[node name="WordPuzzle" type="Node" parent="." unique_id=352090393]
+script = ExtResource("12_ucesb")
+
+[node name="WordBoard" type="Area2D" parent="." unique_id=1742596211 node_paths=PackedStringArray("puzzle")]
+position = Vector2(210, 58)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("13_4ikch")
+puzzle = NodePath("../WordPuzzle")
+prompt_text = "Look at the Puzzle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WordBoard" unique_id=563265204]
+shape = SubResource("RectangleShape2D_etr18")
