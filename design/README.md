@@ -2,7 +2,7 @@
 
 This folder is for **designers**. It holds the team's working art files: layered source files, exports, and reference images.
 
-## For coders: you can ignore this folder
+## For coders:
 
 - **Don't load anything from here in the game.** This folder contains a `.gdignore` file, so Godot skips it completely. It won't show up in the FileSystem dock, and no `.import` files are created here.
 - **Don't edit or reorganize files here.** designers own this folder. If you need a change to an asset, ask them.
