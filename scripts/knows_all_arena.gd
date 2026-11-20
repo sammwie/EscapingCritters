@@ -200,9 +200,9 @@ func _on_boss_defeated(at: Vector2) -> void:
 		create_tween().tween_property(_tint, "color", Color.WHITE, 1.0)
 	await get_tree().create_timer(1.0).timeout
 	won.emit(at)
+	GameState.set_flag("knows_all_defeated", true)
 	if ending_scene_path != "" and ResourceLoader.exists(ending_scene_path):
-		await _fade_to(1.0, 1.5)
-		get_tree().change_scene_to_file(ending_scene_path)
+		GameState.change_scene(ending_scene_path, "", 1.2)
 		return
 	_unlock_camera()
 	_barrier.queue_free()

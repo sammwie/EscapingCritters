@@ -5,8 +5,11 @@ extends Node2D
 @export var player_scene: PackedScene
 @export var arena_size := Vector2(360, 240)
 @export var camera_zoom := 3.0
+@export var give_sword := false
 
 func _ready() -> void:
+	if give_sword:
+		GameState.add_item(&"sword")
 	var rect := Rect2(-arena_size / 2.0, arena_size)
 	var floor_rect := ColorRect.new()
 	floor_rect.color = Color(0.18, 0.14, 0.2)
@@ -33,6 +36,7 @@ func _ready() -> void:
 	cam.make_current()
 
 	var boss := KnowsAllBoss.new()
+	boss.max_hp = 8
 	add_child(boss)
 	var arena := KnowsAllArena.new()
 	add_child(arena)
