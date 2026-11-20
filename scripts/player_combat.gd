@@ -15,6 +15,7 @@ signal attacked
 @export var max_hearts := 3
 @export var attack_cooldown := 0.38
 @export var attack_reach := 30.0
+@export var attack_damage := 1
 @export var attack_half_arc_deg := 75.0
 @export var dodge_speed := 210.0
 @export var dodge_time := 0.24
@@ -94,7 +95,7 @@ func _do_attack() -> void:
 		var to: Vector2 = enemy.global_position - player.global_position
 		var radius: float = float(enemy.get("hit_radius")) if enemy.get("hit_radius") != null else 8.0
 		if to.length() <= attack_reach + radius and absf(rad_to_deg(dir.angle_to(to))) <= attack_half_arc_deg:
-			enemy.take_hit(1, player.global_position)
+			enemy.take_hit(attack_damage, player.global_position)
 			CameraShake.go(player.get_node_or_null("Camera2D") as Camera2D, 1.5, 0.12)
 
 func _do_dodge() -> void:

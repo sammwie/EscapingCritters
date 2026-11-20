@@ -11,6 +11,7 @@ signal task_added(id: StringName, text: String)
 signal task_completed(id: StringName)
 signal tasks_changed
 signal current_task_changed(task: Dictionary)
+signal item_added(id: StringName)
 
 const STORY_FLAGS := ["note_read", "slept", "cat_dead", "baker_confronted", "hid_from_villagers", "pond_lost"]
 
@@ -43,6 +44,7 @@ var flags: Dictionary = {
 # Fixed within one playthrough; randomized for a new one.
 var puzzle_seed := 0
 var solved_puzzles: Dictionary = {}
+var items: Dictionary = {}
 var tasks: Array[Dictionary] = []
 var current_task: Dictionary:
 	get:
@@ -98,6 +100,16 @@ func mark_solved(puzzle_id: StringName) -> void:
 
 func is_solved(puzzle_id: StringName) -> bool:
 	return solved_puzzles.has(puzzle_id)
+	
+
+func add_item(id: StringName) -> void:
+	if id == &"" or has_item(id):
+		return
+	items[id] = true
+	item_added.emit(id)
+
+func has_item(id: StringName) -> bool:
+	return items.has(id)
 
 func add_task(id: StringName, text: String) -> void:
 	if id == &"":
@@ -170,6 +182,7 @@ func new_playthrough() -> void:
 		flags[flag_name] = false
 	set_night(false)
 	solved_puzzles.clear()
+	items.clear()
 	tasks.clear()
 	_resetting = false
 	day_changed.emit(current_day)
