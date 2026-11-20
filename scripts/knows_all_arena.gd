@@ -11,10 +11,12 @@ signal won(at: Vector2)
 
 const FENCE_COLOR := Color(0.55, 0.18, 0.78)
 const PHASE_TINTS := [Color(0.72, 0.62, 0.8), Color(0.62, 0.5, 0.74), Color(0.52, 0.38, 0.66)]
+const INTRO_PATH := "res://dialogues/knows_all_intro.tres"
 
 @export var player_hearts := 5
 @export var sword_damage := 2
 @export var ending_scene_path := ""
+@export var intro_dialogue: DialogueData
 
 var rect := Rect2()
 var player: CharacterBody2D
@@ -31,8 +33,11 @@ var _fade: ColorRect
 var _t := 0.0
 var _resetting := false
 var _finished := false
+var _in_intro := false
 
 func begin(p_player: CharacterBody2D, p_boss: KnowsAllBoss, p_rect: Rect2) -> void:
+	if intro_dialogue == null and ResourceLoader.exists(INTRO_PATH):
+		intro_dialogue = load(INTRO_PATH) as DialogueData
 	player = p_player
 	boss = p_boss
 	rect = p_rect
@@ -68,6 +73,7 @@ func begin(p_player: CharacterBody2D, p_boss: KnowsAllBoss, p_rect: Rect2) -> vo
 
 	await _fade_to(0.0, 0.5)
 	await boss.begin_intro(player)
+	await _play_intro_dialogue()
 	hud.show_boss("KNOWS ALL", boss.hp, boss.max_hp)
 	hud.flash_message("FIGHT!", 0.6)
 	boss.begin_fight(player, rect)
@@ -163,8 +169,26 @@ func _unlock_camera() -> void:
 	_camera.offset = Vector2.ZERO
 	_camera.position_smoothing_enabled = true
 	_camera.reset_smoothing()
+	
+func _unhandled_input(event: InputEvent) -> void:
+	if not _in_intro or not Dialogue.active:
+		return
+	if InputMap.has_action("interact") and event.is_action_pressed("interact"):
+		Dialogue.request_advance()
+		get_viewport().set_input_as_handled()
 
 # ---------- outcomes ----------
+
+func _play_intro_dialogue() -> void:
+	if intro_dialogue == null:
+		return
+	_in_intro = true
+	Dialogue.start(intro_dialogue)
+	while true:
+		var ended: String = await Dialogue.conversation_ended
+		if ended == intro_dialogue.npc_id:
+			break
+	_in_intro = false
 
 func _on_phase_changed(phase: int) -> void:
 	hud.flash_message("PHASE %d" % phase, 0.9)
