@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="DialogueData" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue_line.gd" id="1_l"]
+[ext_resource type="Script" path="res://scripts/dialogue_data.gd" id="2_d"]
+
+[sub_resource type="Resource" id="Line_1"]
+script = ExtResource("1_l")
+speaker = "Knows All"
+text = "You made it through my maze. I'm almost impressed."
+
+[sub_resource type="Resource" id="Line_2"]
+script = ExtResource("1_l")
+speaker = "Knows All"
+text = "I know every wall of this place. I know every step you took."
+
+[sub_resource type="Resource" id="Line_3"]
+script = ExtResource("1_l")
+speaker = "Knows All"
+text = "I know about the pond. I know about Mochi."
+glitch = true
+
+[sub_resource type="Resource" id="Line_4"]
+script = ExtResource("1_l")
+speaker = "You"
+text = "Why are you doing this to everyone?"
+
+[sub_resource type="Resource" id="Line_5"]
+script = ExtResource("1_l")
+speaker = "Knows All"
+text = "Because someone has to keep the village smiling."
+glitch = true
+
+[sub_resource type="Resource" id="Line_6"]
+script = ExtResource("1_l")
+speaker = "You"
+text = "Then I'm ending this."
+
+[sub_resource type="Resource" id="Line_7"]
+script = ExtResource("1_l")
+speaker = "Knows All"
+text = "...You can try."
+glitch = true
+
+[resource]
+script = ExtResource("2_d")
+npc_id = "knows_all_intro"
+lines = Array[ExtResource("1_l")]([SubResource("Line_1"), SubResource("Line_2"), SubResource("Line_3"), SubResource("Line_4"), SubResource("Line_5"), SubResource("Line_6"), SubResource("Line_7")])
+repeat_lines = Array[ExtResource("1_l")]([SubResource("Line_1"), SubResource("Line_2"), SubResource("Line_3"), SubResource("Line_4"), SubResource("Line_5"), SubResource("Line_6"), SubResource("Line_7")])

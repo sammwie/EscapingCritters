@@ -7,6 +7,7 @@ extends Node2D
 @export var camera_zoom := 3.0
 @export var give_sword := false
 
+
 func _ready() -> void:
 	if give_sword:
 		GameState.add_item(&"sword")
@@ -40,4 +41,7 @@ func _ready() -> void:
 	add_child(boss)
 	var arena := KnowsAllArena.new()
 	add_child(arena)
+	var box_scene := load("res://scenes/dialogue_box.tscn") as PackedScene
+	if box_scene:
+		add_child(box_scene.instantiate())
 	arena.begin(player, boss, rect)
