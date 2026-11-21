@@ -18,7 +18,8 @@ signal defeated(at: Vector2)
 
 enum Mode { IDLE, INTRO, FIGHT, DEAD }
 
-const ART_PATH := "res://art/knows_all/boss.png"
+const ART_FOLDER := "res://art/knows_all/walk"
+const DIRS := ["east", "south-east", "south", "south-west", "west", "north-west", "north", "north-east"]
 const WARN := Color(0.62, 0.18, 0.78)
 const BODY := Color(0.14, 0.06, 0.2)
 const FONT := preload("res://art/fonts/Silkscreen-Bold.ttf")
@@ -27,6 +28,8 @@ const RING_SPEED := 110.0
 @export var max_hp := 24
 @export var phase2_at := 0.66
 @export var phase3_at := 0.33
+@export var sprite_scale := 1.0
+@export var walk_fps := 8.0
 
 var hp := 24
 var phase := 1
@@ -35,7 +38,8 @@ var mode := Mode.IDLE
 var target: Node2D = null
 var arena := Rect2()
 
-var _sprite: Sprite2D
+var _anim: AnimatedSprite2D
+var _facing := ""
 var _cooldown := 1.5
 var _attack_id := 0
 var _busy := false
@@ -48,11 +52,47 @@ func _ready() -> void:
 	add_to_group("enemy")
 	z_index = 5
 	hp = max_hp
-	if ResourceLoader.exists(ART_PATH):
-		_sprite = Sprite2D.new()
-		_sprite.texture = load(ART_PATH)
-		_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		add_child(_sprite)
+	_build_sprite()
+
+
+func _build_sprite() -> void:
+	var frames := SpriteFrames.new()
+	frames.remove_animation("default")
+	var found := false
+	for dir in DIRS:
+		var list: Array[Texture2D] = []
+		var i := 0
+		while true:
+			var path := "%s/%s/frame_%03d.png" % [ART_FOLDER, dir, i]
+			if not ResourceLoader.exists(path):
+				break
+			list.append(load(path) as Texture2D)
+			i += 1
+		if list.is_empty():
+			continue
+		frames.add_animation(dir)
+		frames.set_animation_speed(dir, walk_fps)
+		frames.set_animation_loop(dir, true)
+		for tex in list:
+			frames.add_frame(dir, tex)
+		found = true
+	if not found:
+		return
+	_anim = AnimatedSprite2D.new()
+	_anim.sprite_frames = frames
+	_anim.scale = Vector2.ONE * sprite_scale
+	_anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	add_child(_anim)
+	_face(Vector2.DOWN)
+
+func _face(v: Vector2) -> void:
+	if _anim == null or v.length() < 0.01:
+		return
+	var dir: String = DIRS[wrapi(roundi(v.angle() / (PI / 4.0)), 0, 8)]
+	if dir == _facing or not _anim.sprite_frames.has_animation(dir):
+		return
+	_facing = dir
+	_anim.play(dir)
 
 # ---------- modes ----------
 
@@ -109,6 +149,8 @@ func _stop_attacks() -> void:
 
 func _physics_process(delta: float) -> void:
 	_t += delta
+	if is_instance_valid(target):
+		_face(target.global_position - global_position)
 	_ring_warn = maxf(_ring_warn - delta, 0.0)
 	if mode == Mode.FIGHT and is_instance_valid(target):
 		_cooldown -= delta
@@ -283,7 +325,7 @@ func _die() -> void:
 # ---------- looks ----------
 
 func _draw() -> void:
-	if _sprite == null:
+	if _anim == null:
 		_draw_placeholder()
 	if _ring_warn > 0.0:
 		var pulse := 0.5 + 0.5 * sin(_t * 26.0)
