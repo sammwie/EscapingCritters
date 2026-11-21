@@ -34,6 +34,7 @@ var _t := 0.0
 var _resetting := false
 var _finished := false
 var _in_intro := false
+var _owns_combat := true
 
 func begin(p_player: CharacterBody2D, p_boss: KnowsAllBoss, p_rect: Rect2) -> void:
 	if intro_dialogue == null and ResourceLoader.exists(INTRO_PATH):
@@ -54,13 +55,21 @@ func begin(p_player: CharacterBody2D, p_boss: KnowsAllBoss, p_rect: Rect2) -> vo
 	get_parent().add_child(_tint)
 	create_tween().tween_property(_tint, "color", PHASE_TINTS[0], 0.8)
 
-	combat = PlayerCombat.new()
-	combat.name = "PlayerCombat"
-	combat.max_hearts = player_hearts
+	combat = player.get_node_or_null("PlayerCombat") as PlayerCombat
+	_owns_combat = combat == null
+	if _owns_combat:
+		combat = PlayerCombat.new()
+		combat.name = "PlayerCombat"
+		combat.max_hearts = player_hearts
 	if GameState.has_method("has_item") and GameState.call("has_item", &"sword"):
 		combat.set("attack_damage", sword_damage)
 		combat.attack_reach += 8.0
-	player.add_child(combat)
+	if _owns_combat:
+		player.add_child(combat)
+	else:
+		combat.max_hearts = maxi(combat.max_hearts, player_hearts)
+		combat.hearts = combat.max_hearts
+		combat.enabled = true
 	hud = CombatHUD.new()
 	add_child(hud)
 	await get_tree().process_frame
@@ -233,5 +242,17 @@ func _on_boss_defeated(at: Vector2) -> void:
 	await get_tree().create_timer(1.2).timeout
 	if _tint:
 		_tint.queue_free()
-	combat.queue_free()
+	if _owns_combat:
+		combat.queue_free()
 	queue_free()
+	
+	## One-line way to start the fight from a level script:
+##   KnowsAllArena.start(self, player, Rect2(arena_top_left, arena_size), "res://path/to/ending.tscn")
+static func start(level: Node, p_player: CharacterBody2D, p_rect: Rect2, ending_path := "") -> KnowsAllArena:
+	var boss := KnowsAllBoss.new()
+	level.add_child(boss)
+	var arena := KnowsAllArena.new()
+	arena.ending_scene_path = ending_path
+	level.add_child(arena)
+	arena.begin(p_player, boss, p_rect)
+	return arena
