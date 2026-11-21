@@ -84,6 +84,7 @@ func begin(p_player: CharacterBody2D, p_boss: KnowsAllBoss, p_rect: Rect2) -> vo
 	await boss.begin_intro(player)
 	await _play_intro_dialogue()
 	hud.show_boss("KNOWS ALL", boss.hp, boss.max_hp)
+	hud.set_boss_markers([boss.phase2_at, boss.phase3_at])
 	hud.flash_message("FIGHT!", 0.6)
 	boss.begin_fight(player, rect)
 	player.set_physics_process(true)
