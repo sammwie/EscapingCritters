@@ -19,10 +19,29 @@ var _boss_name: Label
 var _message: Label
 var _hint: Label
 var _bar_tween: Tween
+var _ticks: Array[ColorRect] = []
 
 func _ready() -> void:
 	layer = 45
 	_build()
+
+func set_boss_markers(fractions: Array) -> void:
+	for t in _ticks:
+		t.queue_free()
+	_ticks.clear()
+	for f in fractions:
+		var tick := ColorRect.new()
+		tick.color = WOOD_DARK
+		tick.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		tick.anchor_left = f
+		tick.anchor_right = f
+		tick.anchor_top = 0.0
+		tick.anchor_bottom = 1.0
+		tick.offset_left = -2
+		tick.offset_right = 2
+		_boss_bar.add_child(tick)
+		_ticks.append(tick)
+
 
 func _build() -> void:
 	var root := Control.new()

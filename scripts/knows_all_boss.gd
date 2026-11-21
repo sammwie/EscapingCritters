@@ -31,6 +31,7 @@ const RING_SPEED := 110.0
 @export var sprite_scale := 1.0
 @export var walk_fps := 8.0
 
+var _shield_t := 0.0
 var hp := 24
 var phase := 1
 var hit_radius := 26.0
@@ -48,11 +49,30 @@ var _ring_r := -1.0
 var _ring_hit := false
 var _t := 0.0
 
+const ROT_FOLDER := "res://art/knows_all/rotations"
+var _hit_sprite: Sprite2D
+var _rot_textures := {}
+var _hit_id := 0
+
 func _ready() -> void:
 	add_to_group("enemy")
 	z_index = 5
 	hp = max_hp
 	_build_sprite()
+	
+func _show_hit_pose() -> void:
+	if _anim == null or _hit_sprite == null or not _rot_textures.has(_facing):
+		return
+	_hit_id += 1
+	var id := _hit_id
+	_hit_sprite.texture = _rot_textures[_facing]
+	_hit_sprite.visible = true
+	_anim.visible = false
+	await get_tree().create_timer(0.12).timeout
+	if id != _hit_id or not is_instance_valid(_anim):
+		return
+	_hit_sprite.visible = false
+	_anim.visible = true
 
 
 func _build_sprite() -> void:
@@ -83,6 +103,15 @@ func _build_sprite() -> void:
 	_anim.scale = Vector2.ONE * sprite_scale
 	_anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	add_child(_anim)
+	_hit_sprite = Sprite2D.new()
+	_hit_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_hit_sprite.scale = _anim.scale
+	_hit_sprite.visible = false
+	add_child(_hit_sprite)
+	for d in DIRS:
+		var p := "%s/%s.png" % [ROT_FOLDER, d]
+		if ResourceLoader.exists(p):
+			_rot_textures[d] = load(p)
 	_face(Vector2.DOWN)
 
 func _face(v: Vector2) -> void:
@@ -123,6 +152,7 @@ func begin_fight(player: Node2D, rect: Rect2) -> void:
 
 ## Starts the fight over (used after the player is defeated).
 func reset_fight() -> void:
+	_shield_t = 0.0
 	_stop_attacks()
 	hp = max_hp
 	phase = 1
@@ -152,6 +182,7 @@ func _physics_process(delta: float) -> void:
 	if is_instance_valid(target):
 		_face(target.global_position - global_position)
 	_ring_warn = maxf(_ring_warn - delta, 0.0)
+	_shield_t = maxf(_shield_t - delta, 0.0)
 	if mode == Mode.FIGHT and is_instance_valid(target):
 		_cooldown -= delta
 		if _cooldown <= 0.0 and not _busy:
@@ -278,12 +309,13 @@ func _phase_for(h: int) -> int:
 	return 1
 
 func take_hit(damage: int, _from_pos: Vector2) -> void:
-	if mode != Mode.FIGHT or hp <= 0:
+	if mode != Mode.FIGHT or hp <= 0 or _shield_t > 0.0:
 		return
 	hp = maxi(hp - damage, 0)
 	health_changed.emit(hp, max_hp)
 	modulate = Color(3, 3, 3)
 	create_tween().tween_property(self, "modulate", Color.WHITE, 0.14)
+	_show_hit_pose()
 	if hp <= 0:
 		_die()
 		return
@@ -295,6 +327,7 @@ func take_hit(damage: int, _from_pos: Vector2) -> void:
 func _phase_change() -> void:
 	_stop_attacks()
 	_cooldown = 1.8
+	_shield_t = 1.4
 	phase_changed.emit(phase)
 	CameraShake.go(target.get_node_or_null("Camera2D") as Camera2D, 4.0, 0.5)
 	get_tree().call_group("glitch_overlay", "flicker", 0.6, 1.0)
@@ -331,6 +364,8 @@ func _draw() -> void:
 		var pulse := 0.5 + 0.5 * sin(_t * 26.0)
 		draw_arc(Vector2.ZERO, 34.0 + pulse * 6.0, 0.0, TAU, 48, Color(WARN, 0.9), 2.0)
 		draw_string(FONT, Vector2(-3, -50), "!", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(1, 0.3, 0.25))
+	if _shield_t > 0.0:
+		draw_arc(Vector2.ZERO, 36.0, 0.0, TAU, 48, Color(WARN, 0.45 + 0.35 * sin(_t * 18.0)), 3.0)
 	if _ring_r > 0.0:
 		draw_arc(Vector2.ZERO, _ring_r, 0.0, TAU, 96, Color(WARN, 0.95), 3.0)
 
