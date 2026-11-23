@@ -10,11 +10,13 @@ extends CharacterBody2D
 @export var sprite_scale := 1.5
 
 const DIRS := ["east", "south-east", "south", "south-west", "west", "north-west", "north", "north-east"]
+const DUST_PUFF := preload("res://scripts/dust_puff.gd")
 
 var sprite: AnimatedSprite2D
 var facing := "south"
 var _step_timer := 0.0
 var _step_side := false
+var _was_moving := false
 
 func _ready() -> void:
 	add_to_group("player")
@@ -36,11 +38,13 @@ func _physics_process(_delta: float) -> void:
 	if Dialogue.active:
 		velocity = Vector2.ZERO
 		_step_timer = 0.0
+		_update_dust(false)
 		_play("idle")
 		return
 	var dir := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	velocity = dir * speed
 	move_and_slide()
+	_update_dust(dir != Vector2.ZERO)
 	if dir == Vector2.ZERO:
 		_step_timer = 0.0
 		_play("idle")
@@ -59,6 +63,15 @@ func _physics_process(_delta: float) -> void:
 			if _step_timer <= 0.0:
 				SFX.play("outdoor_footsteps")
 				_step_timer = 0.34
+
+func _update_dust(is_moving: bool) -> void:
+	if is_moving != _was_moving:
+		var puff := DUST_PUFF.new() as Node2D
+		puff.top_level = true
+		puff.z_index = 1
+		sprite.add_child(puff)
+		puff.global_position = global_position + Vector2(0, 10)
+		_was_moving = is_moving
 
 func _play(kind: String) -> void:
 	var anim: String = kind + "_" + facing
